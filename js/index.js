@@ -1,4 +1,6 @@
+import { consoleLog } from "./test.js";
 // Scene
+consoleLog();
 const scene = new THREE.Scene();
 // Camera
 const camera = new THREE.PerspectiveCamera(75,

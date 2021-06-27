@@ -2,8 +2,6 @@
 
 
 
-export function animate() {
+export function consoleLog() {
 	console.log(1);
-	requestAnimationFrame(animate);
-	renderer.render(scene, camera);
 }
