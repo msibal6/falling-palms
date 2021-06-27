@@ -14,11 +14,20 @@ document.body.appendChild(renderer.domElement);
 const geometry = new THREE.BoxGeometry();
 const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
 const cube = new THREE.Mesh(geometry, material);
+
+// scene.add automatically places the cube at (0, 0, 0)
 scene.add(cube);
 
+// X towards preferences bar
+// Y towards widget bar
+// Z towards user
+// Changing camera position
 camera.position.z = 5;
-console.log(camera);
+
+// Rendering loop
 function animate() {
+	// renders everytime the screen refreshes only when 
+	// we are the current browser tab
 	requestAnimationFrame(animate);
 	renderer.render(scene, camera);
 }
