@@ -25,6 +25,7 @@ scene.add(cube);
 // Changing camera position
 camera.position.z = 5;
 
+// TODO
 // Create the world
 	// add the skybox
 	// add the floor
