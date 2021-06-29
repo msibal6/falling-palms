@@ -1,11 +1,10 @@
-import { consoleLog } from "./test.js";
+// can now import code from other js files 
+// import { consoleLog } from "./test.js";
 // Scene
-consoleLog();
 const scene = new THREE.Scene();
 // Camera
 const camera = new THREE.PerspectiveCamera(75,
 	window.innerWidth / window.innerHeight, 0.1, 1000);
-
 
 // Renderer
 const renderer = new THREE.WebGLRenderer();
@@ -26,6 +25,10 @@ scene.add(cube);
 // Changing camera position
 camera.position.z = 5;
 
+// Create the world
+	// add the skybox
+	// add the floor
+	// add the lights
 // Rendering loop
 function animate() {
 	// renders everytime the screen refreshes only when 
@@ -33,4 +36,6 @@ function animate() {
 	requestAnimationFrame(animate);
 	renderer.render(scene, camera);
 }
+// This is the loop in The Aviator game
+
 animate();
