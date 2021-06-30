@@ -1,4 +1,5 @@
 // can now import code from other js files 
+import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js';
 // import { consoleLog } from "./test.js";
 // Scene
 const scene = new THREE.Scene();
@@ -10,6 +11,17 @@ const camera = new THREE.PerspectiveCamera(75,
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
+// Resizing the window on resize 
+// might delete
+window.addEventListener('resize', handleWindowResize, false);
+function handleWindowResize() {
+	// update height and width of the renderer and the camera
+	const windowHeight = window.innerHeight;
+	const windowWidth = window.innerWidth;
+	renderer.setSize(windowWidth, windowHeight);
+	camera.aspect = windowWidth / windowHeight;
+	camera.updateProjectionMatrix();
+}
 
 // Placing a cube in the scene
 const geometry = new THREE.BoxGeometry();
@@ -27,9 +39,9 @@ camera.position.z = 5;
 
 // TODO
 // Create the world
-	// add the skybox
-	// add the floor
-	// add the lights
+// add the skybox
+// add the floor
+// add the lights
 // Rendering loop
 function animate() {
 	// renders everytime the screen refreshes only when 
