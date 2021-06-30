@@ -35,13 +35,48 @@ scene.add(cube);
 // Y towards widget bar
 // Z towards user
 // Changing camera position
-camera.position.z = 5;
+camera.position.set(75, 20, 0);
 
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(0, 0, 5);
+controls.update();
+
+const loader = new THREE.CubeTextureLoader();
+const texture = loader.load([
+	'../images/red_background.png',
+	'../images/red_background.png',
+	'../images/red_background.png',
+	'../images/red_background.png',
+	'../images/red_background.png',
+	'../images/red_background.png',
+]);
 // TODO
 // Create the world
 // add the skybox
+scene.background = texture;
 // add the floor
+const plane = new THREE.Mesh(
+	new THREE.PlaneGeometry(100, 100, 10, 10),
+	new THREE.MeshStandardMaterial({
+		color: 0x000000,
+	}));
+plane.castShadow = false;
+plane.receiveShadow = true;
+plane.rotation.x = -Math.PI / 2;
+scene.add(plane);
 // add the lights
+const box = new THREE.Mesh(
+	new THREE.BoxGeometry(2, 2, 2),
+	new THREE.MeshStandardMaterial({
+		color: 0xFFFFFF,
+	}));
+box.position.set(0, 1, 0);
+box.castShadow = true;
+box.receiveShadow = true;
+scene.add(box);
+
+const light = new THREE.AmbientLight(0x101010);
+scene.add(light);
 // Rendering loop
 function animate() {
 	// renders everytime the screen refreshes only when 
@@ -49,6 +84,5 @@ function animate() {
 	requestAnimationFrame(animate);
 	renderer.render(scene, camera);
 }
-// This is the loop in The Aviator game
 
 animate();
