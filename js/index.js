@@ -1,7 +1,7 @@
-// can now import code from other js files 
-import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js';
-
+// import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js';
 import { getNormalizedVector } from './vectorHelper.js';
+import { OrbitZCamera } from './OrbitCamera.js';
+
 // Scene
 const scene = new THREE.Scene();
 // Camera
@@ -30,33 +30,19 @@ const material = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
 const cube = new THREE.Mesh(geometry, material);
 
 // scene.add automatically places the cube at (0, 0, 0)
-
 scene.add(cube);
 cube.position.set(0, 0, 10);
 cube.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), Math.PI / 3);
 
-
 const axesHelper = new THREE.AxesHelper(5);
 scene.add(axesHelper);
-// X towards preferences bar
-// Y towards widget bar
-// Z towards user
+
 // Changing camera position
 camera.position.set(-10, 10, 0);
 console.log(camera.position);
 camera.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), Math.PI / 3);
 console.log(camera);
 console.log(camera.getWorldDirection(new THREE.Vector3(0, 0, 0)));
-
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.target.set(0, 0, 0);
-controls.update();
-// controls.enabled = false;
-// controls.autoRotate = true;
-// controls.maxAzimuthAngle = Math.PI;
-// controls.minAzimuthAngle = 0;
-
-// TODO control the distance and rotation around the object
 
 // Adds red skybox
 const loader = new THREE.CubeTextureLoader();
@@ -90,6 +76,8 @@ box.castShadow = true;
 box.receiveShadow = true;
 scene.add(box);
 
+const testOrbitZCamera = new OrbitZCamera(camera, box);
+
 // Add light
 const ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.5);
 scene.add(ambientLight);
@@ -110,12 +98,13 @@ sun.shadow.camera.right = -100;
 sun.shadow.camera.top = 100;
 sun.shadow.camera.bottom = -100;
 scene.add(sun);
+
 // Rendering loop
 function animate() {
 	// renders every time the screen refreshes only when 
 	// we are the current browser tab
 	requestAnimationFrame(animate);
 	renderer.render(scene, camera);
-	// controls.update();
+	testOrbitZCamera.update();
 }
 animate();
