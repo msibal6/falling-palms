@@ -1,6 +1,6 @@
 // import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js';
 import { getNormalizedVector } from './vectorHelper.js';
-import { OrbitZCamera } from './OrbitCamera.js';
+import { OrbitCamera } from './OrbitCamera.js';
 
 // Scene
 const scene = new THREE.Scene();
@@ -76,7 +76,8 @@ box.castShadow = true;
 box.receiveShadow = true;
 scene.add(box);
 
-const testOrbitZCamera = new OrbitZCamera(camera, box);
+const orbitCamera = new OrbitCamera(camera, box);
+orbitCamera.setOrbit(Math.PI / 4 * 5, Math.PI / 4 * 3, 10, 0.01);
 
 // Add light
 const ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.5);
@@ -105,6 +106,7 @@ function animate() {
 	// we are the current browser tab
 	requestAnimationFrame(animate);
 	renderer.render(scene, camera);
-	testOrbitZCamera.update();
+	orbitCamera.update();
+	console.log(orbitCamera.threeCamera.position);
 }
 animate();
