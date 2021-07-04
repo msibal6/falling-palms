@@ -2,6 +2,7 @@
 import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js';
 
 import { getNormalizedVector } from './vectorHelper.js';
+import { OrbitZCamera } from './OrbitCamera.js';
 // Scene
 const scene = new THREE.Scene();
 // Camera
@@ -48,9 +49,12 @@ camera.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), Math.PI / 3);
 console.log(camera);
 console.log(camera.getWorldDirection(new THREE.Vector3(0, 0, 0)));
 
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.target.set(0, 0, 0);
-controls.update();
+const testOrbitZCamera = new OrbitZCamera(camera, new THREE.Vector3(0, 0, 0))
+testOrbitZCamera.consoleTest();
+
+// const controls = new OrbitControls(camera, renderer.domElement);
+// controls.target.set(0, 0, 0);
+// controls.update();
 // controls.enabled = false;
 // controls.autoRotate = true;
 // controls.maxAzimuthAngle = Math.PI;
