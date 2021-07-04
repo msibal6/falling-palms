@@ -1,14 +1,16 @@
-// "use strict";
+"use strict";
 
+// Pans across the polar angle
+// Flips when panning PI / 2 and 3 PI / 2
 export class OrbitZCamera {
 	constructor(threeCamera, target) {
 		this.threeCamera = threeCamera;
 		this.target = target;
-		this.startAngle = 0;
-		this.currentAngle = 0;
-		this.endAngle = 2 * Math.PI;
-		this.radius = 1;
-		this.delta = 0.1;
+		this.startAngle = Math.PI / 4 * 3;
+		this.currentAngle = this.startAngle;
+		this.endAngle = Math.PI / 4 * 5;
+		this.radius = 5;
+		this.delta = 0.01;
 	}
 
 	setOrbit(newStart, newEnd, newRadius = 1, newDelta = 0.1) {
@@ -21,15 +23,29 @@ export class OrbitZCamera {
 	isOrbitFinished() {
 		return this.endAngle - this.currentAngle <= 0;
 	}
+
+	updatePosition() {
+		const z = this.target.z;
+		const x = this.radius * Math.cos(this.currentAngle)
+			+ this.target.x;
+		const y = this.radius * Math.sin(this.currentAngle)
+			+ this.target.y;
+
+		this.threeCamera.position.set(x, y, z);
+	}
+
 	update() {
 		if (this.isOrbitFinished()) {
-			this.currentAngle = this.endAngle;
-			this.threeCamera.lookAt(this.target);
 			return;
 		}
-		
-
-
-
+		// update angle
+		this.currentAngle += this.delta;
+		if (this.isOrbitFinished()) {
+			this.currentAngle = this.endAngle;
+		}
+		// update position
+		this.updatePosition();
+		// update rotation
+		this.threeCamera.lookAt(this.target);
 	}
 }

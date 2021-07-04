@@ -50,17 +50,6 @@ console.log(camera);
 console.log(camera.getWorldDirection(new THREE.Vector3(0, 0, 0)));
 
 const testOrbitZCamera = new OrbitZCamera(camera, new THREE.Vector3(0, 0, 0))
-testOrbitZCamera.consoleTest();
-
-// const controls = new OrbitControls(camera, renderer.domElement);
-// controls.target.set(0, 0, 0);
-// controls.update();
-// controls.enabled = false;
-// controls.autoRotate = true;
-// controls.maxAzimuthAngle = Math.PI;
-// controls.minAzimuthAngle = 0;
-
-// TODO control the distance and rotation around the object
 
 // Adds red skybox
 const loader = new THREE.CubeTextureLoader();
@@ -120,6 +109,6 @@ function animate() {
 	// we are the current browser tab
 	requestAnimationFrame(animate);
 	renderer.render(scene, camera);
-	// controls.update();
+	testOrbitZCamera.update();
 }
 animate();
