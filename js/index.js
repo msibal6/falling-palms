@@ -49,7 +49,6 @@ camera.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), Math.PI / 3);
 console.log(camera);
 console.log(camera.getWorldDirection(new THREE.Vector3(0, 0, 0)));
 
-const testOrbitZCamera = new OrbitZCamera(camera, new THREE.Vector3(0, 0, 0))
 
 // Adds red skybox
 const loader = new THREE.CubeTextureLoader();
@@ -82,6 +81,8 @@ box.position.set(0, 1, 0);
 box.castShadow = true;
 box.receiveShadow = true;
 scene.add(box);
+
+const testOrbitZCamera = new OrbitZCamera(camera, box);
 
 // Add light
 const ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.5);

@@ -5,7 +5,7 @@
 export class OrbitZCamera {
 	constructor(threeCamera, target) {
 		this.threeCamera = threeCamera;
-		this.target = target;
+		this.targetObject = target;
 		this.startAngle = Math.PI / 4 * 3;
 		this.currentAngle = this.startAngle;
 		this.endAngle = Math.PI / 4 * 5;
@@ -25,11 +25,11 @@ export class OrbitZCamera {
 	}
 
 	updatePosition() {
-		const z = this.target.z;
 		const x = this.radius * Math.cos(this.currentAngle)
-			+ this.target.x;
+			+ this.targetObject.position.x;
 		const y = this.radius * Math.sin(this.currentAngle)
-			+ this.target.y;
+			+ this.targetObject.position.y;
+		const z = this.targetObject.position.z;
 
 		this.threeCamera.position.set(x, y, z);
 	}
@@ -46,6 +46,6 @@ export class OrbitZCamera {
 		// update position
 		this.updatePosition();
 		// update rotation
-		this.threeCamera.lookAt(this.target);
+		this.threeCamera.lookAt(this.targetObject.position);
 	}
 }
