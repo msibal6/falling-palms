@@ -6,29 +6,34 @@ export class SphericalPanCamera {
 	constructor(threeCamera, target) {
 		this.threeCamera = threeCamera;
 		this.targetObject = target;
-		this.startAngle = Math.PI / 4 * 3;
-		this.currentAngle = this.startAngle;
-		this.endAngle = Math.PI / 4 * 5;
 		this.radius = 5;
 
 		this.startPhi = 0;
-		this.startTheta = 0;
+		this.startTheta = Math.PI / 2;
 		this.currentPhi = this.startPhi;
 		this.currentTheta = this.startTheta;
 		this.endPhi = Math.PI * 2;
-		this.endTheta = 0;
+		this.endTheta = Math.PI / 2;
 		this.deltaPhi = 0.02;
 		this.deltaTheta = 0.01;
 
 		this.delta = 0.01;
 	}
 
-	setOrbit(newStart, newEnd, newRadius = 1, newDelta = 0.1) {
-		this.startAngle = newStart;
-		this.currentAngle = newStart;
-		this.endAngle = newEnd;
+	setThetaPan(newStartTheta, newEndTheta, newDeltaTheta = 0.01) {
+		this.startTheta = newStartTheta;
+		this.endTheta = newEndTheta;
+		this.deltaTheta = newDeltaTheta;
+	}
+
+	setPhiPan(newStartPhi, newEndPhi, newDeltaPhi = 0.02) {
+		this.startPhi = newStartPhi;
+		this.endTheta = newEndPhi;
+		this.deltaTheta = newDeltaPhi;
+	}
+
+	setRadius(newRadius) {
 		this.radius = newRadius;
-		this.delta = newDelta;
 	}
 
 	isThetaPanFinished() {
@@ -49,7 +54,7 @@ export class SphericalPanCamera {
 		return this.isPhiPanFinished() && this.isThetaPanFinished();
 	}
 
-	updateAngle() {
+	updateAngles() {
 		if (this.startPhi < this.endPhi) {
 			this.currentPhi += this.deltaPhi;
 		} else {
@@ -62,8 +67,11 @@ export class SphericalPanCamera {
 			this.currentTheta -= this.deltaTheta;
 		}
 
-		if (this.isPanFinished()) {
+		if (this.isPhiPanFinished()) {
 			this.currentPhi = this.endPhi;
+		}
+
+		if (this.isThetaPanFinished()) {
 			this.currentTheta = this.endTheta;
 		}
 	}
@@ -74,10 +82,10 @@ export class SphericalPanCamera {
 		// z r cos polar
 		const x = this.radius * Math.cos(this.currentPhi)
 			* Math.sin(this.currentTheta) + this.targetObject.position.x;
-		const y = this.radius * Math.sin(this.currentPhi)
-			* Math.sin(this.currentTheta) + this.targetObject.position.y;
-		const z = this.radius * Math.cos(this.currentTheta)
-			+ this.targetObject.position.z;
+		const y = this.radius * Math.cos(this.currentTheta)
+			+ this.targetObject.position.y;
+		const z = this.radius * Math.sin(this.currentPhi)
+			* Math.sin(this.currentTheta) + this.targetObject.position.z;
 
 		this.threeCamera.position.set(x, y, z);
 	}
@@ -87,7 +95,7 @@ export class SphericalPanCamera {
 			return;
 		}
 		// update angle
-		this.updateAngle();
+		this.updateAngles();
 		// update position
 		this.updatePosition();
 		// update rotation

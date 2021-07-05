@@ -77,7 +77,6 @@ box.receiveShadow = true;
 scene.add(box);
 
 const orbitCamera = new SphericalPanCamera(camera, box);
-orbitCamera.setOrbit(Math.PI / 4 * 5, Math.PI / 4 * 3, 10, 0.01);
 
 // Add light
 const ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.5);
