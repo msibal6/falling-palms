@@ -9,7 +9,7 @@ export class SphericalPanCamera {
 		this.radius = 5;
 
 		this.startPhi = 0;
-		this.startTheta = Math.PI / 2;
+		this.startTheta = 0;
 		this.currentPhi = this.startPhi;
 		this.currentTheta = this.startTheta;
 		this.endPhi = Math.PI * 2;
@@ -28,8 +28,8 @@ export class SphericalPanCamera {
 
 	setPhiPan(newStartPhi, newEndPhi, newDeltaPhi = 0.02) {
 		this.startPhi = newStartPhi;
-		this.endTheta = newEndPhi;
-		this.deltaTheta = newDeltaPhi;
+		this.endPhi = newEndPhi;
+		this.deltaPhi = newDeltaPhi;
 	}
 
 	setRadius(newRadius) {
