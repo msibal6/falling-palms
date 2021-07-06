@@ -37,13 +37,6 @@ cube.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), Math.PI / 3);
 const axesHelper = new THREE.AxesHelper(5);
 scene.add(axesHelper);
 
-// Changing camera position
-camera.position.set(-10, 10, 0);
-console.log(camera.position);
-camera.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), Math.PI / 3);
-console.log(camera);
-console.log(camera.getWorldDirection(new THREE.Vector3(0, 0, 0)));
-
 // Adds red skybox
 const loader = new THREE.CubeTextureLoader();
 const texture = loader.load([
@@ -80,6 +73,7 @@ const orbitCamera = new SphericalPanCamera(camera, box);
 orbitCamera.setPhiPan(Math.PI, Math.PI);
 orbitCamera.setThetaPan(Math.PI / 4, Math.PI / 4 * 3);
 orbitCamera.setRadius(10);
+
 // Add light
 const ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.5);
 scene.add(ambientLight);
