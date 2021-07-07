@@ -93,11 +93,10 @@ export class SphericalPanCamera {
 	}
 
 	update() {
-		if (this.isPanFinished()) {
-			return;
+		if (!this.isPanFinished()) {
+			// update angle
+			this.updateAngles();
 		}
-		// update angle
-		this.updateAngles();
 		// update position
 		this.updatePosition();
 		// update rotation
