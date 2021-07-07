@@ -58,14 +58,14 @@ const plane = new THREE.Mesh(
 plane.castShadow = false;
 plane.receiveShadow = true;
 plane.rotation.x = -Math.PI / 2;
-scene.add(plane);
+// scene.add(plane);
 // Add another box
 const box = new THREE.Mesh(
 	new THREE.BoxGeometry(2, 2, 2),
 	new THREE.MeshLambertMaterial({
 		color: 0xFFFFFF,
 	}));
-box.position.set(0, 1, 0);
+box.position.set(0, 100, 0);
 box.castShadow = true;
 box.receiveShadow = true;
 scene.add(box);
@@ -98,6 +98,17 @@ sun.shadow.camera.bottom = -100;
 scene.add(sun);
 
 // Cannon-es physics
+const world = new CANNON.World({
+  gravity: new CANNON.Vec3(0, -9.82, 0), // m/s²
+})
+const size = 1
+const halfExtents = new CANNON.Vec3(size, size, size)
+const boxShape = new CANNON.Box(halfExtents)
+const boxBody = new CANNON.Body({ mass: 1, shape: boxShape })
+box.position.set(0, 10, 0);
+world.addBody(boxBody)
+const timeStep = 1 / 60; // seconds
+let lastCallTime;
 // make a plane with zero gravity that looks like my box in three
 // make the same box 
 // Rendering loop
@@ -106,7 +117,16 @@ function animate() {
 	// we are the current browser tab
 	requestAnimationFrame(animate);
 	renderer.render(scene, camera);
-	orbitCamera.update();
+	const time = performance.now() / 1000; // seconds
+	if (!lastCallTime) {
+		world.step(timeStep);
+	} else {
+		const dt = time - lastCallTime;
+		world.step(timeStep, dt);
+	}
+	lastCallTime = time;
+	box.position.copy(boxBody.position);
+	// orbitCamera.update();
 	// console.log(orbitCamera.threeCamera.position);
 }
 animate();
