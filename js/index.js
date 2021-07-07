@@ -70,10 +70,10 @@ box.castShadow = true;
 box.receiveShadow = true;
 scene.add(box);
 
-// const orbitCamera = new SphericalPanCamera(camera, box);
-// orbitCamera.setPhiPan(Math.PI, Math.PI);
-// orbitCamera.setThetaPan(Math.PI / 4, Math.PI / 4 * 3);
-// orbitCamera.setRadius(10);
+const orbitCamera = new SphericalPanCamera(camera, box);
+orbitCamera.setPhiPan(Math.PI, Math.PI);
+orbitCamera.setThetaPan(Math.PI / 4 * 3, Math.PI / 4);
+orbitCamera.setRadius(10);
 camera.position.set(0, 5, 10);
 
 // Add light
@@ -99,7 +99,7 @@ scene.add(sun);
 
 // Cannon-es physics
 const world = new CANNON.World({
-  gravity: new CANNON.Vec3(0, -9.82, 0), // m/s²
+	gravity: new CANNON.Vec3(0, -9.82, 0), // m/s²
 })
 const size = 1
 const halfExtents = new CANNON.Vec3(size, size, size)
@@ -126,7 +126,7 @@ function animate() {
 	}
 	lastCallTime = time;
 	box.position.copy(boxBody.position);
-	// orbitCamera.update();
+	orbitCamera.update();
 	// console.log(orbitCamera.threeCamera.position);
 }
 animate();
