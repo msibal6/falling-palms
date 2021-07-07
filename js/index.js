@@ -1,6 +1,7 @@
 // import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js';
 import { getNormalizedVector } from './vectorHelper.js';
 import { SphericalPanCamera } from './OrbitCamera.js';
+import * as CANNON from './cannon-es.js';
 
 // Scene
 const scene = new THREE.Scene();
@@ -69,10 +70,11 @@ box.castShadow = true;
 box.receiveShadow = true;
 scene.add(box);
 
-const orbitCamera = new SphericalPanCamera(camera, box);
-orbitCamera.setPhiPan(Math.PI, Math.PI);
-orbitCamera.setThetaPan(Math.PI / 4, Math.PI / 4 * 3);
-orbitCamera.setRadius(10);
+// const orbitCamera = new SphericalPanCamera(camera, box);
+// orbitCamera.setPhiPan(Math.PI, Math.PI);
+// orbitCamera.setThetaPan(Math.PI / 4, Math.PI / 4 * 3);
+// orbitCamera.setRadius(10);
+camera.position.set(0, 5, 10);
 
 // Add light
 const ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.5);
@@ -95,6 +97,9 @@ sun.shadow.camera.top = 100;
 sun.shadow.camera.bottom = -100;
 scene.add(sun);
 
+// Cannon-es physics
+// make a plane with zero gravity that looks like my box in three
+// make the same box 
 // Rendering loop
 function animate() {
 	// renders every time the screen refreshes only when 
