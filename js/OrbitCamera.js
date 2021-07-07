@@ -1,5 +1,4 @@
 "use strict";
-
 // Pans across the polar angle
 // Flips when panning PI / 2 and 3 PI / 2
 export class SphericalPanCamera {
@@ -7,7 +6,6 @@ export class SphericalPanCamera {
 		this.threeCamera = threeCamera;
 		this.targetObject = target;
 		this.radius = 5;
-
 		this.startPhi = 0;
 		this.startTheta = 0;
 		this.currentPhi = this.startPhi;
@@ -16,8 +14,6 @@ export class SphericalPanCamera {
 		this.endTheta = Math.PI / 2;
 		this.deltaPhi = 0.02;
 		this.deltaTheta = 0.01;
-
-		this.delta = 0.01;
 	}
 
 	setThetaPan(newStartTheta, newEndTheta, newDeltaTheta = 0.01) {
@@ -79,27 +75,25 @@ export class SphericalPanCamera {
 	}
 
 	updatePosition() {
-		// x r cos azimuth sin polar
-		// y r sin azimuth sin polar
-		// z r cos polar
+		// X and Z are azimuthal 
+		// Y is polar in this case
 		const x = this.radius * Math.cos(this.currentPhi)
 			* Math.sin(this.currentTheta) + this.targetObject.position.x;
-		const y = this.radius * Math.cos(this.currentTheta)
-			+ this.targetObject.position.y;
 		const z = this.radius * Math.sin(this.currentPhi)
 			* Math.sin(this.currentTheta) + this.targetObject.position.z;
-
+		const y = this.radius * Math.cos(this.currentTheta)
+			+ this.targetObject.position.y;
 		this.threeCamera.position.set(x, y, z);
 	}
 
 	update() {
+		// Update angle
 		if (!this.isPanFinished()) {
-			// update angle
 			this.updateAngles();
 		}
-		// update position
+		// Update position
 		this.updatePosition();
-		// update rotation
+		// Update rotation
 		this.threeCamera.lookAt(this.targetObject.position);
 	}
 }
