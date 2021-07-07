@@ -2,6 +2,7 @@
 import { getNormalizedVector } from './vectorHelper.js';
 import { SphericalPanCamera } from './OrbitCamera.js';
 import * as CANNON from './cannon-es.js';
+import { KeyboardController } from './events.js';
 
 // Scene
 const scene = new THREE.Scene();
@@ -108,7 +109,7 @@ boxBody.position.set(0, 100, 0);
 world.addBody(boxBody)
 
 const planeShape = new CANNON.Plane();
-const planeBody = new CANNON.Body({ mass: 0, shape:  planeShape });
+const planeBody = new CANNON.Body({ mass: 0, shape: planeShape });
 planeBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0); // make it face up
 world.addBody(planeBody);
 
@@ -117,7 +118,10 @@ let lastCallTime;
 // make a plane with zero gravity that looks like my box in three
 // make the same box 
 // Rendering loop
+const keyboardController = new KeyboardController();
+keyboardController.init();
 function animate() {
+
 	// renders every time the screen refreshes only when 
 	// we are the current browser tab
 	requestAnimationFrame(animate);
@@ -131,7 +135,6 @@ function animate() {
 	}
 	lastCallTime = time;
 	box.position.copy(boxBody.position);
-	console.log(boxBody.position);
 	orbitCamera.update();
 	// console.log(orbitCamera.threeCamera.position);
 }
