@@ -102,10 +102,10 @@ const world = new CANNON.World({
 	gravity: new CANNON.Vec3(0, -9.82, 0), // m/s²
 })
 const size = 1
-const halfExtents = new CANNON.Vec3(size, size, size)
-const boxShape = new CANNON.Box(halfExtents)
-const boxBody = new CANNON.Body({ mass: 1, shape: boxShape })
-box.position.set(0, 10, 0);
+const halfExtents = new CANNON.Vec3(size, size, size);
+const boxShape = new CANNON.Box(halfExtents);
+const boxBody = new CANNON.Body({ mass: 1, shape: boxShape });
+boxBody.position.set(0, 10, 0);
 world.addBody(boxBody)
 const timeStep = 1 / 60; // seconds
 let lastCallTime;
@@ -126,6 +126,7 @@ function animate() {
 	}
 	lastCallTime = time;
 	box.position.copy(boxBody.position);
+	console.log(boxBody.position);
 	orbitCamera.update();
 	// console.log(orbitCamera.threeCamera.position);
 }

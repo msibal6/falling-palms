@@ -63,7 +63,6 @@ export class SphericalPanCamera {
 			this.currentPhi -= this.deltaPhi;
 		}
 
-		console.log(this.currentTheta);
 		if (this.startTheta < this.endTheta) {
 			this.currentTheta += this.deltaTheta;
 		} else {
