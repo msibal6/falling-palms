@@ -17,23 +17,29 @@ export class KeyboardController {
 			"s": false,
 			"d": false,
 		}
+		this.enabled = true;
 		this.onKeyDownHandler = this.onKeyDown.bind(this);
 		this.onKeyUpHandler = this.onKeyUp.bind(this);
-		console.log(this);
-		console.log(this.keyCodes);
-		console.log(this.pressed);
+	}
+
+	enable() {
+		this.enabled = true;
+	}
+
+	disable() {
+		this.enabled = false;
 	}
 	// listen for key press
 	onKeyDown(event) {
-		// set key to true
-
-		console.log(event);
+		if (!this.enabled) {
+			this.pressed[this.keyCodes[event.keyCode]] = false;
+			return;
+		}
 		this.pressed[this.keyCodes[event.keyCode]] = true;
-		console.log(this.pressed);
 	}
+
 	// listen for key release
 	onKeyUp(event) {
-
 		this.pressed[this.keyCodes[event.keyCode]] = false;
 	}
 
