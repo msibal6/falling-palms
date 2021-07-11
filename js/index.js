@@ -97,7 +97,7 @@ sun.shadow.camera.bottom = -100;
 scene.add(sun);
 // Cannon-es physics
 const world = new CANNON.World({
-	gravity: new CANNON.Vec3(0, -9.82, 0), // m/s²
+	gravity: new CANNON.Vec3(0, -10, 0), // m/s²
 });
 
 const size = 1
@@ -124,7 +124,7 @@ function animate() {
 	// renders every time the screen refreshes only when 
 	// we are the current browser tab
 	requestAnimationFrame(animate);
-	renderer.render(scene, camera);
+
 	const time = performance.now() / 1000; // seconds
 	if (!lastCallTime) {
 		world.step(timeStep);
@@ -133,8 +133,13 @@ function animate() {
 		world.step(timeStep, dt);
 	}
 	lastCallTime = time;
+	if (keyboardController.pressed["w"]) {
+		boxBody.velocity.x = 10;
+	}
 	box.position.copy(boxBody.position);
+
 	orbitCamera.update();
-	// console.log(orbitCamera.threeCamera.position);
+
+	renderer.render(scene, camera);
 }
 animate();
