@@ -1,3 +1,4 @@
+// Copy of https://github.com/pmndrs/cannon-es/blob/master/dist/cannon-es.js
 /**
  * Records what objects are colliding with each other
  */
