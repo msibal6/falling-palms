@@ -136,6 +136,15 @@ function animate() {
 	if (keyboardController.pressed["w"]) {
 		boxBody.velocity.x = 10;
 	}
+	if (keyboardController.pressed["s"]) {
+		boxBody.velocity.x = -10;
+	}
+	if (keyboardController.pressed["a"]) {
+		boxBody.velocity.z = -10;
+	}
+	if (keyboardController.pressed["d"]) {
+		boxBody.velocity.z = 10;
+	}
 	box.position.copy(boxBody.position);
 
 	orbitCamera.update();
