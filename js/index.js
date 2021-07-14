@@ -109,19 +109,26 @@ const world = new CANNON.World({
 	gravity: new CANNON.Vec3(0, -10, 0), // m/s²
 });
 
+const planeShape = new CANNON.Plane();
+const planeMaterial = new CANNON.Material({ friction: 0, });
+const contactMaterial = new CANNON.ContactMaterial(planeMaterial, planeMaterial,
+	{ friction: 0, restitution: 0.3, });
+world.addContactMaterial(contactMaterial);
+const planeBody = new CANNON.Body({
+	mass: 0,
+	shape: planeShape,
+	material: planeMaterial,
+});
+planeBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0); // make it face up
+planeBody.position.set(0, 0, 0);
+world.addBody(planeBody);
 
 const size = 1
 const halfExtents = new CANNON.Vec3(size, size, size);
 const boxShape = new CANNON.Box(halfExtents);
-const boxBody = new CANNON.Body({ mass: 1, shape: boxShape, });
+const boxBody = new CANNON.Body({ mass: 1, shape: boxShape, material: planeMaterial});
 boxBody.position.set(0, 100, 0);
-world.addBody(boxBody)
-
-const planeShape = new CANNON.Plane();
-const planeMaterial = new CANNON.Material({ friction: 0, });
-const planeBody = new CANNON.Body({ mass: 0, shape: planeShape, material: planeMaterial, });
-planeBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0); // make it face up
-world.addBody(planeBody);
+world.addBody(boxBody);
 
 const timeStep = 1 / 60; // seconds
 let lastCallTime;
@@ -156,25 +163,9 @@ function animate() {
 	// Finally, render
 	renderer.render(scene, camera);
 }
-animate();
 
 function updatePlayer() {
-
-	// TODO velocity for either direction is not independent
-	// and affects each other
-
-	// if (keyboardController.pressed["w"]) {
-	// 	boxBody.velocity.x = 10;
-	// }
-	// if (keyboardController.pressed["s"]) {
-	// 	boxBody.velocity.x = -10;
-	// }
-	// if (keyboardController.pressed["a"]) {
-	// 	boxBody.velocity.z = -10;
-	// }
-	// if (keyboardController.pressed["d"]) {
-	// 	boxBody.velocity.z = 10;
-	// }
+	// TODO when moving, the player is skipping on the plane
 	if (keyboardController.pressed["w"]) {
 		if (player.xAcceleration > player.maxSpeed) {
 			player.xAcceleration = player.maxSpeed;
@@ -223,3 +214,4 @@ function dampen() {
 	}
 }
 
+animate();
