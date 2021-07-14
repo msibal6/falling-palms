@@ -71,7 +71,7 @@ scene.add(box);
 
 const orbitCamera = new SphericalPanCamera(camera, box);
 orbitCamera.setPhiPan(Math.PI, Math.PI);
-orbitCamera.setThetaPan(Math.PI / 4 * 3, Math.PI / 4);
+orbitCamera.setThetaPan(Math.PI / 4 * 3, Math.PI / 2);
 orbitCamera.setRadius(10);
 camera.position.set(0, 5, 10);
 
@@ -100,10 +100,12 @@ const world = new CANNON.World({
 	gravity: new CANNON.Vec3(0, -10, 0), // m/s²
 });
 
+
 const size = 1
 const halfExtents = new CANNON.Vec3(size, size, size);
+const planeMaterial = new CANNON.Material({ friction: 0, });
 const boxShape = new CANNON.Box(halfExtents);
-const boxBody = new CANNON.Body({ mass: 1, shape: boxShape });
+const boxBody = new CANNON.Body({ mass: 1, shape: boxShape, material: planeMaterial });
 boxBody.position.set(0, 100, 0);
 world.addBody(boxBody)
 
@@ -114,17 +116,19 @@ world.addBody(planeBody);
 
 const timeStep = 1 / 60; // seconds
 let lastCallTime;
-// make a plane with zero gravity that looks like my box in three
-// make the same box 
-// Rendering loop
+
 const keyboardController = new KeyboardController();
 keyboardController.init();
+
+// Rendering loop
 function animate() {
 
 	// renders every time the screen refreshes only when 
 	// we are the current browser tab
 	requestAnimationFrame(animate);
 
+	// Physics update
+	box.position.copy(boxBody.position);
 	const time = performance.now() / 1000; // seconds
 	if (!lastCallTime) {
 		world.step(timeStep);
@@ -133,6 +137,18 @@ function animate() {
 		world.step(timeStep, dt);
 	}
 	lastCallTime = time;
+	// Player update
+	updatePlayer();
+	// Finally, render
+	renderer.render(scene, camera);
+}
+animate();
+
+function updatePlayer() {
+
+	// TODO velocity for either direction is not independent
+	// and affects each other
+	
 	if (keyboardController.pressed["w"]) {
 		boxBody.velocity.x = 10;
 	}
@@ -145,10 +161,9 @@ function animate() {
 	if (keyboardController.pressed["d"]) {
 		boxBody.velocity.z = 10;
 	}
-	box.position.copy(boxBody.position);
-
+	if (keyboardController.pressed["space"]) {
+		console.log(boxBody.position);
+		console.log(boxBody.velocity);
+	}
 	orbitCamera.update();
-
-	renderer.render(scene, camera);
 }
-animate();
