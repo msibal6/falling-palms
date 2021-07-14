@@ -22,6 +22,14 @@ export class KeyboardController {
 		this.onKeyUpHandler = this.onKeyUp.bind(this);
 	}
 
+	hasNoKeysDown() {
+		for (let key in this.pressed) {
+			if (this.pressed[key]) {
+				return false;
+			}
+		}
+		return true;
+	}
 	enable() {
 		this.enabled = true;
 	}

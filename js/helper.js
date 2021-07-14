@@ -5,3 +5,13 @@ export function getNormalizedVector(vector) {
 	return new THREE.Vector3(vector.x / magnitude, vector.y / magnitude,
 		vector.z / magnitude)
 }
+
+export function almostZero(value, precision) {
+	if (precision === undefined) {
+		precision = 1e-6;
+	}
+	if (Math.abs(value) > precision) {
+		return false;
+	}
+	return true;
+}

@@ -1,4 +1,4 @@
-import { getNormalizedVector } from './vectorHelper.js';
+import { getNormalizedVector, almostZero } from './helper.js';
 import { SphericalPanCamera } from './OrbitCamera.js';
 import * as CANNON from './cannon-es.js';
 import { KeyboardController } from './events.js';
@@ -29,6 +29,15 @@ function handleWindowResize() {
 const geometry = new THREE.BoxGeometry();
 const material = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
 const cube = new THREE.Mesh(geometry, material);
+
+
+const player = {
+	maxSpeed: 20.0,
+	acceleration: 1.0,
+	xAcceleration: 0.0,
+	zAcceleration: 0.0,
+	damping: 0.9,
+}
 
 // scene.add automatically places the cube at (0, 0, 0)
 scene.add(cube);
@@ -71,7 +80,7 @@ scene.add(box);
 
 const orbitCamera = new SphericalPanCamera(camera, box);
 orbitCamera.setPhiPan(Math.PI, Math.PI);
-orbitCamera.setThetaPan(Math.PI / 4 * 3, Math.PI / 2);
+orbitCamera.setThetaPan(Math.PI / 4 * 3, Math.PI / 4);
 orbitCamera.setRadius(10);
 camera.position.set(0, 5, 10);
 
@@ -103,14 +112,14 @@ const world = new CANNON.World({
 
 const size = 1
 const halfExtents = new CANNON.Vec3(size, size, size);
-const planeMaterial = new CANNON.Material({ friction: 0, });
 const boxShape = new CANNON.Box(halfExtents);
-const boxBody = new CANNON.Body({ mass: 1, shape: boxShape, material: planeMaterial });
+const boxBody = new CANNON.Body({ mass: 1, shape: boxShape, });
 boxBody.position.set(0, 100, 0);
 world.addBody(boxBody)
 
 const planeShape = new CANNON.Plane();
-const planeBody = new CANNON.Body({ mass: 0, shape: planeShape });
+const planeMaterial = new CANNON.Material({ friction: 0, });
+const planeBody = new CANNON.Body({ mass: 0, shape: planeShape, material: planeMaterial, });
 planeBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0); // make it face up
 world.addBody(planeBody);
 
@@ -128,6 +137,11 @@ function animate() {
 	requestAnimationFrame(animate);
 
 	// Physics update
+	// Stops the boxbody when reaches a certain point
+	// if (boxBody.position.y <= 30) {
+	// 	boxBody.mass = 0;
+	// 	boxBody.velocity.y = 0;
+	// }
 	box.position.copy(boxBody.position);
 	const time = performance.now() / 1000; // seconds
 	if (!lastCallTime) {
@@ -148,22 +162,64 @@ function updatePlayer() {
 
 	// TODO velocity for either direction is not independent
 	// and affects each other
-	
+
+	// if (keyboardController.pressed["w"]) {
+	// 	boxBody.velocity.x = 10;
+	// }
+	// if (keyboardController.pressed["s"]) {
+	// 	boxBody.velocity.x = -10;
+	// }
+	// if (keyboardController.pressed["a"]) {
+	// 	boxBody.velocity.z = -10;
+	// }
+	// if (keyboardController.pressed["d"]) {
+	// 	boxBody.velocity.z = 10;
+	// }
 	if (keyboardController.pressed["w"]) {
-		boxBody.velocity.x = 10;
+		if (player.xAcceleration > player.maxSpeed) {
+			player.xAcceleration = player.maxSpeed;
+		} else {
+			player.xAcceleration += player.acceleration;
+		}
 	}
 	if (keyboardController.pressed["s"]) {
-		boxBody.velocity.x = -10;
+		if (player.xAcceleration < -player.maxSpeed) {
+			player.xAcceleration = -player.maxSpeed;
+		} else {
+			player.xAcceleration -= player.acceleration;
+		}
 	}
 	if (keyboardController.pressed["a"]) {
-		boxBody.velocity.z = -10;
+		if (player.zAcceleration < -player.maxSpeed) {
+			player.zAcceleration = -player.maxSpeed;
+		} else {
+			player.zAcceleration -= player.acceleration;
+		}
 	}
 	if (keyboardController.pressed["d"]) {
-		boxBody.velocity.z = 10;
+		if (player.zAcceleration > player.maxSpeed) {
+			player.zAcceleration = player.maxSpeed;
+		} else {
+			player.zAcceleration += player.acceleration;
+		}
 	}
 	if (keyboardController.pressed["space"]) {
 		console.log(boxBody.position);
 		console.log(boxBody.velocity);
+		console.log(player);
 	}
+	boxBody.velocity.set(player.xAcceleration, boxBody.velocity.y, player.zAcceleration);
+	dampen();
 	orbitCamera.update();
 }
+
+function dampen() {
+	if (keyboardController.hasNoKeysDown()) {
+		if (almostZero(player.zAcceleration) && almostZero(player.xAcceleration)) {
+			return;
+		}
+		player.zAcceleration *= player.damping;
+		player.xAcceleration *= player.damping;
+	}
+}
+
