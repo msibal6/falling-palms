@@ -2,16 +2,29 @@ import { getNormalizedVector, almostZero } from './helper.js';
 import { SphericalPanCamera } from './OrbitCamera.js';
 import * as CANNON from './cannon-es.js';
 import { printo, KeyboardController } from './events.js';
+import { ThreeManager } from './ThreeManager.js';
+import { CannonManager } from './CannonManager.js';
 
-const game = {
-	_three: THREE,
+
+class Game {
+	constructor() {
+		// visual  is managed by _three manager of the game 
+		this.threeManager = new ThreeManager();
+		// World is managed by cannon manager of the game
+		this.cannonManager = new CannonManager(CANNON);
+		/* Game world the intersection between the two
+		is managed by the game
+		*/
+	}
 }
+const game = new Game();
+console.log(game.cannonManager)
+// setting up the visual in three
 // Scene
-const scene = new game._three.Scene();
+const scene = game.threeManager.createScene();
 // Camera
 const camera = new THREE.PerspectiveCamera(75,
 	window.innerWidth / window.innerHeight, 0.1, 1000);
-
 // Renderer
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -33,8 +46,6 @@ const geometry = new THREE.BoxGeometry();
 const material = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
 const cube = new THREE.Mesh(geometry, material);
 
-console.log(cube);
-
 const player = {
 	// visual
 	// THREE mesh
@@ -50,8 +61,8 @@ const player = {
 }
 // world
 
-const axesHelper = new THREE.AxesHelper(5);
-scene.add(axesHelper);
+// const axesHelper = new THREE.AxesHelper(5);
+// scene.add(axesHelper);
 
 // Adds red skybox
 const loader = new THREE.CubeTextureLoader();
