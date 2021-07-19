@@ -1,7 +1,7 @@
 import { getNormalizedVector, almostZero } from './helper.js';
 import { SphericalPanCamera } from './OrbitCamera.js';
 import * as CANNON from './cannon-es.js';
-import { KeyboardController } from './events.js';
+import { printo, KeyboardController } from './events.js';
 
 // Scene
 const scene = new THREE.Scene();
@@ -30,19 +30,22 @@ const geometry = new THREE.BoxGeometry();
 const material = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
 const cube = new THREE.Mesh(geometry, material);
 
+console.log(cube);
 
 const player = {
+	// visual
+	// THREE mesh
+	mesh: null,
+	// physics
+	// cannon body
+	body: null,
 	maxSpeed: 20.0,
 	acceleration: 1.0,
 	xAcceleration: 0.0,
 	zAcceleration: 0.0,
 	damping: 0.9,
 }
-
-// scene.add automatically places the cube at (0, 0, 0)
-scene.add(cube);
-cube.position.set(0, 0, 10);
-cube.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), Math.PI / 3);
+// world
 
 const axesHelper = new THREE.AxesHelper(5);
 scene.add(axesHelper);
@@ -77,12 +80,13 @@ const box = new THREE.Mesh(
 box.castShadow = true;
 box.receiveShadow = true;
 scene.add(box);
+player.mesh = box;
 
-const orbitCamera = new SphericalPanCamera(camera, box);
+// Orbit camera tracks position of player mesh in the visual scene
+const orbitCamera = new SphericalPanCamera(camera, player.mesh);
 orbitCamera.setPhiPan(Math.PI, Math.PI);
 orbitCamera.setThetaPan(Math.PI / 4 * 3, Math.PI / 4);
 orbitCamera.setRadius(10);
-camera.position.set(0, 5, 10);
 
 // Add light
 const ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.5);
@@ -126,9 +130,10 @@ world.addBody(planeBody);
 const size = 1
 const halfExtents = new CANNON.Vec3(size, size, size);
 const boxShape = new CANNON.Box(halfExtents);
-const boxBody = new CANNON.Body({ mass: 1, shape: boxShape, material: planeMaterial});
+const boxBody = new CANNON.Body({ mass: 1, shape: boxShape, material: planeMaterial });
 boxBody.position.set(0, 100, 0);
 world.addBody(boxBody);
+player.body = boxBody;
 
 const timeStep = 1 / 60; // seconds
 let lastCallTime;
@@ -144,11 +149,13 @@ function animate() {
 	requestAnimationFrame(animate);
 
 	// Physics update
+
 	// Stops the boxbody when reaches a certain point
 	// if (boxBody.position.y <= 30) {
 	// 	boxBody.mass = 0;
 	// 	boxBody.velocity.y = 0;
 	// }
+	// who is in charge of copying simulation data to the visual world
 	box.position.copy(boxBody.position);
 	const time = performance.now() / 1000; // seconds
 	if (!lastCallTime) {
@@ -199,7 +206,7 @@ function updatePlayer() {
 		console.log(boxBody.velocity);
 		console.log(player);
 	}
-	boxBody.velocity.set(player.xAcceleration, boxBody.velocity.y, player.zAcceleration);
+	player.body.velocity.set(player.xAcceleration, plane.body.velocity.y, player.zAcceleration);
 	dampen();
 	orbitCamera.update();
 }

@@ -1,4 +1,5 @@
 "use strict";
+export { printo } from './test.js';
 export class KeyboardController {
 	constructor() {
 		// keycodes
