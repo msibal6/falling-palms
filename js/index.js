@@ -3,8 +3,11 @@ import { SphericalPanCamera } from './OrbitCamera.js';
 import * as CANNON from './cannon-es.js';
 import { printo, KeyboardController } from './events.js';
 
+const game = {
+	_three: THREE,
+}
 // Scene
-const scene = new THREE.Scene();
+const scene = new game._three.Scene();
 // Camera
 const camera = new THREE.PerspectiveCamera(75,
 	window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -206,7 +209,7 @@ function updatePlayer() {
 		console.log(boxBody.velocity);
 		console.log(player);
 	}
-	player.body.velocity.set(player.xAcceleration, plane.body.velocity.y, player.zAcceleration);
+	player.body.velocity.set(player.xAcceleration, player.body.velocity.y, player.zAcceleration);
 	dampen();
 	orbitCamera.update();
 }
