@@ -14,9 +14,12 @@ class Game {
 		this.cannonManager = new CannonManager(CANNON);
 		/* Game world the intersection between the two
 		is managed by the game
+			ie copying position from cannon to three
 		*/
+
 	}
 }
+
 const game = new Game();
 console.log(game.cannonManager)
 // setting up the visual in three
@@ -46,6 +49,8 @@ const geometry = new THREE.BoxGeometry();
 const material = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
 const cube = new THREE.Mesh(geometry, material);
 
+
+
 const player = {
 	// visual
 	// THREE mesh
@@ -58,8 +63,11 @@ const player = {
 	xAcceleration: 0.0,
 	zAcceleration: 0.0,
 	damping: 0.9,
+	camera: null,
+
 }
-// world
+
+// Scene
 
 // const axesHelper = new THREE.AxesHelper(5);
 // scene.add(axesHelper);
@@ -75,7 +83,7 @@ const texture = loader.load([
 	'../images/red_background.png',
 ]);
 scene.background = texture;
-// Add the floor
+// Add the visual floor
 const plane = new THREE.Mesh(
 	new THREE.PlaneGeometry(10, 100),
 	new THREE.MeshLambertMaterial({
@@ -85,7 +93,8 @@ plane.castShadow = false;
 plane.receiveShadow = true;
 plane.rotation.x = -Math.PI / 2;
 scene.add(plane);
-// Add another box
+
+// Add visual player placeholder
 const box = new THREE.Mesh(
 	new THREE.BoxGeometry(2, 2, 2),
 	new THREE.MeshLambertMaterial({
@@ -101,6 +110,7 @@ const orbitCamera = new SphericalPanCamera(camera, player.mesh);
 orbitCamera.setPhiPan(Math.PI, Math.PI);
 orbitCamera.setThetaPan(Math.PI / 4 * 3, Math.PI / 4);
 orbitCamera.setRadius(10);
+player.camera = orbitCamera;
 
 // Add light
 const ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.5);
@@ -122,16 +132,20 @@ sun.shadow.camera.right = -100;
 sun.shadow.camera.top = 100;
 sun.shadow.camera.bottom = -100;
 scene.add(sun);
+
 // Cannon-es physics
 const world = new CANNON.World({
 	gravity: new CANNON.Vec3(0, -10, 0), // m/s²
 });
 
-const planeShape = new CANNON.Plane();
+// Program contact between floor material and itself
 const planeMaterial = new CANNON.Material({ friction: 0, });
 const contactMaterial = new CANNON.ContactMaterial(planeMaterial, planeMaterial,
-	{ friction: 0, restitution: 0.3, });
+	{ friction: 0, restitution: 0.1, });
 world.addContactMaterial(contactMaterial);
+
+// Physical floor
+const planeShape = new CANNON.Plane();
 const planeBody = new CANNON.Body({
 	mass: 0,
 	shape: planeShape,
@@ -141,6 +155,7 @@ planeBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0); // make it face up
 planeBody.position.set(0, 0, 0);
 world.addBody(planeBody);
 
+// Physical player placeholder
 const size = 1
 const halfExtents = new CANNON.Vec3(size, size, size);
 const boxShape = new CANNON.Box(halfExtents);
@@ -157,19 +172,17 @@ keyboardController.init();
 
 // Rendering loop
 function animate() {
-
 	// renders every time the screen refreshes only when 
 	// we are the current browser tab
 	requestAnimationFrame(animate);
 
 	// Physics update
-
 	// Stops the boxbody when reaches a certain point
 	// if (boxBody.position.y <= 30) {
 	// 	boxBody.mass = 0;
 	// 	boxBody.velocity.y = 0;
 	// }
-	// who is in charge of copying simulation data to the visual world
+	// who is in charge of copying physics simulation data to the visual world
 	box.position.copy(boxBody.position);
 	const time = performance.now() / 1000; // seconds
 	if (!lastCallTime) {
@@ -186,7 +199,6 @@ function animate() {
 }
 
 function updatePlayer() {
-	// TODO when moving, the player is skipping on the plane
 	if (keyboardController.pressed["w"]) {
 		if (player.xAcceleration > player.maxSpeed) {
 			player.xAcceleration = player.maxSpeed;
@@ -221,11 +233,11 @@ function updatePlayer() {
 		console.log(player);
 	}
 	player.body.velocity.set(player.xAcceleration, player.body.velocity.y, player.zAcceleration);
-	dampen();
+	dampenAcceleration();
 	orbitCamera.update();
 }
 
-function dampen() {
+function dampenAcceleration() {
 	if (keyboardController.hasNoKeysDown()) {
 		if (almostZero(player.zAcceleration) && almostZero(player.xAcceleration)) {
 			return;

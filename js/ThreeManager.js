@@ -1,3 +1,5 @@
+// classes in js are jusy syntax obstructions
+
 export class ThreeManager {
 	constructor() {
 		this.camera = null;
