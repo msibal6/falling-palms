@@ -13,15 +13,59 @@ class Game {
 		// World is managed by cannon manager of the game
 		this.cannonManager = new CannonManager(CANNON);
 		/* Game world the intersection between the two
-		is managed by the game
+			is managed by the game
 			ie copying position from cannon to three
 		*/
+		this.player = {
+			// visual
+			// THREE mesh
+			mesh: null,
+			// physics
+			// cannon body
+			body: null,
+			maxSpeed: 20.0,
+			acceleration: 1.0,
+			xAcceleration: 0.0,
+			zAcceleration: 0.0,
+			damping: 0.9,
+			camera: null,
+			update: function () {
+				console.log(keyboardController);
+				console.log(game);
+			},
+			create: function () {
+				// Add visual player placeholder
+				const box = new THREE.Mesh(
+					new THREE.BoxGeometry(2, 2, 2),
+					new THREE.MeshLambertMaterial({
+						color: 0xFFFFFF,
+					}));
+				box.castShadow = true;
+				box.receiveShadow = true;
+				scene.add(box);
+				game.player.mesh = box;
+
+				// Physical player placeholder
+				const size = 1
+				const halfExtents = new CANNON.Vec3(size, size, size);
+				const boxShape = new CANNON.Box(halfExtents);
+				const boxBody = new CANNON.Body({ mass: 1, shape: boxShape, material: planeMaterial });
+				boxBody.position.set(0, 100, 0);
+				world.addBody(boxBody);
+				game.player.body = boxBody;
+				console.log(game.player);
+			},
+		}
 
 	}
 }
 
+// Window variables 
 const game = new Game();
-console.log(game.cannonManager)
+// Setting up keyboard events
+const keyboardController = new KeyboardController();
+keyboardController.init();
+
 // setting up the visual in three
 // Scene
 const scene = game.threeManager.createScene();
@@ -105,6 +149,8 @@ box.receiveShadow = true;
 scene.add(box);
 player.mesh = box;
 
+
+
 // Orbit camera tracks position of player mesh in the visual scene
 const orbitCamera = new SphericalPanCamera(camera, player.mesh);
 orbitCamera.setPhiPan(Math.PI, Math.PI);
@@ -166,9 +212,6 @@ player.body = boxBody;
 
 const timeStep = 1 / 60; // seconds
 let lastCallTime;
-
-const keyboardController = new KeyboardController();
-keyboardController.init();
 
 // Rendering loop
 function animate() {

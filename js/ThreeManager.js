@@ -5,11 +5,10 @@ export class ThreeManager {
 		this.camera = null;
 		this.scene = null;
 		this.renderer = null
-		this._three = THREE;
 	}
 
 	createScene() {
-		const newScene = new this._three.Scene();
+		const newScene = new THREE.Scene();
 		return newScene;
 	}
 }
