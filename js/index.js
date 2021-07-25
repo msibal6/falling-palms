@@ -10,18 +10,18 @@ class Game {
 	constructor() {
 		// visual  is managed by _three manager of the game 
 		this.threeManager = new ThreeManager();
+
 		// World is managed by cannon manager of the game
 		this.cannonManager = new CannonManager(CANNON);
+
 		/* Game world the intersection between the two
 			is managed by the game
 			ie copying position from cannon to three
 		*/
 		this.player = {
-			// visual
-			// THREE mesh
+			// visual THREE mesh
 			mesh: null,
-			// physics
-			// cannon body
+			// physics CANNON body
 			body: null,
 			maxSpeed: 20.0,
 			acceleration: 1.0,
@@ -29,10 +29,6 @@ class Game {
 			zAcceleration: 0.0,
 			damping: 0.9,
 			camera: null,
-			update: function () {
-				console.log(keyboardController);
-				console.log(game);
-			},
 			create: function () {
 				// Add visual player placeholder
 				const tempPlayerMesh = new THREE.Mesh(
@@ -49,10 +45,67 @@ class Game {
 				const size = 1;
 				const halfExtents = new CANNON.Vec3(size, size, size);
 				const boxShape = new CANNON.Box(halfExtents);
-				const boxBody = new CANNON.Body({ mass: 1, shape: boxShape, material: planeMaterial });
-				boxBody.position.set(0, 100, 0);
-				world.addBody(boxBody);
-				this.body = boxBody;
+				const tempPlayerBody = new CANNON.Body({ mass: 1, shape: boxShape, material: planeMaterial });
+				tempPlayerBody.position.set(0, 100, 0);
+				world.addBody(tempPlayerBody);
+				console.log(world);
+				this.body = tempPlayerBody;
+
+				// Camera
+				const camera = new THREE.PerspectiveCamera(75,
+					window.innerWidth / window.innerHeight, 0.1, 1000);
+				// Orbit camera tracks position of player mesh in the visual scene
+				const orbitCamera = new SphericalPanCamera(camera, this.mesh);
+				orbitCamera.setPhiPan(Math.PI, Math.PI);
+				orbitCamera.setThetaPan(Math.PI / 4 * 3, Math.PI / 4);
+				orbitCamera.setRadius(10);
+				this.camera = orbitCamera;
+			},
+			update: function () {
+				if (keyboardController.pressed["w"]) {
+					if (this.xAcceleration > this.maxSpeed) {
+						this.xAcceleration = this.maxSpeed;
+					} else {
+						this.xAcceleration += this.acceleration;
+					}
+				}
+				if (keyboardController.pressed["s"]) {
+					if (this.xAcceleration < -this.maxSpeed) {
+						this.xAcceleration = -this.maxSpeed;
+					} else {
+						this.xAcceleration -= this.acceleration;
+					}
+				}
+				if (keyboardController.pressed["a"]) {
+					if (this.zAcceleration < -this.maxSpeed) {
+						this.zAcceleration = -this.maxSpeed;
+					} else {
+						this.zAcceleration -= this.acceleration;
+					}
+				}
+				if (keyboardController.pressed["d"]) {
+					if (this.zAcceleration > this.maxSpeed) {
+						this.zAcceleration = this.maxSpeed;
+					} else {
+						this.zAcceleration += this.acceleration;
+					}
+				}
+				// if (keyboardController.pressed["space"]) {
+				// 	console.log(boxBody.position);
+				// 	console.log(boxBody.velocity);
+				// }
+				this.body.velocity.set(this.xAcceleration, this.body.velocity.y, this.zAcceleration);
+				this.dampenAcceleration();
+				this.camera.update();
+			},
+			dampenAcceleration: function () {
+				if (keyboardController.hasNoKeysDown()) {
+					if (almostZero(this.zAcceleration) && almostZero(this.xAcceleration)) {
+						return;
+					}
+					this.zAcceleration *= this.damping;
+					this.xAcceleration *= this.damping;
+				}
 			},
 		}
 	}
@@ -183,6 +236,7 @@ const planeMaterial = new CANNON.Material({ friction: 0, });
 const contactMaterial = new CANNON.ContactMaterial(planeMaterial, planeMaterial,
 	{ friction: 0, restitution: 0.1, });
 world.addContactMaterial(contactMaterial);
+console.log(world);
 
 // Physical floor
 const planeShape = new CANNON.Plane();
@@ -204,22 +258,19 @@ boxBody.position.set(0, 100, 0);
 world.addBody(boxBody);
 player.body = boxBody;
 
+game.player.create();
 const timeStep = 1 / 60; // seconds
 let lastCallTime;
 
 // Rendering loop
 function animate() {
-	// renders every time the screen refreshes only when 
-	// we are the current browser tab
 	requestAnimationFrame(animate);
 
-	// Physics update
 	// Stops the boxbody when reaches a certain point
 	// if (boxBody.position.y <= 30) {
 	// 	boxBody.mass = 0;
 	// 	boxBody.velocity.y = 0;
 	// }
-	// who is in charge of copying physics simulation data to the visual world
 	box.position.copy(boxBody.position);
 	const time = performance.now() / 1000; // seconds
 	if (!lastCallTime) {

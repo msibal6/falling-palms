@@ -15,4 +15,8 @@ export class ThreeManager {
 	addMesh(mesh) {
 		this.scene.add(mesh);
 	}
+
+	render() {
+		this.renderer.render(this.scene, this.camera);
+	}
 }
