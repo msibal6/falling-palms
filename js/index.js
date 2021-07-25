@@ -35,28 +35,26 @@ class Game {
 			},
 			create: function () {
 				// Add visual player placeholder
-				const box = new THREE.Mesh(
+				const tempPlayerMesh = new THREE.Mesh(
 					new THREE.BoxGeometry(2, 2, 2),
 					new THREE.MeshLambertMaterial({
 						color: 0xFFFFFF,
 					}));
-				box.castShadow = true;
-				box.receiveShadow = true;
-				scene.add(box);
-				game.player.mesh = box;
+				tempPlayerMesh.castShadow = true;
+				tempPlayerMesh.receiveShadow = true;
+				game.threeManager.addMesh(tempPlayerMesh)
+				this.mesh = tempPlayerMesh;
 
-				// Physical player placeholder
-				const size = 1
+				// // Physical player placeholder
+				const size = 1;
 				const halfExtents = new CANNON.Vec3(size, size, size);
 				const boxShape = new CANNON.Box(halfExtents);
 				const boxBody = new CANNON.Body({ mass: 1, shape: boxShape, material: planeMaterial });
 				boxBody.position.set(0, 100, 0);
 				world.addBody(boxBody);
-				game.player.body = boxBody;
-				console.log(game.player);
+				this.body = boxBody;
 			},
 		}
-
 	}
 }
 
@@ -92,8 +90,6 @@ function handleWindowResize() {
 const geometry = new THREE.BoxGeometry();
 const material = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
 const cube = new THREE.Mesh(geometry, material);
-
-
 
 const player = {
 	// visual
@@ -148,8 +144,6 @@ box.castShadow = true;
 box.receiveShadow = true;
 scene.add(box);
 player.mesh = box;
-
-
 
 // Orbit camera tracks position of player mesh in the visual scene
 const orbitCamera = new SphericalPanCamera(camera, player.mesh);
@@ -270,14 +264,13 @@ function updatePlayer() {
 			player.zAcceleration += player.acceleration;
 		}
 	}
-	if (keyboardController.pressed["space"]) {
-		console.log(boxBody.position);
-		console.log(boxBody.velocity);
-		console.log(player);
-	}
+	// if (keyboardController.pressed["space"]) {
+	// 	console.log(boxBody.position);
+	// 	console.log(boxBody.velocity);
+	// }
 	player.body.velocity.set(player.xAcceleration, player.body.velocity.y, player.zAcceleration);
 	dampenAcceleration();
-	orbitCamera.update();
+	player.camera.update();
 }
 
 function dampenAcceleration() {

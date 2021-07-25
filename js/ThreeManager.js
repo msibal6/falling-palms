@@ -3,12 +3,16 @@
 export class ThreeManager {
 	constructor() {
 		this.camera = null;
-		this.scene = null;
-		this.renderer = null
+		this.scene = new THREE.Scene();
+		this.renderer = null;
 	}
 
 	createScene() {
 		const newScene = new THREE.Scene();
 		return newScene;
+	}
+
+	addMesh(mesh) {
+		this.scene.add(mesh);
 	}
 }
