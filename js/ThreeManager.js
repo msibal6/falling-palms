@@ -4,7 +4,13 @@ export class ThreeManager {
 	constructor() {
 		this.camera = null;
 		this.scene = new THREE.Scene();
-		this.renderer = null;
+		this.renderer = new THREE.WebGLRenderer();
+		this.initRenderer();
+	}
+
+	initRenderer() {
+		this.renderer.setSize(window.innerWidth, window.innerHeight);
+		document.body.appendChild(this.renderer.domElement);
 	}
 
 	createScene() {
@@ -12,8 +18,8 @@ export class ThreeManager {
 		return newScene;
 	}
 
-	addMesh(mesh) {
-		this.scene.add(mesh);
+	addToScene(object) {
+		this.scene.add(object);
 	}
 
 	render() {

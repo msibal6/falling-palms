@@ -60,6 +60,7 @@ class Game {
 				orbitCamera.setThetaPan(Math.PI / 4 * 3, Math.PI / 4);
 				orbitCamera.setRadius(10);
 				this.camera = orbitCamera;
+				game.threeManager.camera = this.camera;
 			},
 			update: function () {
 				if (keyboardController.pressed["w"]) {
@@ -129,6 +130,8 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 // Resizing the window on resize 
 // might delete
+
+// TODO put this in three manager 
 window.addEventListener('resize', handleWindowResize, false);
 function handleWindowResize() {
 	// update height and width of the renderer and the camera
@@ -140,9 +143,9 @@ function handleWindowResize() {
 }
 
 // Placing a cube in the scene
-const geometry = new THREE.BoxGeometry();
-const material = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
-const cube = new THREE.Mesh(geometry, material);
+// const geometry = new THREE.BoxGeometry();
+// const material = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
+// const cube = new THREE.Mesh(geometry, material);
 
 const player = {
 	// visual
@@ -259,6 +262,8 @@ world.addBody(boxBody);
 player.body = boxBody;
 
 game.player.create();
+
+console.log(game.threeManager);
 const timeStep = 1 / 60; // seconds
 let lastCallTime;
 
@@ -266,12 +271,17 @@ let lastCallTime;
 function animate() {
 	requestAnimationFrame(animate);
 
-	// Stops the boxbody when reaches a certain point
+	// Stops the player body vertically  when it reaches a certain point
+	// noticed by the game 
+	// done by the player
 	// if (boxBody.position.y <= 30) {
 	// 	boxBody.mass = 0;
 	// 	boxBody.velocity.y = 0;
 	// }
+	// done by the game 
+
 	box.position.copy(boxBody.position);
+	// done by cannonManager
 	const time = performance.now() / 1000; // seconds
 	if (!lastCallTime) {
 		world.step(timeStep);
@@ -281,8 +291,10 @@ function animate() {
 	}
 	lastCallTime = time;
 	// Player update
+	// done by the player in game
 	updatePlayer();
 	// Finally, render
+	// Done by the threeManager
 	renderer.render(scene, camera);
 }
 
