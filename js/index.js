@@ -4,6 +4,7 @@ import * as CANNON from './cannon-es.js';
 import { printo, KeyboardController } from './events.js';
 import { ThreeManager } from './ThreeManager.js';
 import { CannonManager } from './CannonManager.js';
+import { AirStream } from './Airstream.js';
 
 
 class Game {
@@ -87,10 +88,9 @@ class Game {
 				// 	boxBody.mass = 0;
 				// 	boxBody.velocity.y = 0;
 				// }
-				// done by the game 
 				this.updateForwardAccelaration("xAcceleration", "w");
-				this.updateBackwardAcceleration("xAcceleration", "s");
 				this.updateForwardAccelaration("zAcceleration", "d");
+				this.updateBackwardAcceleration("xAcceleration", "s");
 				this.updateBackwardAcceleration("zAcceleration", "a");
 				// if (keyboardController.pressed["space"]) {
 				// 	console.log(boxBody.position);
