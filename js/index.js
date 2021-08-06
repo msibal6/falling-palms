@@ -38,29 +38,28 @@ class Game {
 					}));
 				tempPlayerMesh.castShadow = true;
 				tempPlayerMesh.receiveShadow = true;
-				game.threeManager.addMesh(tempPlayerMesh)
+				game.threeManager.addToScene(tempPlayerMesh)
 				this.mesh = tempPlayerMesh;
 
 				// // Physical player placeholder
 				const size = 1;
 				const halfExtents = new CANNON.Vec3(size, size, size);
 				const boxShape = new CANNON.Box(halfExtents);
-				const tempPlayerBody = new CANNON.Body({ mass: 1, shape: boxShape, material: planeMaterial });
+				const tempPlayerBody = new CANNON.Body({ mass: 1, shape: boxShape, material: game.cannonManager.planeMaterial });
 				tempPlayerBody.position.set(0, 100, 0);
-				world.addBody(tempPlayerBody);
-				console.log(world);
 				this.body = tempPlayerBody;
+				game.cannonManager.world.addBody(tempPlayerBody);
 
 				// Camera
-				const camera = new THREE.PerspectiveCamera(75,
+				const threeCamera = new THREE.PerspectiveCamera(75,
 					window.innerWidth / window.innerHeight, 0.1, 1000);
 				// Orbit camera tracks position of player mesh in the visual scene
-				const orbitCamera = new SphericalPanCamera(camera, this.mesh);
+				const orbitCamera = new SphericalPanCamera(threeCamera, this.mesh);
 				orbitCamera.setPhiPan(Math.PI, Math.PI);
 				orbitCamera.setThetaPan(Math.PI / 4 * 3, Math.PI / 4);
 				orbitCamera.setRadius(10);
 				this.camera = orbitCamera;
-				game.threeManager.camera = this.camera;
+				game.threeManager.camera = threeCamera;
 			},
 			update: function () {
 				if (keyboardController.pressed["w"]) {
@@ -120,48 +119,49 @@ keyboardController.init();
 
 // setting up the visual in three
 // Scene
-const scene = game.threeManager.createScene();
+// const scene = game.threeManager.createScene();
 // Camera
-const camera = new THREE.PerspectiveCamera(75,
-	window.innerWidth / window.innerHeight, 0.1, 1000);
+// const camera = new THREE.PerspectiveCamera(75,
+// 	window.innerWidth / window.innerHeight, 0.1, 1000);
 // Renderer
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+// const renderer = new THREE.WebGLRenderer();
+// renderer.setSize(window.innerWidth, window.innerHeight);
+// document.body.appendChild(renderer.domElement);
 // Resizing the window on resize 
 // might delete
 
 // TODO put this in three manager 
-window.addEventListener('resize', handleWindowResize, false);
-function handleWindowResize() {
-	// update height and width of the renderer and the camera
-	const windowHeight = window.innerHeight;
-	const windowWidth = window.innerWidth;
-	renderer.setSize(windowWidth, windowHeight);
-	camera.aspect = windowWidth / windowHeight;
-	camera.updateProjectionMatrix();
-}
+window.addEventListener('resize', game.threeManager.handleWindowResize(), false);
+// function handleWindowResize() {
+// 	// update height and width of the renderer and the camera
+// 	console.log("resizing in index");
+// 	const windowHeight = window.innerHeight;
+// 	const windowWidth = window.innerWidth;
+// 	renderer.setSize(windowWidth, windowHeight);
+// 	camera.aspect = windowWidth / windowHeight;
+// 	camera.updateProjectionMatrix();
+// }
 
 // Placing a cube in the scene
 // const geometry = new THREE.BoxGeometry();
 // const material = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
 // const cube = new THREE.Mesh(geometry, material);
 
-const player = {
-	// visual
-	// THREE mesh
-	mesh: null,
-	// physics
-	// cannon body
-	body: null,
-	maxSpeed: 20.0,
-	acceleration: 1.0,
-	xAcceleration: 0.0,
-	zAcceleration: 0.0,
-	damping: 0.9,
-	camera: null,
+// const player = {
+// 	// visual
+// 	// THREE mesh
+// 	mesh: null,
+// 	// physics
+// 	// cannon body
+// 	body: null,
+// 	maxSpeed: 20.0,
+// 	acceleration: 1.0,
+// 	xAcceleration: 0.0,
+// 	zAcceleration: 0.0,
+// 	damping: 0.9,
+// 	camera: null,
 
-}
+// }
 
 // Scene
 
@@ -178,7 +178,7 @@ const texture = loader.load([
 	'../images/red_background.png',
 	'../images/red_background.png',
 ]);
-scene.background = texture;
+game.threeManager.scene.background = texture;
 // Add the visual floor
 const plane = new THREE.Mesh(
 	new THREE.PlaneGeometry(10, 100),
@@ -188,29 +188,29 @@ const plane = new THREE.Mesh(
 plane.castShadow = false;
 plane.receiveShadow = true;
 plane.rotation.x = -Math.PI / 2;
-scene.add(plane);
+game.threeManager.addToScene(plane);
 
 // Add visual player placeholder
-const box = new THREE.Mesh(
-	new THREE.BoxGeometry(2, 2, 2),
-	new THREE.MeshLambertMaterial({
-		color: 0xFFFFFF,
-	}));
-box.castShadow = true;
-box.receiveShadow = true;
-scene.add(box);
-player.mesh = box;
+// const box = new THREE.Mesh(
+// 	new THREE.BoxGeometry(2, 2, 2),
+// 	new THREE.MeshLambertMaterial({
+// 		color: 0xFFFFFF,
+// 	}));
+// box.castShadow = true;
+// box.receiveShadow = true;
+// scene.add(box);
+// player.mesh = box;
 
 // Orbit camera tracks position of player mesh in the visual scene
-const orbitCamera = new SphericalPanCamera(camera, player.mesh);
-orbitCamera.setPhiPan(Math.PI, Math.PI);
-orbitCamera.setThetaPan(Math.PI / 4 * 3, Math.PI / 4);
-orbitCamera.setRadius(10);
-player.camera = orbitCamera;
+// const orbitCamera = new SphericalPanCamera(camera, player.mesh);
+// orbitCamera.setPhiPan(Math.PI, Math.PI);
+// orbitCamera.setThetaPan(Math.PI / 4 * 3, Math.PI / 4);
+// orbitCamera.setRadius(10);
+// player.camera = orbitCamera;
 
 // Add light
 const ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.5);
-scene.add(ambientLight);
+game.threeManager.addToScene(ambientLight);
 
 const sun = new THREE.DirectionalLight(0xFFFFFF0, 0.5);
 sun.position.set(20, 1000, 10);
@@ -227,43 +227,43 @@ sun.shadow.camera.left = 100;
 sun.shadow.camera.right = -100;
 sun.shadow.camera.top = 100;
 sun.shadow.camera.bottom = -100;
-scene.add(sun);
+game.threeManager.addToScene(sun);
 
 // Cannon-es physics
-const world = new CANNON.World({
-	gravity: new CANNON.Vec3(0, -10, 0), // m/s²
-});
+// const world = new CANNON.World({
+// 	gravity: new CANNON.Vec3(0, -10, 0), // m/s²
+// });
 
-// Program contact between floor material and itself
-const planeMaterial = new CANNON.Material({ friction: 0, });
-const contactMaterial = new CANNON.ContactMaterial(planeMaterial, planeMaterial,
-	{ friction: 0, restitution: 0.1, });
-world.addContactMaterial(contactMaterial);
-console.log(world);
+// // Program contact between floor material and itself
+// const planeMaterial = new CANNON.Material({ friction: 0, });
+// const contactMaterial = new CANNON.ContactMaterial(planeMaterial, planeMaterial,
+// 	{ friction: 0, restitution: 0.1, });
+// world.addContactMaterial(contactMaterial);
+// console.log(world);
 
 // Physical floor
 const planeShape = new CANNON.Plane();
 const planeBody = new CANNON.Body({
 	mass: 0,
 	shape: planeShape,
-	material: planeMaterial,
+	material: game.cannonManager.planeMaterial,
 });
 planeBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0); // make it face up
 planeBody.position.set(0, 0, 0);
-world.addBody(planeBody);
+game.cannonManager.world.addBody(planeBody);
 
 // Physical player placeholder
-const size = 1
-const halfExtents = new CANNON.Vec3(size, size, size);
-const boxShape = new CANNON.Box(halfExtents);
-const boxBody = new CANNON.Body({ mass: 1, shape: boxShape, material: planeMaterial });
-boxBody.position.set(0, 100, 0);
-world.addBody(boxBody);
-player.body = boxBody;
+// const size = 1
+// const halfExtents = new CANNON.Vec3(size, size, size);
+// const boxShape = new CANNON.Box(halfExtents);
+// const boxBody = new CANNON.Body({ mass: 1, shape: boxShape, material: planeMaterial });
+// boxBody.position.set(0, 100, 0);
+// world.addBody(boxBody);
+// player.body = boxBody;
 
 game.player.create();
 
-console.log(game.threeManager);
+// console.log(game.threeManager);
 const timeStep = 1 / 60; // seconds
 let lastCallTime;
 
@@ -280,70 +280,76 @@ function animate() {
 	// }
 	// done by the game 
 
-	box.position.copy(boxBody.position);
+	// box.position.copy(boxBody.position);
+	game.player.mesh.position.copy(game.player.body.position);
 	// done by cannonManager
-	const time = performance.now() / 1000; // seconds
-	if (!lastCallTime) {
-		world.step(timeStep);
-	} else {
-		const dt = time - lastCallTime;
-		world.step(timeStep, dt);
-	}
-	lastCallTime = time;
+	game.cannonManager.update();
+	// const time = performance.now() / 1000; // seconds
+	// if (!lastCallTime) {
+	// 	world.step(timeStep);
+	// } else {
+	// 	const dt = time - lastCallTime;
+	// 	world.step(timeStep, dt);
+	// }
+	// lastCallTime = time;
+
 	// Player update
 	// done by the player in game
-	updatePlayer();
+	// updatePlayer();
+	game.player.update();
+
 	// Finally, render
 	// Done by the threeManager
-	renderer.render(scene, camera);
+	// renderer.render(scene, camera);
+	game.threeManager.render();
 }
 
-function updatePlayer() {
-	if (keyboardController.pressed["w"]) {
-		if (player.xAcceleration > player.maxSpeed) {
-			player.xAcceleration = player.maxSpeed;
-		} else {
-			player.xAcceleration += player.acceleration;
-		}
-	}
-	if (keyboardController.pressed["s"]) {
-		if (player.xAcceleration < -player.maxSpeed) {
-			player.xAcceleration = -player.maxSpeed;
-		} else {
-			player.xAcceleration -= player.acceleration;
-		}
-	}
-	if (keyboardController.pressed["a"]) {
-		if (player.zAcceleration < -player.maxSpeed) {
-			player.zAcceleration = -player.maxSpeed;
-		} else {
-			player.zAcceleration -= player.acceleration;
-		}
-	}
-	if (keyboardController.pressed["d"]) {
-		if (player.zAcceleration > player.maxSpeed) {
-			player.zAcceleration = player.maxSpeed;
-		} else {
-			player.zAcceleration += player.acceleration;
-		}
-	}
-	// if (keyboardController.pressed["space"]) {
-	// 	console.log(boxBody.position);
-	// 	console.log(boxBody.velocity);
-	// }
-	player.body.velocity.set(player.xAcceleration, player.body.velocity.y, player.zAcceleration);
-	dampenAcceleration();
-	player.camera.update();
-}
+// function updatePlayer() {
+// 	if (keyboardController.pressed["w"]) {
+// 		if (player.xAcceleration > player.maxSpeed) {
+// 			player.xAcceleration = player.maxSpeed;
+// 		} else {
+// 			player.xAcceleration += player.acceleration;
+// 		}
+// 	}
+// 	if (keyboardController.pressed["s"]) {
+// 		if (player.xAcceleration < -player.maxSpeed) {
+// 			player.xAcceleration = -player.maxSpeed;
+// 		} else {
+// 			player.xAcceleration -= player.acceleration;
+// 		}
+// 	}
+// 	if (keyboardController.pressed["a"]) {
+// 		if (player.zAcceleration < -player.maxSpeed) {
+// 			player.zAcceleration = -player.maxSpeed;
+// 		} else {
+// 			player.zAcceleration -= player.acceleration;
+// 		}
+// 	}
+// 	if (keyboardController.pressed["d"]) {
+// 		if (player.zAcceleration > player.maxSpeed) {
+// 			player.zAcceleration = player.maxSpeed;
+// 		} else {
+// 			player.zAcceleration += player.acceleration;
+// 		}
+// 	}
+// 	// if (keyboardController.pressed["space"]) {
+// 	// 	console.log(boxBody.position);
+// 	// 	console.log(boxBody.velocity);
+// 	// }
+// 	player.body.velocity.set(player.xAcceleration, player.body.velocity.y, player.zAcceleration);
+// 	dampenAcceleration();
+// 	player.camera.update();
+// }
 
-function dampenAcceleration() {
-	if (keyboardController.hasNoKeysDown()) {
-		if (almostZero(player.zAcceleration) && almostZero(player.xAcceleration)) {
-			return;
-		}
-		player.zAcceleration *= player.damping;
-		player.xAcceleration *= player.damping;
-	}
-}
+// function dampenAcceleration() {
+// 	if (keyboardController.hasNoKeysDown()) {
+// 		if (almostZero(player.zAcceleration) && almostZero(player.xAcceleration)) {
+// 			return;
+// 		}
+// 		player.zAcceleration *= player.damping;
+// 		player.xAcceleration *= player.damping;
+// 	}
+// }
 
 animate();

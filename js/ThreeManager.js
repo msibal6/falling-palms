@@ -6,6 +6,7 @@ export class ThreeManager {
 		this.scene = new THREE.Scene();
 		this.renderer = new THREE.WebGLRenderer();
 		this.initRenderer();
+		console.log(this.renderer);
 	}
 
 	initRenderer() {
@@ -24,5 +25,18 @@ export class ThreeManager {
 
 	render() {
 		this.renderer.render(this.scene, this.camera);
+	}
+
+	handleWindowResize() {
+		return function () {
+			console.log("Resizing");
+			// update height and width of the renderer and the camera
+			console.log(this);
+			const windowHeight = window.innerHeight;
+			const windowWidth = window.innerWidth;
+			this.renderer.setSize(windowWidth, windowHeight);
+			this.camera.aspect = windowWidth / windowHeight;
+			this.camera.updateProjectionMatrix();
+		}.bind(this);
 	}
 }
