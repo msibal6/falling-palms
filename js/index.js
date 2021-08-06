@@ -61,36 +61,29 @@ class Game {
 				this.camera = orbitCamera;
 				game.threeManager.camera = threeCamera;
 			},
-			
+			updateForwardAccelaration: function (axis, key) {
+				if (keyboardController.pressed[key]) {
+					if (this[axis] > this.maxSpeed) {
+						this[axis] = this.maxSpeed;
+					} else {
+						this[axis] += this.acceleration;
+					}
+				}
+			},
+			updateBackwardAcceleration: function (axis, key) {
+				if (keyboardController.pressed[key]) {
+					if (this[axis] < -this.maxSpeed) {
+						this[axis] = -this.maxSpeed;
+					} else {
+						this[axis] -= this.acceleration;
+					}
+				}
+			},
 			update: function () {
-				if (keyboardController.pressed["w"]) {
-					if (this.xAcceleration > this.maxSpeed) {
-						this.xAcceleration = this.maxSpeed;
-					} else {
-						this.xAcceleration += this.acceleration;
-					}
-				}
-				if (keyboardController.pressed["s"]) {
-					if (this.xAcceleration < -this.maxSpeed) {
-						this.xAcceleration = -this.maxSpeed;
-					} else {
-						this.xAcceleration -= this.acceleration;
-					}
-				}
-				if (keyboardController.pressed["a"]) {
-					if (this.zAcceleration < -this.maxSpeed) {
-						this.zAcceleration = -this.maxSpeed;
-					} else {
-						this.zAcceleration -= this.acceleration;
-					}
-				}
-				if (keyboardController.pressed["d"]) {
-					if (this.zAcceleration > this.maxSpeed) {
-						this.zAcceleration = this.maxSpeed;
-					} else {
-						this.zAcceleration += this.acceleration;
-					}
-				}
+				this.updateForwardAccelaration("xAcceleration", "w");
+				this.updateBackwardAcceleration("xAcceleration", "s");
+				this.updateForwardAccelaration("zAcceleration", "d");
+				this.updateBackwardAcceleration("zAcceleration", "a");
 				// if (keyboardController.pressed["space"]) {
 				// 	console.log(boxBody.position);
 				// 	console.log(boxBody.velocity);
@@ -109,11 +102,37 @@ class Game {
 				}
 			},
 		}
+
+		this.animationLoop = null;
+		this.loop = function () {
+
+			this.animationLoop = requestAnimationFrame(this.loop);
+
+			// Stops the player body vertically  when it reaches a certain point
+			// noticed by the game 
+			// done by the player
+			// if (boxBody.position.y <= 30) {
+			// 	boxBody.mass = 0;
+			// 	boxBody.velocity.y = 0;
+			// }
+			// done by the game 
+			this.player.mesh.position.copy(this.player.body.position);
+
+			// done by cannonManager
+			this.cannonManager.update();
+
+			// Player update
+			this.player.update();
+
+			// Finally, render
+			this.threeManager.render();
+		}
 	}
 }
 
 // Window variables 
 const game = new Game();
+
 // Setting up keyboard events
 const keyboardController = new KeyboardController();
 keyboardController.init();
@@ -121,8 +140,8 @@ keyboardController.init();
 window.addEventListener('resize', game.threeManager.handleWindowResize(), false);
 
 // Scene
-// const axesHelper = new THREE.AxesHelper(5);
-// scene.add(axesHelper);
+
+// Creating the scene
 // Adds red skybox
 const loader = new THREE.CubeTextureLoader();
 const texture = loader.load([
@@ -207,4 +226,5 @@ function animate() {
 	game.threeManager.render();
 }
 
-animate();
+game.loop();
+// animate()
