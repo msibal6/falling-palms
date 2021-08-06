@@ -6,22 +6,25 @@ export class ThreeManager {
 		this.scene = new THREE.Scene();
 		this.renderer = new THREE.WebGLRenderer();
 		this.initRenderer();
-		this.raycaster = new THREE.Raycaster();
-		this.mouse = new THREE.Vector2();
-		window.addEventListener('mousemove', this.onMouseMove(), false);
-		window.addEventListener('mousedown',
-			function (event) { console.log(event) }, false);
+		// window.addEventListener('mousemove', this.onMouseMove(), false);
+		window.addEventListener('mousedown', this.onMouseClick(), false);
 	}
 
-	onMouseMove() {
+	onMouseClick() {
 		return function (event) {
-
 			// calculate mouse position in normalized device coordinates
 			// (-1 to +1) for both components
-
-			console.log(event);
-			this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-			this.mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+			const raycaster = new THREE.Raycaster();
+			const mouse = new THREE.Vector2();
+			mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+			mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+			raycaster.setFromCamera(mouse, this.camera);
+			// calculate objects intersecting the picking ray
+			const intersects = raycaster.intersectObjects(this.scene.children);
+			if (intersects.length > 0) {
+				// intersects[i].object.material.color.set(0xff0000);
+				console.log(intersects[0]);
+			}
 		}.bind(this);
 	}
 
@@ -88,26 +91,11 @@ export class ThreeManager {
 	}
 
 	render() {
-		// update the picking ray with the camera and mouse position
-		this.raycaster.setFromCamera(this.mouse, this.camera);
-
-		// calculate objects intersecting the picking ray
-		const intersects = this.raycaster.intersectObjects(this.scene.children);
-
-		for (let i = 0; i < intersects.length; i++) {
-
-			// intersects[i].object.material.color.set(0xff0000);
-			// console.log(intersects[i].object);
-
-		}
 		this.renderer.render(this.scene, this.camera);
 	}
 
 	handleWindowResize() {
 		return function () {
-			console.log("Resizing");
-			// update height and width of the renderer and the camera
-			console.log(this);
 			const windowHeight = window.innerHeight;
 			const windowWidth = window.innerWidth;
 			this.renderer.setSize(windowWidth, windowHeight);
