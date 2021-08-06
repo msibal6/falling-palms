@@ -105,9 +105,10 @@ class Game {
 
 		this.animationLoop = null;
 		this.loop = function () {
-
+			console.log("calling");
+			console.log(this);
+			console.log(this.animationLoop);
 			this.animationLoop = requestAnimationFrame(this.loop);
-
 			// Stops the player body vertically  when it reaches a certain point
 			// noticed by the game 
 			// done by the player
@@ -126,7 +127,7 @@ class Game {
 
 			// Finally, render
 			this.threeManager.render();
-		}
+		}.bind(this);
 	}
 }
 
@@ -227,4 +228,4 @@ function animate() {
 }
 
 game.loop();
-// animate()
+// animate();
