@@ -80,6 +80,14 @@ class Game {
 				}
 			},
 			update: function () {
+				// Stops the player body vertically  when it reaches a certain point
+				// noticed by the game 
+				// done by the player
+				// if (boxBody.position.y <= 30) {
+				// 	boxBody.mass = 0;
+				// 	boxBody.velocity.y = 0;
+				// }
+				// done by the game 
 				this.updateForwardAccelaration("xAcceleration", "w");
 				this.updateBackwardAcceleration("xAcceleration", "s");
 				this.updateForwardAccelaration("zAcceleration", "d");
@@ -104,21 +112,12 @@ class Game {
 		}
 
 		this.animationLoop = null;
-		this.loop = function () {
-			console.log("calling");
-			console.log(this);
-			console.log(this.animationLoop);
-			this.animationLoop = requestAnimationFrame(this.loop);
-			// Stops the player body vertically  when it reaches a certain point
-			// noticed by the game 
-			// done by the player
-			// if (boxBody.position.y <= 30) {
-			// 	boxBody.mass = 0;
-			// 	boxBody.velocity.y = 0;
-			// }
-			// done by the game 
-			this.player.mesh.position.copy(this.player.body.position);
 
+		this.loop = function () {
+			this.animationLoop = requestAnimationFrame(this.loop);
+			// TODO
+			// Managing the position of the player
+			this.player.mesh.position.copy(this.player.body.position);
 			// done by cannonManager
 			this.cannonManager.update();
 
@@ -128,6 +127,13 @@ class Game {
 			// Finally, render
 			this.threeManager.render();
 		}.bind(this);
+
+		this.start = function () {
+			this.threeManager.createScene();
+			this.cannonManager.createWorld();
+			this.player.create();
+			this.loop();
+		}
 	}
 }
 
@@ -140,92 +146,4 @@ keyboardController.init();
 
 window.addEventListener('resize', game.threeManager.handleWindowResize(), false);
 
-// Scene
-
-// Creating the scene
-// Adds red skybox
-const loader = new THREE.CubeTextureLoader();
-const texture = loader.load([
-	'../images/red_background.png',
-	'../images/red_background.png',
-	'../images/red_background.png',
-	'../images/red_background.png',
-	'../images/red_background.png',
-	'../images/red_background.png',
-]);
-game.threeManager.scene.background = texture;
-// Add the visual floor
-const plane = new THREE.Mesh(
-	new THREE.PlaneGeometry(10, 100),
-	new THREE.MeshLambertMaterial({
-		color: 0x000000,
-	}));
-plane.castShadow = false;
-plane.receiveShadow = true;
-plane.rotation.x = -Math.PI / 2;
-game.threeManager.addToScene(plane);
-
-// Add ambient light
-const ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.5);
-game.threeManager.addToScene(ambientLight);
-
-// Add sunlight
-const sun = new THREE.DirectionalLight(0xFFFFFF0, 0.5);
-sun.position.set(20, 1000, 10);
-sun.target.position.set(0, 0, 0);
-sun.castShadow = true;
-sun.shadow.bias = -0.001;
-sun.shadow.mapSize.width = 2048;
-sun.shadow.mapSize.height = 2048;
-sun.shadow.camera.near = 0.1;
-sun.shadow.camera.far = 500.0;
-sun.shadow.camera.near = 0.5;
-sun.shadow.camera.far = 500.0;
-sun.shadow.camera.left = 100;
-sun.shadow.camera.right = -100;
-sun.shadow.camera.top = 100;
-sun.shadow.camera.bottom = -100;
-game.threeManager.addToScene(sun);
-
-// Cannon-es physics
-// Physical floor
-const planeShape = new CANNON.Plane();
-const planeBody = new CANNON.Body({
-	mass: 0,
-	shape: planeShape,
-	material: game.cannonManager.planeMaterial,
-});
-planeBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0); // make it face up
-planeBody.position.set(0, 0, 0);
-game.cannonManager.world.addBody(planeBody);
-
-// Creating the player
-game.player.create();
-
-
-// Rendering loop
-function animate() {
-	requestAnimationFrame(animate);
-
-	// Stops the player body vertically  when it reaches a certain point
-	// noticed by the game 
-	// done by the player
-	// if (boxBody.position.y <= 30) {
-	// 	boxBody.mass = 0;
-	// 	boxBody.velocity.y = 0;
-	// }
-	// done by the game 
-	game.player.mesh.position.copy(game.player.body.position);
-
-	// done by cannonManager
-	game.cannonManager.update();
-
-	// Player update
-	game.player.update();
-
-	// Finally, render
-	game.threeManager.render();
-}
-
-game.loop();
-// animate();
+game.start();

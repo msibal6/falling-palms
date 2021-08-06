@@ -15,6 +15,19 @@ export class CannonManager {
 		this.world.addContactMaterial(this.contactMaterial);
 	}
 
+	createWorld() {
+		// Physical floor
+		const planeShape = new CANNON.Plane();
+		const planeBody = new CANNON.Body({
+			mass: 0,
+			shape: planeShape,
+			material: this.planeMaterial,
+		});
+		planeBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0); // make it face up
+		planeBody.position.set(0, 0, 0);
+		this.world.addBody(planeBody)
+	}
+
 	update() {
 		const time = performance.now() / 1000; // seconds
 		if (!this.lastCallTime) {
