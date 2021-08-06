@@ -46,7 +46,11 @@ class Game {
 				const size = 1;
 				const halfExtents = new CANNON.Vec3(size, size, size);
 				const boxShape = new CANNON.Box(halfExtents);
-				const tempPlayerBody = new CANNON.Body({ mass: 1, shape: boxShape, material: game.cannonManager.planeMaterial });
+				const tempPlayerBody = new CANNON.Body({
+					mass: 1,
+					shape: boxShape,
+					material: game.cannonManager.planeMaterial
+				});
 				tempPlayerBody.position.set(0, 100, 0);
 				this.body = tempPlayerBody;
 				game.cannonManager.world.addBody(tempPlayerBody);
@@ -133,6 +137,7 @@ class Game {
 			this.cannonManager.createWorld();
 			this.player.create();
 			this.loop();
+			testAirStream.update();
 		}
 	}
 }
@@ -145,5 +150,10 @@ const keyboardController = new KeyboardController();
 keyboardController.init();
 
 window.addEventListener('resize', game.threeManager.handleWindowResize(), false);
+
+const testAirStream = new AirStream(game.player.mesh);
+testAirStream.start();
+testAirStream.setStart(new THREE.Vector3(0, 0, 0));
+testAirStream.setEnd(new THREE.Vector3(1, 1, 1));
 
 game.start();

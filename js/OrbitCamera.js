@@ -4,6 +4,7 @@
 export class SphericalPanCamera {
 	constructor(threeCamera, target) {
 		this.threeCamera = threeCamera;
+		// THREE Mesh
 		this.targetObject = target;
 		this.radius = 5;
 		this.startPhi = 0;

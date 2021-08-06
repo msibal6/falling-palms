@@ -1,3 +1,5 @@
+import { ConvexPolyhedron } from "./cannon-es";
+
 export class AirStream {
 	constructor(target) {
 		// target object
@@ -34,13 +36,23 @@ export class AirStream {
 	}
 
 	updateOffset() {
+		console.log(this.startPoint);
+		console.log(this.endPoint);
 
+		let gap = this.endPoint.sub(this.startPoint);
+		gap.divideScalar(this.delta);
+		this.currentPoint.addVectors(this.currentPoint, gap);
+
+		console.log(gap);
+		console.log(this.currentPoint);
 	}
+
 	update() {
 		if (this.moving) {
 			this.updateOffset();
 		}
 		// Add current point to target position 
 		// and set the mesh position to that
+		// copy(target.position.add(this.currentPoint))
 	}
 }
