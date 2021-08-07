@@ -1,9 +1,7 @@
-import { ConvexPolyhedron } from "./cannon-es";
 
 export class AirStream {
 	constructor(target) {
-		// target object
-		// tracks a THREE mesh with some position value
+		// target tracks a THREE mesh 
 		this.target = target;
 		// start point
 		this.startPoint = null;
@@ -12,6 +10,14 @@ export class AirStream {
 		this.endPoint = null;
 		this.delta = 100;
 		this.moving = false;
+		this.mesh = new THREE.Mesh(
+			new THREE.BoxGeometry(0.5, 0.5, 4),
+			new THREE.MeshLambertMaterial({
+				color: 0x0FF0FF,
+			}));
+		this.mesh.receiveShadow = false;
+		this.mesh.castShadow = false;
+		this.mesh.rotation.x = -Math.PI / 2;
 	}
 
 	setStart(startPoint) {

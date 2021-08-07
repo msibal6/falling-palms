@@ -153,7 +153,8 @@ window.addEventListener('resize', game.threeManager.handleWindowResize(), false)
 
 const testAirStream = new AirStream(game.player.mesh);
 testAirStream.start();
+
 testAirStream.setStart(new THREE.Vector3(0, 0, 0));
 testAirStream.setEnd(new THREE.Vector3(1, 1, 1));
-
+game.threeManager.addToScene(testAirStream.mesh);
 game.start();
