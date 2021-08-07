@@ -15,3 +15,15 @@ export function almostZero(value, precision) {
 	}
 	return true;
 }
+
+export function vectorsAlmostEqual(threeVector1, threeVector2, precision) {
+	if (precision === undefined) {
+		precision = 1e-6;
+	}
+	if (almostZero(threeVector1.x - threeVector2.x, precision)
+		&& almostZero(threeVector1.y - threeVector2.y, precision)
+		&& almostZero(threeVector1.z - threeVector2.z, precision)) {
+		return true;
+	}
+	return false;
+}

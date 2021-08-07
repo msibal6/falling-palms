@@ -128,6 +128,7 @@ class Game {
 			// Player update
 			this.player.update();
 
+			this.testAirStream.update();
 			// Finally, render
 			this.threeManager.render();
 		}.bind(this);
@@ -136,8 +137,12 @@ class Game {
 			this.threeManager.createScene();
 			this.cannonManager.createWorld();
 			this.player.create();
+			this.testAirStream = new AirStream(game.player.mesh);
+			this.testAirStream.setStart(new THREE.Vector3(0, 0, 0));
+			this.testAirStream.setEnd(new THREE.Vector3(1, 1, 1));
+			this.testAirStream.start();
+			game.threeManager.addToScene(this.testAirStream.mesh);
 			this.loop();
-			testAirStream.update();
 		}
 	}
 }
@@ -151,10 +156,4 @@ keyboardController.init();
 
 window.addEventListener('resize', game.threeManager.handleWindowResize(), false);
 
-const testAirStream = new AirStream(game.player.mesh);
-testAirStream.start();
-
-testAirStream.setStart(new THREE.Vector3(0, 0, 0));
-testAirStream.setEnd(new THREE.Vector3(1, 1, 1));
-game.threeManager.addToScene(testAirStream.mesh);
 game.start();
