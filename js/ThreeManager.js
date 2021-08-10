@@ -7,7 +7,7 @@ export class ThreeManager {
 		this.renderer = new THREE.WebGLRenderer();
 		this.initRenderer();
 		// window.addEventListener('mousemove', this.onMouseMove(), false);
-		window.addEventListener('mousedown', this.onMouseClick(), false);
+		// window.addEventListener('mousedown', this.onMouseClick(), false);
 	}
 
 	onMouseClick() {

@@ -138,6 +138,7 @@ class Game {
 			this.cannonManager.createWorld();
 			this.player.create();
 			this.testAirstream();
+			window.addEventListener('mousedown', this.onMouseClick(), false);
 			this.loop();
 		}
 	}
@@ -146,9 +147,26 @@ class Game {
 		this.testAirStream = new AirStream(game.player.mesh);
 		this.testAirStream.setStart(new THREE.Vector3(5, 0, 10));
 		this.testAirStream.setEnd(new THREE.Vector3(5, 10, 10));
-		this.testAirStream.setDelta(75);
+		this.testAirStream.setDelta(100);
 		this.testAirStream.start();
 		this.threeManager.addToScene(this.testAirStream.mesh);
+	}
+
+	onMouseClick() {
+		return function (event) {
+			// calculate mouse position in normalized device coordinates
+			// (-1 to +1) for both components
+			const raycaster = new THREE.Raycaster();
+			const mouse = new THREE.Vector2();
+			mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+			mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+			raycaster.setFromCamera(mouse, this.player.camera.threeCamera);
+			// calculate objects intersecting the picking ray
+			const intersects = raycaster.intersectObject(this.testAirStream.mesh);
+			if (intersects.length > 0) {
+				console.log(intersects[0]);
+			}
+		}.bind(this);
 	}
 }
 

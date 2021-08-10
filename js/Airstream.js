@@ -25,6 +25,13 @@ export class AirStream {
 		this.mesh.receiveShadow = false;
 		this.mesh.castShadow = false;
 		this.mesh.rotation.x = -Math.PI / 2;
+		this.mesh.raycast = function(raycaster, intersects) {
+			console.log(this);
+			console.log(raycaster);
+			console.log(intersects);
+			this.stop();
+		}.bind(this);
+		console.log(this.mesh.raycast);
 	}
 
 	setStart(startPoint) {
@@ -50,6 +57,7 @@ export class AirStream {
 	}
 
 	stop() {
+		console.log("stopping");
 		this.moving = false;
 	}
 
@@ -65,11 +73,8 @@ export class AirStream {
 
 	updateSize() {
 		let rad = this.increment / (this.delta) * 2 * Math.PI;
-		// (-0.5 cos(x) + 0.5)
 		const scale = -0.5 * Math.cos(rad) + 0.5;
-		 // console.log(scale);
 		this.mesh.scale.set(scale, scale, scale);
-
 	}
 
 	update() {
