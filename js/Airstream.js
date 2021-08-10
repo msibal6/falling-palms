@@ -1,11 +1,10 @@
 
-import { almostZero, vectorsAlmostEqual } from './helper.js';
+import { vectorsAlmostEqual } from './helper.js';
 
 export class AirStream {
-	constructor(target) {
+	constructor(target, name) {
 		// target tracks a THREE mesh 
 		this.target = target;
-		console.log(target);
 		// start point
 		this.startPoint = null;
 		this.currentPoint = null;
@@ -20,7 +19,9 @@ export class AirStream {
 			new THREE.MeshLambertMaterial({
 				color: 0x0FF0FF,
 			}));
-		this.mesh.name = "testAirstream";
+		if (name !== undefined) {
+			this.mesh.name = name;
+		}
 		this.mesh.receiveShadow = false;
 		this.mesh.castShadow = false;
 		this.mesh.rotation.x = -Math.PI / 2;
@@ -53,18 +54,20 @@ export class AirStream {
 	}
 
 	updateOffset() {
-		let gap = new THREE.Vector3(this.endPoint.x - this.startPoint.x, this.endPoint.y - this.startPoint.y, this.endPoint.z - this.startPoint.z);
-		// gap = new THREE.Vector3(gap.x / this.delta, gap.y / this.delta, gap.z / this.delta);
+		let gap = new THREE.Vector3(this.endPoint.x - this.startPoint.x,
+			this.endPoint.y - this.startPoint.y,
+			this.endPoint.z - this.startPoint.z);
 		gap.divideScalar(this.delta);
-		this.currentPoint = new THREE.Vector3(gap.x + this.currentPoint.x, gap.y + this.currentPoint.y, gap.z + this.currentPoint.z);
+		this.currentPoint = new THREE.Vector3(gap.x + this.currentPoint.x,
+			gap.y + this.currentPoint.y,
+			gap.z + this.currentPoint.z);
 	}
 
 	updateSize() {
-		let scale = this.increment / (this.delta / 2);
-		if (scale > 1) {
-			scale = 2 - scale;
-		}
-		// console.log(scale);
+		let rad = this.increment / (this.delta) * 2 * Math.PI;
+		// (-0.5 cos(x) + 0.5)
+		const scale = -0.5 * Math.cos(rad) + 0.5;
+		 // console.log(scale);
 		this.mesh.scale.set(scale, scale, scale);
 
 	}
@@ -77,10 +80,8 @@ export class AirStream {
 			if (vectorsAlmostEqual(this.currentPoint, this.endPoint, 0.1)) {
 				// this.stop();
 				this.restart();
-
 			}
 		}
-		const newPosition = new THREE.Vector3(this.target.position.x + this.currentPoint.x, this.target.position.y + this.currentPoint.y, this.target.position.z + this.currentPoint.z);
-		this.mesh.position.copy(newPosition);
+		this.mesh.position.addVectors(this.target.position, this.currentPoint);
 	}
 }
