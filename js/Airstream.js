@@ -5,33 +5,26 @@ export class AirStream {
 	constructor(target, name) {
 		// target tracks a THREE mesh 
 		this.target = target;
-		// start point
 		this.startPoint = null;
 		this.currentPoint = null;
-		// end point
 		this.endPoint = null;
 		this.delta = 1000;
 		this.increment = 0;
-
 		this.moving = false;
 		this.mesh = new THREE.Mesh(
 			new THREE.BoxGeometry(0.5, 0.5, 4),
 			new THREE.MeshLambertMaterial({
 				color: 0x0FF0FF,
 			}));
-		if (name !== undefined) {
-			this.mesh.name = name;
-		}
 		this.mesh.receiveShadow = false;
 		this.mesh.castShadow = false;
 		this.mesh.rotation.x = -Math.PI / 2;
-		this.mesh.raycast = function(raycaster, intersects) {
+		this.mesh.raycast = function (raycaster, intersects) {
 			console.log(this);
 			console.log(raycaster);
 			console.log(intersects);
 			this.stop();
 		}.bind(this);
-		console.log(this.mesh.raycast);
 	}
 
 	setStart(startPoint) {
@@ -57,7 +50,6 @@ export class AirStream {
 	}
 
 	stop() {
-		console.log("stopping");
 		this.moving = false;
 	}
 
@@ -83,7 +75,6 @@ export class AirStream {
 			this.updateOffset();
 			this.updateSize();
 			if (vectorsAlmostEqual(this.currentPoint, this.endPoint, 0.1)) {
-				// this.stop();
 				this.restart();
 			}
 		}

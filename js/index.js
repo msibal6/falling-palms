@@ -162,7 +162,7 @@ class Game {
 			mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
 			raycaster.setFromCamera(mouse, this.player.camera.threeCamera);
 			// calculate objects intersecting the picking ray
-			const intersects = raycaster.intersectObject(this.testAirStream.mesh);
+			const intersects = raycaster.intersectObjects(this.threeManager.scene.children);
 			if (intersects.length > 0) {
 				console.log(intersects[0]);
 			}
