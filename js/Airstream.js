@@ -29,6 +29,10 @@ export class AirStream {
 		this.currentPoint = startPoint;
 	}
 
+	restart() {
+		this.setStart(this.startPoint);
+	}
+
 	setEnd(endPoint) {
 		this.endPoint = endPoint;
 	}
@@ -46,29 +50,22 @@ export class AirStream {
 	}
 
 	updateOffset() {
-		let gap = this.endPoint.sub(this.startPoint);
-		console.log(gap);
-		gap = new THREE.Vector3(gap.x / this.delta, gap.y / this.delta, gap.z / this.delta);
-		// console.log(gap);
-		// this.currentPoint.addVectors(this.currentPoint, gap);
+		let gap = new THREE.Vector3(this.endPoint.x - this.startPoint.x, this.endPoint.y - this.startPoint.y, this.endPoint.z - this.startPoint.z);
+		// gap = new THREE.Vector3(gap.x / this.delta, gap.y / this.delta, gap.z / this.delta);
+		gap.divideScalar(this.delta);
 		this.currentPoint = new THREE.Vector3(gap.x + this.currentPoint.x, gap.y + this.currentPoint.y, gap.z + this.currentPoint.z);
-
-		// this.currentPoint.addVectors(this.currentPoint.x + gap.x, this.currentPoint.y + gap.y, this.currentPoint.z + gap.z);
-		console.log("start point " + this.startPoint.x + this.startPoint.y + this.startPoint.z);
-		console.log(this.currentPoint);
 	}
 
 	update() {
 		if (this.moving) {
 			this.updateOffset();
-			if (vectorsAlmostEqual(this.currentPoint, this.endPoint, 0.5)) {
-				this.stop();
+			if (vectorsAlmostEqual(this.currentPoint, this.endPoint, 0.1)) {
+				// this.stop();
+				this.restart();
+
 			}
 		}
-
 		const newPosition = new THREE.Vector3(this.target.position.x + this.currentPoint.x, this.target.position.y + this.currentPoint.y, this.target.position.z + this.currentPoint.z);
-
 		this.mesh.position.copy(newPosition);
-		// this.mesh.position.set(this.target.position.x + this.currentPoint.x, this.target.position.y + this.currentPoint.y, this.target.position.z + this.currentPoint.z);
 	}
 }

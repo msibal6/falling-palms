@@ -62,7 +62,7 @@ class Game {
 				const orbitCamera = new SphericalPanCamera(threeCamera, this.mesh);
 				orbitCamera.setPhiPan(Math.PI, Math.PI);
 				orbitCamera.setThetaPan(Math.PI / 4 * 3, Math.PI / 4);
-				orbitCamera.setRadius(10);
+				orbitCamera.setRadius(20);
 				this.camera = orbitCamera;
 				game.threeManager.camera = threeCamera;
 			},
@@ -138,8 +138,9 @@ class Game {
 			this.cannonManager.createWorld();
 			this.player.create();
 			this.testAirStream = new AirStream(game.player.mesh);
-			this.testAirStream.setStart(new THREE.Vector3(0, 0, 0));
-			this.testAirStream.setEnd(new THREE.Vector3(1, 1, 1));
+			this.testAirStream.setStart(new THREE.Vector3(5, 0, 5));
+			this.testAirStream.setEnd(new THREE.Vector3(5, 10, 5));
+			this.testAirStream.setDelta(50);
 			this.testAirStream.start();
 			game.threeManager.addToScene(this.testAirStream.mesh);
 			this.loop();
