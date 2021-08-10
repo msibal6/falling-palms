@@ -22,7 +22,6 @@ export class ThreeManager {
 			// calculate objects intersecting the picking ray
 			const intersects = raycaster.intersectObjects(this.scene.children);
 			if (intersects.length > 0) {
-				// intersects[i].object.material.color.set(0xff0000);
 				console.log(intersects[0]);
 			}
 		}.bind(this);

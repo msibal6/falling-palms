@@ -138,9 +138,9 @@ class Game {
 			this.cannonManager.createWorld();
 			this.player.create();
 			this.testAirStream = new AirStream(game.player.mesh);
-			this.testAirStream.setStart(new THREE.Vector3(5, 0, 5));
-			this.testAirStream.setEnd(new THREE.Vector3(5, 10, 5));
-			this.testAirStream.setDelta(50);
+			this.testAirStream.setStart(new THREE.Vector3(5, 0, 10));
+			this.testAirStream.setEnd(new THREE.Vector3(5, 10, 10));
+			this.testAirStream.setDelta(75);
 			this.testAirStream.start();
 			game.threeManager.addToScene(this.testAirStream.mesh);
 			this.loop();
