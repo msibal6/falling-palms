@@ -24,6 +24,10 @@ export class SphericalPanCamera {
 		this.deltaTheta = newDeltaTheta;
 	}
 
+	setThetaDelta(newThetaDelta) {
+		this.deltaTheta = newThetaDelta;
+	}
+
 	setPhiPan(newStartPhi, newEndPhi, newDeltaPhi = 0.02) {
 		this.startPhi = newStartPhi;
 		this.currentPhi = this.startPhi;

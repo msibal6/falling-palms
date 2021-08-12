@@ -1,7 +1,7 @@
-import { getNormalizedVector, almostZero } from './helper.js';
+import { almostZero } from './helper.js';
 import { SphericalPanCamera } from './OrbitCamera.js';
 import * as CANNON from './cannon-es.js';
-import { printo, KeyboardController } from './events.js';
+import { KeyboardController } from './events.js';
 import { ThreeManager } from './ThreeManager.js';
 import { CannonManager } from './CannonManager.js';
 import { AirStream } from './Airstream.js';
@@ -65,6 +65,14 @@ class Game {
 				orbitCamera.setRadius(20);
 				this.camera = orbitCamera;
 				game.threeManager.camera = threeCamera;
+
+				// Add AirStreams
+				this.testAirStream = new AirStream(this.mesh);
+				this.testAirStream.setStart(new THREE.Vector3(5, 0, 10));
+				this.testAirStream.setEnd(new THREE.Vector3(5, 10, 10));
+				this.testAirStream.setDelta(100);
+				this.testAirStream.start();
+				game.threeManager.addToScene(this.testAirStream.mesh);
 			},
 			updateForwardAccelaration: function (axis, key) {
 				if (keyboardController.pressed[key]) {
@@ -86,12 +94,12 @@ class Game {
 			},
 			update: function () {
 				// Stops the player body vertically  when it reaches a certain point
-				// noticed by the game 
-				// done by the player
-				// if (boxBody.position.y <= 30) {
-				// 	boxBody.mass = 0;
-				// 	boxBody.velocity.y = 0;
-				// }
+				if (this.testAirStream.isStopped()) {
+					this.camera.setThetaDelta(0.05);
+					this.body.mass = 0;
+					this.body.velocity.y = 0;
+				}
+				this.testAirStream.update();
 				this.updateForwardAccelaration("xAcceleration", "w");
 				this.updateForwardAccelaration("zAcceleration", "d");
 				this.updateBackwardAcceleration("xAcceleration", "s");
@@ -113,7 +121,7 @@ class Game {
 					this.xAcceleration *= this.damping;
 				}
 			},
-		}
+		};
 
 		this.animationLoop = null;
 
@@ -128,7 +136,6 @@ class Game {
 			// Player update
 			this.player.update();
 
-			this.testAirStream.update();
 			// Finally, render
 			this.threeManager.render();
 		}.bind(this);
@@ -137,23 +144,13 @@ class Game {
 			this.threeManager.createScene();
 			this.cannonManager.createWorld();
 			this.player.create();
-			this.testAirstream();
 			window.addEventListener('mousedown', this.onMouseClick(), false);
 			this.loop();
 		}
 	}
 
-	testAirstream() {
-		this.testAirStream = new AirStream(game.player.mesh);
-		this.testAirStream.setStart(new THREE.Vector3(5, 0, 10));
-		this.testAirStream.setEnd(new THREE.Vector3(5, 10, 10));
-		this.testAirStream.setDelta(100);
-		this.testAirStream.start();
-		this.threeManager.addToScene(this.testAirStream.mesh);
-	}
-
 	onMouseClick() {
-		return function (event) {
+		return function onMouseClickHandler(event) {
 			// calculate mouse position in normalized device coordinates
 			// (-1 to +1) for both components
 			const raycaster = new THREE.Raycaster();

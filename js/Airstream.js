@@ -16,13 +16,14 @@ export class AirStream {
 			new THREE.MeshLambertMaterial({
 				color: 0x0FF0FF,
 			}));
+		if (name !== undefined) {
+			this.mesh.name = name;
+		}
 		this.mesh.receiveShadow = false;
 		this.mesh.castShadow = false;
 		this.mesh.rotation.x = -Math.PI / 2;
+
 		this.mesh.raycast = function (raycaster, intersects) {
-			console.log(this);
-			console.log(raycaster);
-			console.log(intersects);
 			this.stop();
 		}.bind(this);
 	}
@@ -51,6 +52,10 @@ export class AirStream {
 
 	stop() {
 		this.moving = false;
+	}
+
+	isStopped() {
+		return !this.moving;
 	}
 
 	updateOffset() {
