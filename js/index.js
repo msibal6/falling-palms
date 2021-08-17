@@ -1,5 +1,5 @@
 import { almostZero } from './helper.js';
-import { SphericalPanCamera } from './OrbitCamera.js';
+import { SphericalPanCamera } from './SphericalPanCamera.js';
 import * as CANNON from './cannon-es.js';
 import { KeyboardController } from './events.js';
 import { ThreeManager } from './ThreeManager.js';
