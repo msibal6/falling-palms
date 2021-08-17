@@ -11,7 +11,7 @@ export class CannonManager {
 		// Program contact between floor material and itself
 		this.planeMaterial = new CANNON.Material({ friction: 0, });
 		this.contactMaterial = new CANNON.ContactMaterial(this.planeMaterial, this.planeMaterial,
-			{ friction: 0, restitution: 0.1, });
+			{ friction: 0, restitution: 0.0, });
 		this.world.addContactMaterial(this.contactMaterial);
 	}
 

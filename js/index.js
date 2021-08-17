@@ -4,7 +4,7 @@ import * as CANNON from './cannon-es.js';
 import { KeyboardController } from './events.js';
 import { ThreeManager } from './ThreeManager.js';
 import { CannonManager } from './CannonManager.js';
-import { AirStream } from './Airstream.js';
+import { Airstream } from './Airstream.js';
 
 
 class Game {
@@ -14,6 +14,7 @@ class Game {
 
 		// World is managed by cannon manager of the game
 		this.cannonManager = new CannonManager(CANNON);
+		this.onMouseClickHandler = this.onMouseClick.bind(this);
 
 		/* Game world the intersection between the two
 			is managed by the game
@@ -67,12 +68,37 @@ class Game {
 				game.threeManager.camera = threeCamera;
 
 				// Add AirStreams
-				this.testAirStream = new AirStream(this.mesh);
-				this.testAirStream.setStart(new THREE.Vector3(5, 0, 10));
-				this.testAirStream.setEnd(new THREE.Vector3(5, 10, 10));
-				this.testAirStream.setDelta(100);
-				this.testAirStream.start();
-				game.threeManager.addToScene(this.testAirStream.mesh);
+				this.airstreams = [];
+				this.addAirstream(new THREE.Vector3(5, 0, 10), new THREE.Vector3(5, 10, 10));
+				this.addAirstream(new THREE.Vector3(5, 0, -10), new THREE.Vector3(5, 10, -10));
+			},
+			addAirstream: function (start, end) {
+				const newAirstream = new Airstream(this.mesh);
+				this.airstreams.push(newAirstream);
+				newAirstream.setStart(start);
+				newAirstream.setEnd(end);
+				newAirstream.setDelta(100);
+				newAirstream.start();
+				game.threeManager.addToScene(newAirstream.mesh);
+			},
+			updateAirstreams: function () {
+				if (this.airstreams === undefined) {
+					return;
+				}
+				for (let i = 0; i < this.airstreams.length; i++) {
+					this.airstreams[i].update();
+				}
+			},
+			allAirstreamsStopped: function () {
+				if (this.airstreams === undefined) {
+					return true;
+				}
+				for (let i = 0; i < this.airstreams.length; i++) {
+					if (!this.airstreams[i].isStopped()) {
+						return false;
+					}
+				}
+				return true;
 			},
 			updateForwardAccelaration: function (axis, key) {
 				if (keyboardController.pressed[key]) {
@@ -94,12 +120,13 @@ class Game {
 			},
 			update: function () {
 				// Stops the player body vertically  when it reaches a certain point
-				if (this.testAirStream.isStopped()) {
+				if (this.allAirstreamsStopped()) {
 					this.camera.setThetaDelta(0.05);
 					this.body.mass = 0;
 					this.body.velocity.y = 0;
 				}
-				this.testAirStream.update();
+
+				this.updateAirstreams();
 				this.updateForwardAccelaration("xAcceleration", "w");
 				this.updateForwardAccelaration("zAcceleration", "d");
 				this.updateBackwardAcceleration("xAcceleration", "s");
@@ -144,15 +171,15 @@ class Game {
 			this.threeManager.createScene();
 			this.cannonManager.createWorld();
 			this.player.create();
-			window.addEventListener('mousedown', this.onMouseClick(), false);
+			window.addEventListener('mousedown', this.onMouseClickHandler, false);
 			this.loop();
 		}
 	}
 
 	onMouseClick() {
-		return function onMouseClickHandler(event) {
 			// calculate mouse position in normalized device coordinates
 			// (-1 to +1) for both components
+			console.log('raycasting');
 			const raycaster = new THREE.Raycaster();
 			const mouse = new THREE.Vector2();
 			mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -160,10 +187,14 @@ class Game {
 			raycaster.setFromCamera(mouse, this.player.camera.threeCamera);
 			// calculate objects intersecting the picking ray
 			const intersects = raycaster.intersectObjects(this.threeManager.scene.children);
-			if (intersects.length > 0) {
-				console.log(intersects[0]);
+			if (intersects.length) {
+				for (let i = 0; i < this.player.airstreams.length; i++) {
+					if (intersects[0].object === this.player.airstreams[i].mesh) {
+						this.player.airstreams[i].stop();
+						break;
+					}
+				}
 			}
-		}.bind(this);
 	}
 }
 

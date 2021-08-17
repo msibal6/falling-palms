@@ -1,7 +1,7 @@
 
 import { vectorsAlmostEqual } from './helper.js';
 
-export class AirStream {
+export class Airstream {
 	constructor(target, name) {
 		// target tracks a THREE mesh 
 		this.target = target;
@@ -15,6 +15,7 @@ export class AirStream {
 			new THREE.BoxGeometry(0.5, 0.5, 4),
 			new THREE.MeshLambertMaterial({
 				color: 0x0FF0FF,
+				side: THREE.DoubleSide,
 			}));
 		if (name !== undefined) {
 			this.mesh.name = name;
@@ -23,9 +24,15 @@ export class AirStream {
 		this.mesh.castShadow = false;
 		this.mesh.rotation.x = -Math.PI / 2;
 
-		this.mesh.raycast = function (raycaster, intersects) {
-			this.stop();
-		}.bind(this);
+
+		// TODO implement this to avoid ugly coderaycaster delegates to raycast method to determine 
+		// if it should be in intersectsb
+		// this.mesh.raycast = function (raycaster, intersects) {
+		// 	console.log(this);
+		// 	console.log(raycaster);
+		// 	// intersects.push(this);
+		// 	// console.log(intersects);
+		// }.bind(this);
 	}
 
 	setStart(startPoint) {
