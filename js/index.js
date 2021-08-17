@@ -25,11 +25,11 @@ class Game {
 			mesh: null,
 			// physics CANNON body
 			body: null,
-			maxSpeed: 20.0,
-			acceleration: 1.0,
+			maxSpeed: 80.0,
+			acceleration: 4.0,
 			xAcceleration: 0.0,
 			zAcceleration: 0.0,
-			damping: 0.9,
+			damping: 0.85,
 			camera: null,
 			create: function () {
 				// Add visual player placeholder
@@ -140,13 +140,13 @@ class Game {
 				this.camera.update();
 			},
 			dampenAcceleration: function () {
-				if (keyboardController.hasNoKeysDown()) {
+				// if (keyboardController.hasNoKeysDown()) {
 					if (almostZero(this.zAcceleration) && almostZero(this.xAcceleration)) {
 						return;
 					}
 					this.zAcceleration *= this.damping;
 					this.xAcceleration *= this.damping;
-				}
+				// }
 			},
 		};
 
