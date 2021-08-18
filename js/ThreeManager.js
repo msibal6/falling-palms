@@ -1,30 +1,10 @@
 // classes in js are jusy syntax obstructions
-
 export class ThreeManager {
 	constructor() {
 		this.camera = null;
 		this.scene = new THREE.Scene();
 		this.renderer = new THREE.WebGLRenderer();
 		this.initRenderer();
-		// window.addEventListener('mousemove', this.onMouseMove(), false);
-		// window.addEventListener('mousedown', this.onMouseClick(), false);
-	}
-
-	onMouseClick() {
-		return function (event) {
-			// calculate mouse position in normalized device coordinates
-			// (-1 to +1) for both components
-			const raycaster = new THREE.Raycaster();
-			const mouse = new THREE.Vector2();
-			mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-			mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
-			raycaster.setFromCamera(mouse, this.camera);
-			// calculate objects intersecting the picking ray
-			const intersects = raycaster.intersectObjects(this.scene.children);
-			if (intersects.length > 0) {
-				console.log(intersects[0]);
-			}
-		}.bind(this);
 	}
 
 	initRenderer() {
@@ -92,6 +72,7 @@ export class ThreeManager {
 	render() {
 		this.renderer.render(this.scene, this.camera);
 	}
+
 
 	handleWindowResize() {
 		return function () {

@@ -12,27 +12,28 @@ export class Airstream {
 		this.increment = 0;
 		this.moving = false;
 		this.mesh = new THREE.Mesh(
-			new THREE.BoxGeometry(0.5, 0.5, 4),
+			new THREE.BoxGeometry(1, 1, 12),
 			new THREE.MeshLambertMaterial({
 				color: 0x0FF0FF,
 				side: THREE.DoubleSide,
 			}));
 		if (name !== undefined) {
 			this.mesh.name = name;
+		} else {
+			this.mesh.name = "Airstream";
 		}
 		this.mesh.receiveShadow = false;
 		this.mesh.castShadow = false;
 		this.mesh.rotation.x = -Math.PI / 2;
 
 
-		// TODO implement this to avoid ugly coderaycaster delegates to raycast method to determine 
-		// if it should be in intersectsb
-		// this.mesh.raycast = function (raycaster, intersects) {
-		// 	console.log(this);
-		// 	console.log(raycaster);
-		// 	// intersects.push(this);
-		// 	// console.log(intersects);
-		// }.bind(this);
+		this.mesh.raycast = function (raycaster, intersects) {
+			this.mesh.geometry.computeBoundingBox();
+			this.mesh.geometry.boundingBox.applyMatrix4(this.mesh.matrix);
+			if (raycaster.ray.intersectsBox(this.mesh.geometry.boundingBox)) {
+				this.stop();
+			}
+		}.bind(this);
 	}
 
 	setStart(startPoint) {
@@ -79,6 +80,9 @@ export class Airstream {
 		let rad = this.increment / (this.delta) * 2 * Math.PI;
 		const scale = -0.5 * Math.cos(rad) + 0.5;
 		this.mesh.scale.set(scale, scale, scale);
+		// if (scale == 1) {
+		// 	this.stop();
+		// }
 	}
 
 	update() {

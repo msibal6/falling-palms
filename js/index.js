@@ -175,25 +175,16 @@ class Game {
 		}
 	}
 
-	onMouseClick() {
+	onMouseClick(event) {
 		// calculate mouse position in normalized device coordinates
 		// (-1 to +1) for both components
 		const raycaster = new THREE.Raycaster();
 		const mouse = new THREE.Vector2();
 		mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-		mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+		mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 		raycaster.setFromCamera(mouse, this.player.camera.threeCamera);
-		
 		// calculate objects intersecting the picking ray
 		const intersects = raycaster.intersectObjects(this.threeManager.scene.children);
-		if (intersects.length) {
-			for (let i = 0; i < this.player.airstreams.length; i++) {
-				if (intersects[0].object === this.player.airstreams[i].mesh) {
-					this.player.airstreams[i].stop();
-					break;
-				}
-			}
-		}
 	}
 }
 
