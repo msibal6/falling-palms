@@ -119,6 +119,7 @@ class Game {
 				}
 			},
 			update: function () {
+				// update player position in three from position in cannon
 				this.mesh.position.copy(this.body.position);
 				// Stops the player body vertically  when it reaches a certain point
 				if (this.allAirstreamsStopped()) {
@@ -136,7 +137,8 @@ class Game {
 				// 	console.log(boxBody.position);
 				// 	console.log(boxBody.velocity);
 				// }
-				this.body.velocity.set(this.xAcceleration, this.body.velocity.y, this.zAcceleration);
+				this.body.velocity.set(this.xAcceleration, this.body.velocity.y,
+					this.zAcceleration);
 				this.dampenAcceleration();
 				this.camera.update();
 			},
@@ -184,15 +186,19 @@ class Game {
 		raycaster.setFromCamera(mouse, this.player.camera.threeCamera);
 		// calculate objects intersecting the picking ray
 		const intersects = raycaster.intersectObjects(this.threeManager.scene.children);
+		if (intersects.length) {
+			console.log(intersects[0]);
+		}
+
 	}
 }
 
 // Window variables 
-const game = new Game();
+window.game = new Game();
 window.addEventListener('resize', game.threeManager.handleWindowResize(), false);
 
 // Setting up keyboard events
-const keyboardController = new KeyboardController();
-keyboardController.init();
+window.keyboardController = new KeyboardController();
+window.keyboardController.init();
 
-game.start();
+window.game.start();
