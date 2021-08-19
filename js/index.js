@@ -69,8 +69,35 @@ class Game {
 
 				// Add AirStreams
 				this.airstreams = [];
-				this.addAirstream(new THREE.Vector3(5, 0, 10), new THREE.Vector3(5, 10, 10));
-				this.addAirstream(new THREE.Vector3(5, 0, -10), new THREE.Vector3(5, 10, -10));
+				this.addAirstream(new THREE.Vector3(5, 0, 10),
+					new THREE.Vector3(5, 10, 10));
+				this.addAirstream(new THREE.Vector3(5, 0, -10),
+					new THREE.Vector3(5, 10, -10));
+			},
+			shootPalm: function (targetPoint) {
+				let targetVector = new THREE.Vector3();
+				targetVector.subVectors(targetPoint, this.mesh.position);
+				targetVector.normalize();
+				const material = new THREE.LineBasicMaterial({
+					color: 0x0000ff
+				});
+
+				const points = [];
+				points.push(this.mesh.position);
+				const testPoint = new THREE.Vector3();
+				testPoint.addVectors(this.mesh.position, targetVector);
+				points.push(testPoint);
+				// points.push( new THREE.Vector3( 10, 0, 0 ) );
+
+				const geometry = new THREE.BufferGeometry().setFromPoints( points );
+
+				const line = new THREE.Line( geometry, material );
+				game.threeManager.addToScene(line);
+				// get the target point
+				// determin vector towards target point
+				// create palm 
+				// 
+
 			},
 			addAirstream: function (start, end) {
 				const newAirstream = new Airstream(this.mesh);
@@ -188,6 +215,7 @@ class Game {
 		const intersects = raycaster.intersectObjects(this.threeManager.scene.children);
 		if (intersects.length) {
 			console.log(intersects[0]);
+			this.player.shootPalm(intersects[0].point);
 		}
 
 	}

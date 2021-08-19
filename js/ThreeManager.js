@@ -46,6 +46,7 @@ export class ThreeManager {
 			new THREE.MeshLambertMaterial({
 				color: 0xF0FF00,
 			}));
+		plane.name = "ground";
 		plane.castShadow = false;
 		plane.receiveShadow = true;
 		plane.rotation.x = -Math.PI / 2;
