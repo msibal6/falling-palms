@@ -17,15 +17,15 @@ export class Airstream {
 				color: 0x0FF0FF,
 				side: THREE.DoubleSide,
 			}));
+
 		if (name !== undefined) {
 			this.mesh.name = name;
 		} else {
 			this.mesh.name = "Airstream";
 		}
+		this.mesh.rotation.x = -Math.PI / 2;
 		this.mesh.receiveShadow = false;
 		this.mesh.castShadow = false;
-		this.mesh.rotation.x = -Math.PI / 2;
-
 
 		this.mesh.raycast = function (raycaster, intersects) {
 			this.mesh.geometry.computeBoundingBox();
@@ -80,9 +80,6 @@ export class Airstream {
 		let rad = this.increment / (this.delta) * 2 * Math.PI;
 		const scale = -0.5 * Math.cos(rad) + 0.5;
 		this.mesh.scale.set(scale, scale, scale);
-		// if (scale == 1) {
-		// 	this.stop();
-		// }
 	}
 
 	update() {

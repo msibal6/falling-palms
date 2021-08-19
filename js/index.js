@@ -159,7 +159,6 @@ class Game {
 			this.cannonManager.update();
 
 			// Player update
-			// this.player.mesh.position.copy(this.player.body.position);
 			this.player.update();
 
 			// Finally, render
@@ -190,11 +189,10 @@ class Game {
 
 // Window variables 
 const game = new Game();
+window.addEventListener('resize', game.threeManager.handleWindowResize(), false);
 
 // Setting up keyboard events
 const keyboardController = new KeyboardController();
 keyboardController.init();
-
-window.addEventListener('resize', game.threeManager.handleWindowResize(), false);
 
 game.start();
