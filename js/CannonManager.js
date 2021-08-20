@@ -16,6 +16,9 @@ export class CannonManager {
 		this.world.addContactMaterial(this.contactMaterial);
 		// Palm Material
 		this.palmMaterial = new CANNON.Material({ friction: 5, });
+		this.palmContact = new CANNON.ContactMaterial(this.palmMaterial, this.planeMaterial,
+			{ friction: 0, restitution: 0.0 });
+		this.world.addContactMaterial(this.palmContact);
 	}
 
 	addMeshBody(meshBody) {

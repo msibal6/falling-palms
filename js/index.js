@@ -79,26 +79,24 @@ class Game {
 				let targetVector = new THREE.Vector3();
 				targetVector.subVectors(targetPoint, this.mesh.position);
 				targetVector.normalize();
-				const material = new THREE.LineBasicMaterial({
-					color: 0x0000ff
-				});
+				// const material = new THREE.LineBasicMaterial({
+				// 	color: 0x0000ff
+				// });
 
-				const points = [];
-				points.push(this.mesh.position);
-				const testPoint = new THREE.Vector3();
-				testPoint.addVectors(this.mesh.position, targetVector);
-				points.push(testPoint);
+				// const points = [];
+				// points.push(this.mesh.position);
+				// const testPoint = new THREE.Vector3();
+				// testPoint.addVectors(this.mesh.position, targetVector);
+				// points.push(testPoint);
 
-				const geometry = new THREE.BufferGeometry().setFromPoints(points);
-				const line = new THREE.Line(geometry, material);
-				window.game.threeManager.addToScene(line);
-				// get the target point
-				// determin vector towards target point
-				// create palm 
-				// 
+				// const geometry = new THREE.BufferGeometry().setFromPoints(points);
+				// const line = new THREE.Line(geometry, material);
+				// window.game.threeManager.addToScene(line);
+
 				const palmShot = new Palm(this.mesh.position, targetVector.multiplyScalar(50));
-				palmShot.setFiringLocation(this.mesh.position);
-				palmShot.setDirection(targetVector);
+				palmShot.setFiringLocation(this.mesh.position.x, this.mesh.position.y - 10, this.mesh.position.z);
+				// palmShot.setFiringLocation(this.mesh.position);
+				palmShot.setDirection(targetVector.multiplyScalar(10));
 			},
 			addAirstream: function (start, end) {
 				const newAirstream = new Airstream(this.mesh);
