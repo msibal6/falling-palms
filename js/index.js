@@ -5,6 +5,7 @@ import { KeyboardController } from './events.js';
 import { ThreeManager } from './ThreeManager.js';
 import { CannonManager } from './CannonManager.js';
 import { Airstream } from './Airstream.js';
+import { Palm } from './Palm.js';
 
 
 class Game {
@@ -95,7 +96,9 @@ class Game {
 				// determin vector towards target point
 				// create palm 
 				// 
-
+				const palmShot = new Palm(this.mesh.position, targetVector.multiplyScalar(50));
+				palmShot.setFiringLocation(this.mesh.position);
+				palmShot.setDirection(targetVector);
 			},
 			addAirstream: function (start, end) {
 				const newAirstream = new Airstream(this.mesh);
@@ -194,6 +197,7 @@ class Game {
 	}
 
 	addMeshBody(mesh, body) {
+		console.log(mesh);
 		this.threeManager.addMeshBody(mesh);
 		this.cannonManager.addMeshBody(body);
 	}
