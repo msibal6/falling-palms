@@ -1,6 +1,7 @@
 // classes in js are jusy syntax obstructions
 export class ThreeManager {
 	constructor() {
+		this.meshBodies = [];
 		this.camera = null;
 		this.scene = new THREE.Scene();
 		this.renderer = new THREE.WebGLRenderer();
@@ -10,6 +11,11 @@ export class ThreeManager {
 	initRenderer() {
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 		document.body.appendChild(this.renderer.domElement);
+	}
+
+	addMeshBody(meshBody) {
+		this.meshBodies.push(meshBody);
+		this.addToScene(meshBody);
 	}
 
 	createScene() {

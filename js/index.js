@@ -40,9 +40,7 @@ class Game {
 					}));
 				tempPlayerMesh.castShadow = true;
 				tempPlayerMesh.receiveShadow = true;
-				game.threeManager.addToScene(tempPlayerMesh)
 				this.mesh = tempPlayerMesh;
-
 				// // Physical player placeholder
 				const size = 1;
 				const halfExtents = new CANNON.Vec3(size, size, size);
@@ -54,18 +52,20 @@ class Game {
 				});
 				tempPlayerBody.position.set(0, 100, 0);
 				this.body = tempPlayerBody;
-				game.cannonManager.world.addBody(tempPlayerBody);
+				this.body.addEventListener('collide', function (e) {
+					console.log(e)
+				})
+				window.game.addMeshBody(this.mesh, this.body);
 
 				// Camera
 				const threeCamera = new THREE.PerspectiveCamera(75,
 					window.innerWidth / window.innerHeight, 0.1, 1000);
-				// Orbit camera tracks position of player mesh in the visual scene
 				const orbitCamera = new SphericalPanCamera(threeCamera, this.mesh);
 				orbitCamera.setPhiPan(Math.PI, Math.PI);
 				orbitCamera.setThetaPan(Math.PI / 4 * 3, Math.PI / 4);
 				orbitCamera.setRadius(20);
 				this.camera = orbitCamera;
-				game.threeManager.camera = threeCamera;
+				window.game.threeManager.camera = threeCamera;
 
 				// Add AirStreams
 				this.airstreams = [];
@@ -87,12 +87,10 @@ class Game {
 				const testPoint = new THREE.Vector3();
 				testPoint.addVectors(this.mesh.position, targetVector);
 				points.push(testPoint);
-				// points.push( new THREE.Vector3( 10, 0, 0 ) );
 
-				const geometry = new THREE.BufferGeometry().setFromPoints( points );
-
-				const line = new THREE.Line( geometry, material );
-				game.threeManager.addToScene(line);
+				const geometry = new THREE.BufferGeometry().setFromPoints(points);
+				const line = new THREE.Line(geometry, material);
+				window.game.threeManager.addToScene(line);
 				// get the target point
 				// determin vector towards target point
 				// create palm 
@@ -106,7 +104,7 @@ class Game {
 				newAirstream.setEnd(end);
 				newAirstream.setDelta(100);
 				newAirstream.start();
-				game.threeManager.addToScene(newAirstream.mesh);
+				window.game.threeManager.addToScene(newAirstream.mesh);
 			},
 			updateAirstreams: function () {
 				if (this.airstreams === undefined) {
@@ -146,8 +144,6 @@ class Game {
 				}
 			},
 			update: function () {
-				// update player position in three from position in cannon
-				this.mesh.position.copy(this.body.position);
 				// Stops the player body vertically  when it reaches a certain point
 				if (this.allAirstreamsStopped()) {
 					this.camera.setThetaDelta(0.05);
@@ -160,23 +156,17 @@ class Game {
 				this.updateForwardAccelaration("zAcceleration", "d");
 				this.updateBackwardAcceleration("xAcceleration", "s");
 				this.updateBackwardAcceleration("zAcceleration", "a");
-				// if (keyboardController.pressed["space"]) {
-				// 	console.log(boxBody.position);
-				// 	console.log(boxBody.velocity);
-				// }
 				this.body.velocity.set(this.xAcceleration, this.body.velocity.y,
 					this.zAcceleration);
 				this.dampenAcceleration();
 				this.camera.update();
 			},
 			dampenAcceleration: function () {
-				// if (keyboardController.hasNoKeysDown()) {
 				if (almostZero(this.zAcceleration) && almostZero(this.xAcceleration)) {
 					return;
 				}
 				this.zAcceleration *= this.damping;
 				this.xAcceleration *= this.damping;
-				// }
 			},
 		};
 
@@ -184,22 +174,35 @@ class Game {
 
 		this.loop = function () {
 			this.animationLoop = requestAnimationFrame(this.loop);
+			// game updates mesh position from cannon positions
+			this.updateMeshBodies();
 			// done by cannonManager
 			this.cannonManager.update();
-
 			// Player update
 			this.player.update();
-
 			// Finally, render
 			this.threeManager.render();
 		}.bind(this);
+	}
 
-		this.start = function () {
-			this.threeManager.createScene();
-			this.cannonManager.createWorld();
-			this.player.create();
-			window.addEventListener('mousedown', this.onMouseClickHandler, false);
-			this.loop();
+	start() {
+		this.threeManager.createScene();
+		this.cannonManager.createWorld();
+		this.player.create();
+		window.addEventListener('mousedown', this.onMouseClickHandler, false);
+		this.loop();
+	}
+
+	addMeshBody(mesh, body) {
+		this.threeManager.addMeshBody(mesh);
+		this.cannonManager.addMeshBody(body);
+	}
+
+	updateMeshBodies() {
+		const meshes = this.threeManager.meshBodies;
+		const bodies = this.cannonManager.meshBodies;
+		for (let i = 0; i < bodies.length; i++) {
+			meshes[i].position.copy(bodies[i].position);
 		}
 	}
 
@@ -217,7 +220,6 @@ class Game {
 			console.log(intersects[0]);
 			this.player.shootPalm(intersects[0].point);
 		}
-
 	}
 }
 

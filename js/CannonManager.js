@@ -3,6 +3,7 @@ export class CannonManager {
 	constructor() {
 		this.timeStep = 1 / 60;
 		this.lastCallTime = null;
+		this.meshBodies = [];
 
 		this.world = new CANNON.World({
 			gravity: new CANNON.Vec3(0, -10, 0), // m/s²
@@ -13,6 +14,12 @@ export class CannonManager {
 		this.contactMaterial = new CANNON.ContactMaterial(this.planeMaterial, this.planeMaterial,
 			{ friction: 0, restitution: 0.0, });
 		this.world.addContactMaterial(this.contactMaterial);
+	}
+
+	addMeshBody(meshBody) {
+		this.meshBodies.push(meshBody);
+		this.world.addBody(meshBody);
+
 	}
 
 	createWorld() {
