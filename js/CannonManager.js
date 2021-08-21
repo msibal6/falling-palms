@@ -27,10 +27,11 @@ export class CannonManager {
 		this.world.addBody(meshBody);
 	}
 
-	// removeMeshBody(meshBody) {
-	// 	removeItemFromArray(meshBody, this.meshBodies);
-	// 	this.world.removeBody(meshBody);
-	// }
+	removeMeshBody(meshBody) {
+		// this.world.removeBody(meshBody);
+		meshBody.sleep();
+		removeItemFromArray(meshBody, this.meshBodies);
+	}
 
 	createWorld() {
 		// Physical floor

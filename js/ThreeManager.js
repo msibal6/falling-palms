@@ -20,10 +20,10 @@ export class ThreeManager {
 		this.addToScene(meshBody);
 	}
 
-	// removeMeshBody(meshBody) {
-	// 	removeItemFromArray(meshBody, this.meshBodies);
-	// 	this.scene.remove(meshBody);
-	// }
+	removeMeshBody(meshBody) {
+		removeItemFromArray(meshBody, this.meshBodies);
+		this.scene.remove(meshBody);
+	}
 
 	createScene() {
 		this.createSkybox();

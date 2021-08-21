@@ -23,14 +23,14 @@ export class Palm {
 			material: window.game.cannonManager.palmMaterial,
 		});
 		this.body = tempPlayerBody;
+		window.game.addMeshBody(this.mesh, this.body);
 		this.collisionHandler = this.collide.bind(this);
 		this.body.addEventListener('collide', this.collisionHandler, false);
-		window.game.addMeshBody(this.mesh, this.body);
 	}
 
 	collide(event) {
 		console.log(this);
-		// window.game.removeMeshBody(this);
+		window.game.removeMeshBody(this.mesh, this.body);
 	}
 
 	setFiringLocation(location, y, z) {
@@ -52,7 +52,7 @@ export class Palm {
 		}
 		// const points = [];
 		// points.push(this.mesh.position);
-		console.log(testPoint);
+		// console.log(testPoint);
 		this.mesh.lookAt(testPoint);
 		// points.push(testPoint);
 
