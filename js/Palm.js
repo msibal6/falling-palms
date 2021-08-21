@@ -5,11 +5,11 @@ export class Palm {
 	}
 
 	initialize() {
-		const handSize = new THREE.Vector3(0.5, 6, 3);
+		const handSize = new THREE.Vector3(3, 6, 0.5);
 		const tempPlayerMesh = new THREE.Mesh(
 			new THREE.BoxGeometry(handSize.x, handSize.y, handSize.z),
 			new THREE.MeshLambertMaterial({
-				color: 0xFFFFFF,
+				color: 0xFFadfb,
 			}));
 		tempPlayerMesh.castShadow = true;
 		tempPlayerMesh.receiveShadow = true;
@@ -23,7 +23,14 @@ export class Palm {
 			material: window.game.cannonManager.palmMaterial,
 		});
 		this.body = tempPlayerBody;
+		this.collisionHandler = this.collide.bind(this);
+		this.body.addEventListener('collide', this.collisionHandler, false);
 		window.game.addMeshBody(this.mesh, this.body);
+	}
+
+	collide(event) {
+		console.log(this);
+		// window.game.removeMeshBody(this);
 	}
 
 	setFiringLocation(location, y, z) {
@@ -34,7 +41,27 @@ export class Palm {
 		}
 	}
 
-	setDirection(direction) {
-		this.body.velocity.set(direction.x, direction.y, direction.z);
+	setDirection(direction, y, z) {
+		const testPoint = new THREE.Vector3();
+		if (direction.x === undefined) {
+			this.body.velocity.set(direction, y, z);
+			testPoint.addVectors(this.mesh.position, new THREE.Vector3(direction, y, z));
+		} else {
+			this.body.velocity.set(direction.x, direction.y, direction.z);
+			testPoint.addVectors(this.mesh.position, direction);
+		}
+		// const points = [];
+		// points.push(this.mesh.position);
+		console.log(testPoint);
+		this.mesh.lookAt(testPoint);
+		// points.push(testPoint);
+
+		// const geometry = new THREE.BufferGeometry().setFromPoints(points);
+		// const line = new THREE.Line(geometry, material);
+		// window.game.threeManager.addToScene(line);
+
+	}
+	setSpeed(speed) {
+		this.body.velocity.scale(speed, this.body.velocity);
 	}
 }

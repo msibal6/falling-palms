@@ -96,7 +96,8 @@ class Game {
 				const palmShot = new Palm(this.mesh.position, targetVector.multiplyScalar(50));
 				palmShot.setFiringLocation(this.mesh.position.x, this.mesh.position.y - 10, this.mesh.position.z);
 				// palmShot.setFiringLocation(this.mesh.position);
-				palmShot.setDirection(targetVector.multiplyScalar(10));
+				palmShot.setDirection(targetVector);
+				palmShot.setSpeed(10);
 			},
 			addAirstream: function (start, end) {
 				const newAirstream = new Airstream(this.mesh);
@@ -195,10 +196,15 @@ class Game {
 	}
 
 	addMeshBody(mesh, body) {
-		console.log(mesh);
 		this.threeManager.addMeshBody(mesh);
 		this.cannonManager.addMeshBody(body);
 	}
+
+	// addMeshBody(mesh, body) {
+	// 	this.threeManager.removeMeshBody(mesh);
+	// 	this.cannonManager.removeMeshBody(body);
+	// }
+
 
 	updateMeshBodies() {
 		const meshes = this.threeManager.meshBodies;

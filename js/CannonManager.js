@@ -1,4 +1,5 @@
 import * as CANNON from './cannon-es.js';
+import { removeItemFromArray } from './helper.js';
 export class CannonManager {
 	constructor() {
 		this.timeStep = 1 / 60;
@@ -24,8 +25,12 @@ export class CannonManager {
 	addMeshBody(meshBody) {
 		this.meshBodies.push(meshBody);
 		this.world.addBody(meshBody);
-
 	}
+
+	// removeMeshBody(meshBody) {
+	// 	removeItemFromArray(meshBody, this.meshBodies);
+	// 	this.world.removeBody(meshBody);
+	// }
 
 	createWorld() {
 		// Physical floor

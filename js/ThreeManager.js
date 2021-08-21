@@ -1,3 +1,5 @@
+import { removeItemFromArray } from "./helper.js";
+
 // classes in js are jusy syntax obstructions
 export class ThreeManager {
 	constructor() {
@@ -17,6 +19,11 @@ export class ThreeManager {
 		this.meshBodies.push(meshBody);
 		this.addToScene(meshBody);
 	}
+
+	// removeMeshBody(meshBody) {
+	// 	removeItemFromArray(meshBody, this.meshBodies);
+	// 	this.scene.remove(meshBody);
+	// }
 
 	createScene() {
 		this.createSkybox();
@@ -75,6 +82,8 @@ export class ThreeManager {
 	addToScene(object) {
 		this.scene.add(object);
 	}
+
+
 
 	render() {
 		this.renderer.render(this.scene, this.camera);

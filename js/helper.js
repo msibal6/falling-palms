@@ -27,3 +27,12 @@ export function vectorsAlmostEqual(threeVector1, threeVector2, precision) {
 	}
 	return false;
 }
+
+export function removeItemFromArray(item, array) {
+	const index = array.indexOf(item);
+	if (index == array.length - 1) {
+		array.pop();
+	} else {
+		array.splice(index, index + 1);
+	}
+}
