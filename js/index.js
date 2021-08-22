@@ -6,6 +6,7 @@ import { ThreeManager } from './ThreeManager.js';
 import { CannonManager } from './CannonManager.js';
 import { Airstream } from './Airstream.js';
 import { Palm } from './Palm.js';
+import { Player } from './Player.js';
 
 
 class Game {
@@ -17,6 +18,8 @@ class Game {
 		this.cannonManager = new CannonManager(CANNON);
 		this.onMouseClickHandler = this.onMouseClick.bind(this);
 
+this.testPlayer = new Player();
+this.testPlayer.test();
 		/* Game world the intersection between the two
 			is managed by the game
 			ie copying position from cannon to three
@@ -79,18 +82,6 @@ class Game {
 				let targetVector = new THREE.Vector3();
 				targetVector.subVectors(targetPoint, this.mesh.position);
 				targetVector.normalize();
-
-				// const material = new THREE.LineBasicMaterial({
-				// 	color: 0x0000ff
-				// });
-				// const points = [];
-				// points.push(this.mesh.position);
-				// const testPoint = new THREE.Vector3();
-				// testPoint.addVectors(this.mesh.position, targetVector);
-				// points.push(testPoint);
-				// const geometry = new THREE.BufferGeometry().setFromPoints(points);
-				// const line = new THREE.Line(geometry, material);
-				// window.game.threeManager.addToScene(line);
 
 				const palmShot = new Palm(this.mesh.position, targetVector.multiplyScalar(50));
 				palmShot.setFiringLocation(this.mesh.position.x, this.mesh.position.y - 10, this.mesh.position.z);
