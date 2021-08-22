@@ -79,16 +79,15 @@ class Game {
 				let targetVector = new THREE.Vector3();
 				targetVector.subVectors(targetPoint, this.mesh.position);
 				targetVector.normalize();
+
 				// const material = new THREE.LineBasicMaterial({
 				// 	color: 0x0000ff
 				// });
-
 				// const points = [];
 				// points.push(this.mesh.position);
 				// const testPoint = new THREE.Vector3();
 				// testPoint.addVectors(this.mesh.position, targetVector);
 				// points.push(testPoint);
-
 				// const geometry = new THREE.BufferGeometry().setFromPoints(points);
 				// const line = new THREE.Line(geometry, material);
 				// window.game.threeManager.addToScene(line);
