@@ -20,7 +20,7 @@ export class ThreeManager {
 		this.addToScene(meshBody);
 	}
 
-	removeMeshBody(meshBody) {
+	removeBodyMesh(meshBody) {
 		removeItemFromArray(meshBody, this.meshBodies);
 		this.scene.remove(meshBody);
 	}

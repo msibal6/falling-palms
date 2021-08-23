@@ -161,6 +161,8 @@ this.testPlayer.test();
 				this.xAcceleration *= this.damping;
 			},
 		};
+		console.log(this.player);
+		console.log(this.testPlayer);
 
 		this.animationLoop = null;
 
@@ -191,7 +193,7 @@ this.testPlayer.test();
 	}
 
 	removeMeshBody(mesh, body) {
-		this.threeManager.removeMeshBody(mesh);
+		this.threeManager.removeBodyMesh(mesh);
 		this.cannonManager.removeMeshBody(body);
 	}
 
