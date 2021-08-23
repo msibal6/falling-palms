@@ -18,8 +18,8 @@ class Game {
 		this.cannonManager = new CannonManager(CANNON);
 		this.onMouseClickHandler = this.onMouseClick.bind(this);
 
-this.testPlayer = new Player();
-this.testPlayer.test();
+		this.testPlayer = new Player();
+		this.testPlayer.test();
 		/* Game world the intersection between the two
 			is managed by the game
 			ie copying position from cannon to three
