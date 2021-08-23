@@ -15,6 +15,7 @@ Player.prototype.test = function () {
 }
 
 Player.prototype.create = function () {
+	// Add visual player placeholder
 	const tempPlayerMesh = new THREE.Mesh(
 		new THREE.BoxGeometry(2, 2, 2),
 		new THREE.MeshLambertMaterial({
@@ -55,4 +56,91 @@ Player.prototype.create = function () {
 		new THREE.Vector3(5, 10, 10));
 	this.addAirstream(new THREE.Vector3(5, 0, -10),
 		new THREE.Vector3(5, 10, -10));
+}
+
+Player.prototype.shootPalm = function (targetPoint) {
+	let targetVector = new THREE.Vector3();
+	targetVector.subVectors(targetPoint, this.mesh.position);
+	targetVector.normalize();
+
+	const palmShot = new Palm(this.mesh.position, targetVector.multiplyScalar(50));
+	palmShot.setFiringLocation(this.mesh.position.x, this.mesh.position.y - 10, this.mesh.position.z);
+	// palmShot.setFiringLocation(this.mesh.position);
+	palmShot.setDirection(targetVector);
+	palmShot.setSpeed(5);
+}
+Player.prototype.addAirstream = function (start, end) {
+	const newAirstream = new Airstream(this.mesh);
+	this.airstreams.push(newAirstream);
+	newAirstream.setStart(start);
+	newAirstream.setEnd(end);
+	newAirstream.setDelta(100);
+	newAirstream.start();
+	window.game.threeManager.addToScene(newAirstream.mesh);
+}
+Player.prototype.updateAirstreams = function () {
+	if (this.airstreams === undefined) {
+		return;
+	}
+	for (let i = 0; i < this.airstreams.length; i++) {
+		this.airstreams[i].update();
+	}
+}
+
+Player.prototype.allAirstreamsStopped = function () {
+	if (this.airstreams === undefined) {
+		return true;
+	}
+	for (let i = 0; i < this.airstreams.length; i++) {
+		if (!this.airstreams[i].isStopped()) {
+			return false;
+		}
+	}
+	return true;
+}
+Player.prototype.updateForwardAccelaration = function (axis, key) {
+	if (keyboardController.pressed[key]) {
+		if (this[axis] > this.maxSpeed) {
+			this[axis] = this.maxSpeed;
+		} else {
+			this[axis] += this.acceleration;
+		}
+	}
+}
+
+Player.prototype.updateBackwardAcceleration = function (axis, key) {
+	if (keyboardController.pressed[key]) {
+		if (this[axis] < -this.maxSpeed) {
+			this[axis] = -this.maxSpeed;
+		} else {
+			this[axis] -= this.acceleration;
+		}
+	}
+}
+
+Player.prototype.update = function () {
+	// Stops the player body vertically  when it reaches a certain point
+	if (this.allAirstreamsStopped()) {
+		this.camera.setThetaDelta(0.05);
+		this.body.mass = 0;
+		this.body.velocity.y = 0;
+	}
+
+	this.updateAirstreams();
+	this.updateForwardAccelaration("xAcceleration", "w");
+	this.updateForwardAccelaration("zAcceleration", "d");
+	this.updateBackwardAcceleration("xAcceleration", "s");
+	this.updateBackwardAcceleration("zAcceleration", "a");
+	this.body.velocity.set(this.xAcceleration, this.body.velocity.y,
+		this.zAcceleration);
+	this.dampenAcceleration();
+	this.camera.update();
+}
+
+Player.prototype.dampenAcceleration = function () {
+	if (almostZero(this.zAcceleration) && almostZero(this.xAcceleration)) {
+		return;
+	}
+	this.zAcceleration *= this.damping;
+	this.xAcceleration *= this.damping;
 }
