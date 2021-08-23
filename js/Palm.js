@@ -29,7 +29,6 @@ export class Palm {
 	}
 
 	collide(event) {
-		console.log(this);
 		window.game.removeMeshBody(this.mesh, this.body);
 	}
 

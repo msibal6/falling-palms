@@ -217,7 +217,6 @@ this.testPlayer.test();
 		// calculate objects intersecting the picking ray
 		const intersects = raycaster.intersectObjects(this.threeManager.scene.children);
 		if (intersects.length) {
-			console.log(intersects[0]);
 			this.player.shootPalm(intersects[0].point);
 		}
 	}

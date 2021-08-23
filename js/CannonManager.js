@@ -5,6 +5,7 @@ export class CannonManager {
 		this.timeStep = 1 / 60;
 		this.lastCallTime = null;
 		this.meshBodies = [];
+		this.meshBodiesToRemove = [];
 
 		this.world = new CANNON.World({
 			gravity: new CANNON.Vec3(0, -10, 0), // m/s²
@@ -28,9 +29,21 @@ export class CannonManager {
 	}
 
 	removeMeshBody(meshBody) {
-		// this.world.removeBody(meshBody);
-		meshBody.sleep();
+		// meshBody.sleep();
+		this.killBody(meshBody);
 		removeItemFromArray(meshBody, this.meshBodies);
+	}
+
+	removeDeadMeshBodies() {
+		for (let i = 0; i < this.meshBodiesToRemove.length; i++) {
+			const meshBody = this.meshBodiesToRemove[i];
+			this.world.removeBody(meshBody);
+			removeItemFromArray(meshBody, this.meshBodiesToRemove);
+		}
+	}
+
+	killBody(meshBody) {
+		this.meshBodiesToRemove.push(meshBody);
 	}
 
 	createWorld() {
@@ -47,6 +60,7 @@ export class CannonManager {
 	}
 
 	update() {
+		this.removeDeadMeshBodies()
 		const time = performance.now() / 1000; // seconds
 		if (!this.lastCallTime) {
 			this.world.step(this.timeStep);
