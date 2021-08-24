@@ -1,11 +1,6 @@
-import { almostZero } from './helper.js';
-import { SphericalPanCamera } from './SphericalPanCamera.js';
-import * as CANNON from './cannon-es.js';
 import { KeyboardController } from './events.js';
 import { ThreeManager } from './ThreeManager.js';
 import { CannonManager } from './CannonManager.js';
-import { Airstream } from './Airstream.js';
-import { Palm } from './Palm.js';
 import { player } from './player.js';
 
 class Game {
@@ -14,6 +9,8 @@ class Game {
 		this.threeManager = new ThreeManager();
 		// World is managed by cannon manager of the game
 		this.cannonManager = new CannonManager();
+		// TODO Add array for mesh bodies so it is clear game is handling intersection
+		// between the two
 
 		this.onMouseClickHandler = this.onMouseClick.bind(this);
 
@@ -28,12 +25,9 @@ class Game {
 			// done by cannonManager
 			this.cannonManager.update();
 			// Player update
-			//  console.log(this.player)
 			this.player.update();
-			// this.testPlayer.update();
 			// Finally, render
 			this.threeManager.render();
-			// console.log(this);
 		}.bind(this);
 	}
 
@@ -54,7 +48,6 @@ class Game {
 		this.threeManager.removeBodyMesh(mesh);
 		this.cannonManager.removeMeshBody(body);
 	}
-
 
 	updateMeshBodies() {
 		const meshes = this.threeManager.meshBodies;
