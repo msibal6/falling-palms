@@ -20,7 +20,7 @@ export class Palm {
 		const tempPlayerBody = new CANNON.Body({
 			mass: 0.5,
 			shape: boxShape,
-			material: window.game.cannonManager.palmMaterial,
+			material: window.game._cannonManager.palmMaterial,
 		});
 		this.body = tempPlayerBody;
 		window.game.addMeshBody(this.mesh, this.body);

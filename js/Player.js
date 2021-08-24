@@ -35,14 +35,14 @@ export const player = {
 		const tempPlayerBody = new CANNON.Body({
 			mass: 1,
 			shape: boxShape,
-			material: game.cannonManager.planeMaterial
+			material: game._cannonManager.planeMaterial
 		});
 		tempPlayerBody.position.set(0, 100, 0);
 		this.body = tempPlayerBody;
 		this.body.addEventListener('collide', function (e) {
 			console.log(e);
 		});
-		console.log(window.game.threeManager);
+		console.log(window.game._threeManager);
 		window.game.addMeshBody(this.mesh, this.body);
 
 		// Camera
@@ -53,7 +53,7 @@ export const player = {
 		orbitCamera.setThetaPan(Math.PI / 4 * 3, Math.PI / 4);
 		orbitCamera.setRadius(20);
 		this.camera = orbitCamera;
-		window.game.threeManager.camera = threeCamera;
+		window.game._threeManager.camera = threeCamera;
 
 		// Add AirStreams
 		this.airstreams = [];
@@ -80,7 +80,7 @@ export const player = {
 		newAirstream.setEnd(end);
 		newAirstream.setDelta(delta);
 		newAirstream.start();
-		window.game.threeManager.addToScene(newAirstream.mesh);
+		window.game._threeManager.addToScene(newAirstream.mesh);
 	},
 	updateAirstreams: function () {
 		if (this.airstreams === undefined) {

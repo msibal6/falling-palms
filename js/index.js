@@ -19,15 +19,15 @@ class Game {
 		this._animationLoop = null;
 
 		this._loop = function () {
-			this.animationLoop = requestAnimationFrame(this.loop);
+			this._animationLoop = requestAnimationFrame(this._loop);
 			// game updates mesh position from cannon positions
 			this.updateMeshBodies();
 			// done by cannonManager
-			this.cannonManager.update();
+			this._cannonManager.update();
 			// Player update
-			this.player.update();
+			this._player.update();
 			// Finally, render
-			this.threeManager.render();
+			this._threeManager.render();
 		}.bind(this);
 	}
 
@@ -58,6 +58,7 @@ class Game {
 	}
 
 	onMouseClick(event) {
+
 		// calculate mouse position in normalized device coordinates
 		// (-1 to +1) for both components
 		const raycaster = new THREE.Raycaster();
@@ -65,6 +66,7 @@ class Game {
 		mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
 		mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 		raycaster.setFromCamera(mouse, this._player.camera.threeCamera);
+
 		// calculate objects intersecting the picking ray
 		const intersects = raycaster.intersectObjects(this._threeManager.scene.children);
 		if (intersects.length) {
@@ -75,7 +77,8 @@ class Game {
 
 // Window variables 
 window.game = new Game();
-window.addEventListener('resize', game.threeManager.handleWindowResize(), false);
+// console.log(window.game.threeManager.);
+window.addEventListener('resize', window.game._threeManager.handleWindowResize(), false);
 
 // Setting up keyboard events
 window.keyboardController = new KeyboardController();
