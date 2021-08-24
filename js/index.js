@@ -6,19 +6,19 @@ import { player } from './player.js';
 class Game {
 	constructor() {
 		// visual  is managed by _three manager of the game 
-		this.threeManager = new ThreeManager();
+		this._threeManager = new ThreeManager();
 		// World is managed by cannon manager of the game
-		this.cannonManager = new CannonManager();
+		this._cannonManager = new CannonManager();
 		// TODO Add array for mesh bodies so it is clear game is handling intersection
 		// between the two
 
-		this.onMouseClickHandler = this.onMouseClick.bind(this);
+		this._onMouseClickHandler = this.onMouseClick.bind(this);
 
-		this.player = player;
+		this._player = player;
 
-		this.animationLoop = null;
+		this._animationLoop = null;
 
-		this.loop = function () {
+		this._loop = function () {
 			this.animationLoop = requestAnimationFrame(this.loop);
 			// game updates mesh position from cannon positions
 			this.updateMeshBodies();
@@ -32,26 +32,26 @@ class Game {
 	}
 
 	start() {
-		this.threeManager.createScene();
-		this.cannonManager.createWorld();
-		this.player.create();
-		window.addEventListener('mousedown', this.onMouseClickHandler, false);
-		this.loop();
+		this._threeManager.createScene();
+		this._cannonManager.createWorld();
+		this._player.create();
+		window.addEventListener('mousedown', this._onMouseClickHandler, false);
+		this._loop();
 	}
 
 	addMeshBody(mesh, body) {
-		this.threeManager.addMeshBody(mesh);
-		this.cannonManager.addMeshBody(body);
+		this._threeManager.addMeshBody(mesh);
+		this._cannonManager.addMeshBody(body);
 	}
 
 	removeMeshBody(mesh, body) {
-		this.threeManager.removeBodyMesh(mesh);
-		this.cannonManager.removeMeshBody(body);
+		this._threeManager.removeBodyMesh(mesh);
+		this._cannonManager.removeMeshBody(body);
 	}
 
 	updateMeshBodies() {
-		const meshes = this.threeManager.meshBodies;
-		const bodies = this.cannonManager.meshBodies;
+		const meshes = this._threeManager.meshBodies;
+		const bodies = this._cannonManager.meshBodies;
 		for (let i = 0; i < bodies.length; i++) {
 			meshes[i].position.copy(bodies[i].position);
 		}
@@ -64,11 +64,11 @@ class Game {
 		const mouse = new THREE.Vector2();
 		mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
 		mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-		raycaster.setFromCamera(mouse, this.player.camera.threeCamera);
+		raycaster.setFromCamera(mouse, this._player.camera.threeCamera);
 		// calculate objects intersecting the picking ray
-		const intersects = raycaster.intersectObjects(this.threeManager.scene.children);
+		const intersects = raycaster.intersectObjects(this._threeManager.scene.children);
 		if (intersects.length) {
-			this.player.shootPalm(intersects[0].point);
+			this._player.shootPalm(intersects[0].point);
 		}
 	}
 }
