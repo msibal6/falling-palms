@@ -12,14 +12,14 @@ class Game {
 		// TODO Add array for mesh bodies so it is clear game is handling intersection
 		// between the two
 
-		this._onMouseClickHandler = this.onMouseClick.bind(this);
+		this.onMouseClickHandler = this.onMouseClick.bind(this);
 
 		this._player = player;
 
 		this._animationLoop = null;
 
-		this._loop = function () {
-			this._animationLoop = requestAnimationFrame(this._loop);
+		this.loop = function () {
+			this._animationLoop = requestAnimationFrame(this.loop);
 			// game updates mesh position from cannon positions
 			this.updateMeshBodies();
 			// done by cannonManager
@@ -35,8 +35,8 @@ class Game {
 		this._threeManager.createScene();
 		this._cannonManager.createWorld();
 		this._player.create();
-		window.addEventListener('mousedown', this._onMouseClickHandler, false);
-		this._loop();
+		window.addEventListener('mousedown', this.onMouseClickHandler, false);
+		this.loop();
 	}
 
 	addMeshBody(mesh, body) {
