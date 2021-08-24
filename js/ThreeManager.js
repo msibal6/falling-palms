@@ -92,6 +92,8 @@ export class ThreeManager {
 
 	handleWindowResize() {
 		return function () {
+			console.log(this.scene.children);
+			console.log(this.camera);
 			const windowHeight = window.innerHeight;
 			const windowWidth = window.innerWidth;
 			this.renderer.setSize(windowWidth, windowHeight);

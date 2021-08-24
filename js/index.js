@@ -13,13 +13,11 @@ class Game {
 	constructor() {
 		// visual  is managed by _three manager of the game 
 		this.threeManager = new ThreeManager();
-
 		// World is managed by cannon manager of the game
-		this.cannonManager = new CannonManager(CANNON);
+		this.cannonManager = new CannonManager();
 		this.onMouseClickHandler = this.onMouseClick.bind(this);
 
 		this.testPlayer = new Player();
-		this.testPlayer.test();
 		/* Game world the intersection between the two
 			is managed by the game
 			ie copying position from cannon to three
@@ -59,6 +57,7 @@ class Game {
 				this.body.addEventListener('collide', function (e) {
 					console.log(e)
 				})
+				console.log(window.game.threeManager);
 				window.game.addMeshBody(this.mesh, this.body);
 
 				// Camera
@@ -161,8 +160,6 @@ class Game {
 				this.xAcceleration *= this.damping;
 			},
 		};
-		console.log(this.player);
-		console.log(this.testPlayer);
 
 		this.animationLoop = null;
 
@@ -173,21 +170,28 @@ class Game {
 			// done by cannonManager
 			this.cannonManager.update();
 			// Player update
+			//  console.log(this.player)
 			this.player.update();
+			// this.testPlayer.update();
 			// Finally, render
 			this.threeManager.render();
+			// console.log(this);
 		}.bind(this);
 	}
 
 	start() {
+		// this.testPlayer.test();
 		this.threeManager.createScene();
 		this.cannonManager.createWorld();
+		// this.testPlayer.create();
 		this.player.create();
 		window.addEventListener('mousedown', this.onMouseClickHandler, false);
 		this.loop();
 	}
 
 	addMeshBody(mesh, body) {
+		console.log(mesh);
+		console.log(body);
 		this.threeManager.addMeshBody(mesh);
 		this.cannonManager.addMeshBody(body);
 	}
@@ -230,4 +234,5 @@ window.addEventListener('resize', game.threeManager.handleWindowResize(), false)
 window.keyboardController = new KeyboardController();
 window.keyboardController.init();
 
+// window.game.testPlayer.test();
 window.game.start();

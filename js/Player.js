@@ -1,3 +1,8 @@
+import { almostZero } from './helper.js';
+import { SphericalPanCamera } from './SphericalPanCamera.js';
+import * as CANNON from './cannon-es.js';
+import { Airstream } from './Airstream.js';
+import { Palm } from './Palm.js';
 export function Player() {
 	// visual THREE mesh
 	this.mesh = null;
@@ -12,6 +17,8 @@ export function Player() {
 
 Player.prototype.test = function () {
 	console.log("test");
+	console.log(window.game);
+	console.log(window.game.threeManager);
 }
 
 Player.prototype.create = function () {
@@ -31,23 +38,23 @@ Player.prototype.create = function () {
 	const tempPlayerBody = new CANNON.Body({
 		mass: 1,
 		shape: boxShape,
-		material: game.cannonManager.planeMaterial
+		material: window.game.cannonManager.planeMaterial,
 	});
 	tempPlayerBody.position.set(0, 100, 0);
 	this.body = tempPlayerBody;
-	this.body.addEventListener('collide', function (e) {
-		console.log(e)
-	})
+	// this.body.addEventVListener('collide', function (e) {
+	// 	console.log(e);
+	// })
 	window.game.addMeshBody(this.mesh, this.body);
 
 	// Camera
 	const threeCamera = new THREE.PerspectiveCamera(75,
 		window.innerWidth / window.innerHeight, 0.1, 1000);
-	const orbitCamera = new SphericalPanCamera(threeCamera, this.mesh);
-	orbitCamera.setPhiPan(Math.PI, Math.PI);
-	orbitCamera.setThetaPan(Math.PI / 4 * 3, Math.PI / 4);
-	orbitCamera.setRadius(20);
-	this.camera = orbitCamera;
+	const sphericalPanCamera = new SphericalPanCamera(threeCamera, this.mesh);
+	sphericalPanCamera.setPhiPan(Math.PI, Math.PI);
+	sphericalPanCamera.setThetaPan(Math.PI / 4 * 3, Math.PI / 4);
+	sphericalPanCamera.setRadius(20);
+	this.camera = sphericalPanCamera;
 	window.game.threeManager.camera = threeCamera;
 
 	// Add AirStreams
@@ -70,6 +77,7 @@ Player.prototype.shootPalm = function (targetPoint) {
 	palmShot.setSpeed(5);
 }
 Player.prototype.addAirstream = function (start, end) {
+	console.log(this);
 	const newAirstream = new Airstream(this.mesh);
 	this.airstreams.push(newAirstream);
 	newAirstream.setStart(start);
