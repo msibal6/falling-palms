@@ -1,7 +1,7 @@
 import { KeyboardController } from './events.js';
 import { ThreeManager } from './ThreeManager.js';
 import { CannonManager } from './CannonManager.js';
-import { player } from './player.js';
+import { Player } from './Player.js';
 
 class Game {
 	constructor() {
@@ -14,7 +14,7 @@ class Game {
 
 		this.onMouseClickHandler = this.onMouseClick.bind(this);
 
-		this._player = player;
+		this._player = new Player();
 
 		this._animationLoop = null;
 

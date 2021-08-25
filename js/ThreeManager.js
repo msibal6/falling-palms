@@ -4,7 +4,9 @@ import { removeItemFromArray } from "./helper.js";
 export class ThreeManager {
 	constructor() {
 		this.meshBodies = [];
-		this.camera = null;
+		const threeCamera = new THREE.PerspectiveCamera(75,
+			window.innerWidth / window.innerHeight, 0.1, 1000);
+		this.camera = threeCamera;
 		this.scene = new THREE.Scene();
 		this.renderer = new THREE.WebGLRenderer();
 		this.initRenderer();
@@ -92,8 +94,6 @@ export class ThreeManager {
 
 	handleWindowResize() {
 		return function () {
-			console.log(this.scene.children);
-			console.log(this.camera);
 			const windowHeight = window.innerHeight;
 			const windowWidth = window.innerWidth;
 			this.renderer.setSize(windowWidth, windowHeight);
