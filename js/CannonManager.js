@@ -29,7 +29,6 @@ export class CannonManager {
 	}
 
 	removeMeshBody(meshBody) {
-		// meshBody.sleep();
 		this.killBody(meshBody);
 		removeItemFromArray(meshBody, this.meshBodies);
 	}
@@ -43,6 +42,7 @@ export class CannonManager {
 	}
 
 	killBody(meshBody) {
+		meshBody.sleep();
 		this.meshBodiesToRemove.push(meshBody);
 	}
 

@@ -10,6 +10,7 @@ class Game {
 		// World is managed by cannon manager of the game
 		this._cannonManager = new CannonManager();
 		// TODO Add array for mesh bodies so it is clear game is handling intersection
+		this.meshBodies = [];
 		// between the two
 
 		this.onMouseClickHandler = this.onMouseClick.bind(this);
