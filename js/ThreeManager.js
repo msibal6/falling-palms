@@ -3,7 +3,7 @@ import { removeItemFromArray } from "./helper.js";
 // classes in js are jusy syntax obstructions
 export class ThreeManager {
 	constructor() {
-		this.meshBodies = [];
+		this._visuals = [];
 		const threeCamera = new THREE.PerspectiveCamera(75,
 			window.innerWidth / window.innerHeight, 0.1, 1000);
 		this.camera = threeCamera;
@@ -17,13 +17,13 @@ export class ThreeManager {
 		document.body.appendChild(this.renderer.domElement);
 	}
 
-	addMeshBody(meshBody) {
-		this.meshBodies.push(meshBody);
+	addVisual(meshBody) {
+		this._visuals.push(meshBody);
 		this.addToScene(meshBody);
 	}
 
-	removeBodyMesh(meshBody) {
-		removeItemFromArray(meshBody, this.meshBodies);
+	removeVisual(meshBody) {
+		removeItemFromArray(meshBody, this._visuals);
 		this.scene.remove(meshBody);
 	}
 

@@ -2,6 +2,9 @@ import { KeyboardController } from './events.js';
 import { ThreeManager } from './ThreeManager.js';
 import { CannonManager } from './CannonManager.js';
 import { Player } from './Player.js';
+import { Medy } from './Medy.js';
+import * as CANNON from './cannon-es.js';
+import { removeItemFromArray } from './helper.js';
 
 class Game {
 	constructor() {
@@ -10,7 +13,7 @@ class Game {
 		// World is managed by cannon manager of the game
 		this._cannonManager = new CannonManager();
 		// TODO Add array for mesh bodies so it is clear game is handling intersection
-		this.meshBodies = [];
+		this._medies = [];
 		// between the two
 
 		this.onMouseClickHandler = this.onMouseClick.bind(this);
@@ -26,7 +29,7 @@ class Game {
 			// done by cannonManager
 			this._cannonManager.update();
 			// Player update
-			this._player.update();
+			// this._player.update();
 			// Finally, render
 			this._threeManager.render();
 		}.bind(this);
@@ -35,26 +38,65 @@ class Game {
 	start() {
 		this._threeManager.createScene();
 		this._cannonManager.createWorld();
-		this._player.create();
+		this._threeManager.camera.position.set(0, 10, 10);
+		this.testMedy();
+		// this._player.create();
 		window.addEventListener('mousedown', this.onMouseClickHandler, false);
 		this.loop();
 	}
+	testMedy() {
+		// Add visual player placeholder
+		const tempPlayerMesh = new THREE.Mesh(
+			new THREE.BoxGeometry(2, 2, 2),
+			new THREE.MeshLambertMaterial({
+				color: 0xFFFFFF,
+			}));
+		tempPlayerMesh.castShadow = true;
+		tempPlayerMesh.receiveShadow = true;
+		// // Physical player placeholder
+		const size = 1;
+		const halfExtents = new CANNON.Vec3(size, size, size);
+		const boxShape = new CANNON.Box(halfExtents);
+		const tempPlayerBody = new CANNON.Body({
+			mass: 1,
+			shape: boxShape,
+			material: game._cannonManager.planeMaterial
+		});
+		const newMedy = new Medy(tempPlayerMesh, tempPlayerBody);
+		newMedy._body.position.set(0, 100, 0);
+		this.addMedy(newMedy);
+	}
+
+	addMedy(medy) {
+		this._medies.push(medy);
+		this._threeManager.addVisual(medy._mesh);
+		this._cannonManager.addPhysical(medy._body);
+	}
+
+	removeMedy(medy) {
+		removeItemFromArray(medy, this._medies);
+		this._threeManager.removeVisual(medy._mesh);
+		this._cannonManager.removePhysical(medy._body);
+	}
 
 	addMeshBody(mesh, body) {
-		this._threeManager.addMeshBody(mesh);
-		this._cannonManager.addMeshBody(body);
+		this._threeManager.addVisual(mesh);
+		this._cannonManager.addPhysical(body);
 	}
 
 	removeMeshBody(mesh, body) {
-		this._threeManager.removeBodyMesh(mesh);
-		this._cannonManager.removeMeshBody(body);
+		this._threeManager.removeVisual(mesh);
+		this._cannonManager.removePhysical(body);
 	}
 
 	updateMeshBodies() {
-		const meshes = this._threeManager.meshBodies;
-		const bodies = this._cannonManager.meshBodies;
-		for (let i = 0; i < bodies.length; i++) {
-			meshes[i].position.copy(bodies[i].position);
+		const visuals = this._threeManager._visuals;
+		const physicals = this._cannonManager._physicals;
+		if (physicals.length == 0) {
+			return;
+		}
+		for (let i = 0; i < physicals.length; i++) {
+			visuals[i].position.copy(physicals[i].position);
 		}
 	}
 

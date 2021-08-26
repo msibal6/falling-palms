@@ -4,7 +4,7 @@ export class CannonManager {
 	constructor() {
 		this.timeStep = 1 / 60;
 		this.lastCallTime = null;
-		this.meshBodies = [];
+		this._physicals = [];
 		this.meshBodiesToRemove = [];
 
 		this.world = new CANNON.World({
@@ -23,14 +23,14 @@ export class CannonManager {
 		this.world.addContactMaterial(this.palmContact);
 	}
 
-	addMeshBody(meshBody) {
-		this.meshBodies.push(meshBody);
+	addPhysical(meshBody) {
+		this._physicals.push(meshBody);
 		this.world.addBody(meshBody);
 	}
 
-	removeMeshBody(meshBody) {
+	removePhysical(meshBody) {
 		this.killBody(meshBody);
-		removeItemFromArray(meshBody, this.meshBodies);
+		removeItemFromArray(meshBody, this._physicals);
 	}
 
 	removeDeadMeshBodies() {
