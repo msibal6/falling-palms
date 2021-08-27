@@ -25,11 +25,12 @@ class Game {
 		this.loop = function () {
 			this._animationLoop = requestAnimationFrame(this.loop);
 			// game updates mesh position from cannon positions
+			this.updateMedies();
 			this.updateMeshBodies();
 			// done by cannonManager
 			this._cannonManager.update();
 			// Player update
-			// this._player.update();
+			this._player.update();
 			// Finally, render
 			this._threeManager.render();
 		}.bind(this);
@@ -38,9 +39,8 @@ class Game {
 	start() {
 		this._threeManager.createScene();
 		this._cannonManager.createWorld();
-		this._threeManager.camera.position.set(0, 10, 10);
-		this.testMedy();
-		// this._player.create();
+		// this.testMedy();
+		this._player.create();
 		window.addEventListener('mousedown', this.onMouseClickHandler, false);
 		this.loop();
 	}
@@ -89,6 +89,12 @@ class Game {
 		this._cannonManager.removePhysical(body);
 	}
 
+	updateMedies() {
+		for (let i = 0; i < this._medies.length; i++) {
+			this._medies[i]._mesh.position.copy(this._medies[i]._body.position);
+		}
+	}
+
 	updateMeshBodies() {
 		const visuals = this._threeManager._visuals;
 		const physicals = this._cannonManager._physicals;
@@ -127,5 +133,4 @@ window.addEventListener('resize', window.game._threeManager.handleWindowResize()
 window.keyboardController = new KeyboardController();
 window.keyboardController.init();
 
-// window.game.testPlayer.test();
 window.game.start();

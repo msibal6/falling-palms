@@ -3,12 +3,13 @@ import { SphericalPanCamera } from './SphericalPanCamera.js';
 import * as CANNON from './cannon-es.js';
 import { Airstream } from './Airstream.js';
 import { Palm } from './Palm.js';
+import { Medy } from './Medy.js';
 export class Player {
 	constructor() {
 		// visual THREE mesh
-		this.mesh = null;
 		// physics CANNON body
-		this.body = null;
+		// Wrapped in this._medy
+		this._medy = null;
 		this.maxSpeed = 80.0;
 		this.acceleration = 4.0;
 		this.xAcceleration = 0.0;
@@ -26,10 +27,8 @@ export class Player {
 			}));
 		tempPlayerMesh.castShadow = true;
 		tempPlayerMesh.receiveShadow = true;
-		this.mesh = tempPlayerMesh;
-		// TODO raycasting for shooting palms
-		this.mesh.raycast = function (raycaster, intersects) {
-
+		// // TODO raycasting for shooting palms
+		tempPlayerMesh.raycast = function (raycaster, intersects) {
 		}
 		// // Physical player placeholder
 		const size = 1;
@@ -41,15 +40,14 @@ export class Player {
 			material: game._cannonManager.planeMaterial
 		});
 		tempPlayerBody.position.set(0, 100, 0);
-		this.body = tempPlayerBody;
-		this.body.addEventListener('collide', function (e) {
-			// console.log(e);
+		tempPlayerBody.addEventListener('collide', function (e) {
+			console.log(e);
 		});
-		// console.log(window.game._threeManager);
-		window.game.addMeshBody(this.mesh, this.body);
+		this._medy = new Medy(tempPlayerMesh, tempPlayerBody);
+		window.game.addMedy(this._medy);
 
 		// Camera
-		const orbitCamera = new SphericalPanCamera(window.game._threeManager.camera, this.mesh);
+		const orbitCamera = new SphericalPanCamera(window.game._threeManager.camera, this._medy._mesh);
 		orbitCamera.setPhiPan(Math.PI, Math.PI);
 		orbitCamera.setThetaPan(Math.PI / 4 * 3, Math.PI / 4);
 		orbitCamera.setRadius(20);
@@ -62,19 +60,25 @@ export class Player {
 		this.addAirstream(new THREE.Vector3(5, 0, -10),
 			new THREE.Vector3(5, 10, -10), 100);
 	}
+
 	shootPalm(targetPoint) {
-		let targetVector = new THREE.Vector3();
-		targetVector.subVectors(targetPoint, this.mesh.position);
+		const targetVector = new THREE.Vector3();
+		targetVector.subVectors(targetPoint, this._medy._mesh.position);
 		targetVector.normalize();
 
-		const palmShot = new Palm(this.mesh.position, targetVector.multiplyScalar(50));
-		palmShot.setFiringLocation(this.mesh.position.x, this.mesh.position.y - 10, this.mesh.position.z);
-		// palmShot.setFiringLocation(this.mesh.position);
+		const palmShot = new Palm(this._medy._mesh.position,
+			targetVector.multiplyScalar(50));
+		palmShot.setFiringLocation(
+			this._medy._mesh.position.x,
+			this._medy._mesh.position.y - 10,
+			this._medy._mesh.position.z
+		);
 		palmShot.setDirection(targetVector);
 		palmShot.setSpeed(5);
 	}
+
 	addAirstream(start, end, delta) {
-		const newAirstream = new Airstream(this.mesh);
+		const newAirstream = new Airstream(this._medy._mesh);
 		this.airstreams.push(newAirstream);
 		newAirstream.setStart(start);
 		newAirstream.setEnd(end);
@@ -82,6 +86,7 @@ export class Player {
 		newAirstream.start();
 		window.game._threeManager.addToScene(newAirstream.mesh);
 	}
+
 	updateAirstreams() {
 		if (this.airstreams === undefined) {
 			return;
@@ -90,6 +95,7 @@ export class Player {
 			this.airstreams[i].update();
 		}
 	}
+
 	allAirstreamsStopped() {
 		if (this.airstreams === undefined) {
 			return true;
@@ -101,6 +107,7 @@ export class Player {
 		}
 		return true;
 	}
+
 	updateForwardAccelaration(axis, key) {
 		if (keyboardController.pressed[key]) {
 			if (this[axis] > this.maxSpeed) {
@@ -110,6 +117,7 @@ export class Player {
 			}
 		}
 	}
+
 	updateBackwardAcceleration(axis, key) {
 		if (keyboardController.pressed[key]) {
 			if (this[axis] < -this.maxSpeed) {
@@ -119,12 +127,13 @@ export class Player {
 			}
 		}
 	}
+
 	update() {
 		// Stops the player body vertically  when it reaches a certain point
 		if (this.allAirstreamsStopped()) {
 			this.camera.setThetaDelta(0.05);
-			this.body.mass = 0;
-			this.body.velocity.y = 0;
+			this._medy._body.mass = 0;
+			this._medy._body.velocity.y = 0;
 		}
 
 		this.updateAirstreams();
@@ -132,11 +141,15 @@ export class Player {
 		this.updateForwardAccelaration("zAcceleration", "d");
 		this.updateBackwardAcceleration("xAcceleration", "s");
 		this.updateBackwardAcceleration("zAcceleration", "a");
-		this.body.velocity.set(this.xAcceleration, this.body.velocity.y,
-			this.zAcceleration);
+		this._medy._body.velocity.set(
+			this.xAcceleration,
+			this._medy._body.velocity.y,
+			this.zAcceleration
+		);
 		this.dampenAcceleration();
 		this.camera.update();
 	}
+
 	dampenAcceleration() {
 		if (almostZero(this.zAcceleration) && almostZero(this.xAcceleration)) {
 			return;
