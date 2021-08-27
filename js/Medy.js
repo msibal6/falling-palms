@@ -1,5 +1,3 @@
-import * as CANNON from './cannon-es.js';
-
 export class Medy {
 	constructor(mesh, body) {
 		this._mesh = mesh;
