@@ -7,4 +7,8 @@ export class Medy {
 	update() {
 		this._mesh.position.copy(this._body.position);
 	}
+
+	test() {
+		console.log(this);
+	}
 }

@@ -5,6 +5,7 @@ import { Player } from './Player.js';
 import { Medy } from './Medy.js';
 import * as CANNON from './cannon-es.js';
 import { removeItemFromArray } from './helper.js';
+import { Palm2 } from './Palm2.js';
 
 class Game {
 	constructor() {
@@ -26,7 +27,7 @@ class Game {
 			this._animationLoop = requestAnimationFrame(this.loop);
 			// game updates mesh position from cannon positions
 			this.updateMedies();
-			this.updateMeshBodies();
+			// this.updateMeshBodies();
 			// done by cannonManager
 			this._cannonManager.update();
 			// Player update
@@ -39,32 +40,15 @@ class Game {
 	start() {
 		this._threeManager.createScene();
 		this._cannonManager.createWorld();
-		// this.testMedy();
+		this.testPalm2();
+
 		this._player.create();
 		window.addEventListener('mousedown', this.onMouseClickHandler, false);
 		this.loop();
 	}
-	testMedy() {
-		// Add visual player placeholder
-		const tempPlayerMesh = new THREE.Mesh(
-			new THREE.BoxGeometry(2, 2, 2),
-			new THREE.MeshLambertMaterial({
-				color: 0xFFFFFF,
-			}));
-		tempPlayerMesh.castShadow = true;
-		tempPlayerMesh.receiveShadow = true;
-		// // Physical player placeholder
-		const size = 1;
-		const halfExtents = new CANNON.Vec3(size, size, size);
-		const boxShape = new CANNON.Box(halfExtents);
-		const tempPlayerBody = new CANNON.Body({
-			mass: 1,
-			shape: boxShape,
-			material: game._cannonManager.planeMaterial
-		});
-		const newMedy = new Medy(tempPlayerMesh, tempPlayerBody);
-		newMedy._body.position.set(0, 100, 0);
-		this.addMedy(newMedy);
+	testPalm2() {
+		const testPalm = new Palm2();
+		console.log(testPalm);
 	}
 
 	addMedy(medy) {
