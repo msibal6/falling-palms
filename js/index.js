@@ -25,11 +25,12 @@ class Game {
 
 		this.loop = function () {
 			this._animationLoop = requestAnimationFrame(this.loop);
-			// game updates mesh position from cannon positions
-			this.updateMedies();
 			// this.updateMeshBodies();
 			// done by cannonManager
 			this._cannonManager.update();
+			// game updates mesh position from cannon positions
+			this.updateMedies();
+			this.maintainMedies();
 			// Player update
 			this._player.update();
 			// Finally, render
@@ -40,18 +41,13 @@ class Game {
 	start() {
 		this._threeManager.createScene();
 		this._cannonManager.createWorld();
-		this.testPalm2();
-
 		this._player.create();
 		window.addEventListener('mousedown', this.onMouseClickHandler, false);
 		this.loop();
 	}
-	testPalm2() {
-		const testPalm = new Palm2();
-		console.log(testPalm);
-	}
 
 	addMedy(medy) {
+		console.log(medy);
 		this._medies.push(medy);
 		this._threeManager.addVisual(medy._mesh);
 		this._cannonManager.addPhysical(medy._body);
@@ -75,7 +71,17 @@ class Game {
 
 	updateMedies() {
 		for (let i = 0; i < this._medies.length; i++) {
-			this._medies[i]._mesh.position.copy(this._medies[i]._body.position);
+			this._medies[i].update();
+		}
+	}
+
+	maintainMedies() {
+		for (let i = 0; i < this._medies.length; i++) {
+			if (this._medies[i].maintain !== undefined) {
+				// console.log(this._medies[i]);
+				// this._medies[i]._body.velocity.set(10, 10, 10);
+				this._medies[i].maintain();
+			}
 		}
 	}
 

@@ -4,6 +4,9 @@ import * as CANNON from './cannon-es.js';
 import { Airstream } from './Airstream.js';
 import { Palm } from './Palm.js';
 import { Medy } from './Medy.js';
+import { Palm2 } from './Palm2.js';
+import { Palm3 } from './Palm3.js';
+
 export class Player {
 	constructor() {
 		// visual THREE mesh
@@ -66,8 +69,8 @@ export class Player {
 		targetVector.subVectors(targetPoint, this._medy._mesh.position);
 		targetVector.normalize();
 
-		const palmShot = new Palm(this._medy._mesh.position,
-			targetVector.multiplyScalar(50));
+		const palmShot = new Palm3();
+		window.game.addMedy(palmShot._medy);
 		palmShot.setFiringLocation(
 			this._medy._mesh.position.x,
 			this._medy._mesh.position.y - 10,
@@ -88,7 +91,7 @@ export class Player {
 	}
 
 	updateAirstreams() {
-		if (this.airstreams === undefined) {
+		if (this.airstreams === undefined || this.airstreams.length == 0) {
 			return;
 		}
 		for (let i = 0; i < this.airstreams.length; i++) {
@@ -97,7 +100,7 @@ export class Player {
 	}
 
 	allAirstreamsStopped() {
-		if (this.airstreams === undefined) {
+		if (this.airstreams === undefined || this.airstreams.length == 0) {
 			return true;
 		}
 		for (let i = 0; i < this.airstreams.length; i++) {
@@ -141,6 +144,7 @@ export class Player {
 		this.updateForwardAccelaration("zAcceleration", "d");
 		this.updateBackwardAcceleration("xAcceleration", "s");
 		this.updateBackwardAcceleration("zAcceleration", "a");
+		// console.log(this._medy);
 		this._medy._body.velocity.set(
 			this.xAcceleration,
 			this._medy._body.velocity.y,
