@@ -18,11 +18,7 @@ export class Airstream {
 				side: THREE.DoubleSide,
 			}));
 
-		if (name !== undefined) {
-			this.mesh.name = name;
-		} else {
-			this.mesh.name = "Airstream";
-		}
+		this.mesh.name = "Airstream";
 		this.mesh.rotation.x = -Math.PI / 2;
 		this.mesh.receiveShadow = false;
 		this.mesh.castShadow = false;

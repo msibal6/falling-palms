@@ -30,7 +30,6 @@ class Game {
 			this._cannonManager.update();
 			// game updates mesh position from cannon positions
 			this.updateMedies();
-			this.maintainMedies();
 			// Player update
 			this._player.update();
 			// Finally, render
@@ -79,7 +78,6 @@ class Game {
 		for (let i = 0; i < this._medies.length; i++) {
 			if (this._medies[i].maintain !== undefined) {
 				// console.log(this._medies[i]);
-				// this._medies[i]._body.velocity.set(10, 10, 10);
 				this._medies[i].maintain();
 			}
 		}

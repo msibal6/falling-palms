@@ -69,15 +69,15 @@ export class Player {
 		targetVector.subVectors(targetPoint, this._medy._mesh.position);
 		targetVector.normalize();
 
-		const palmShot = new Palm3();
-		window.game.addMedy(palmShot._medy);
+		const palmShot = new Palm2();
+		window.game.addMedy(palmShot);
 		palmShot.setFiringLocation(
 			this._medy._mesh.position.x,
 			this._medy._mesh.position.y - 10,
 			this._medy._mesh.position.z
 		);
 		palmShot.setDirection(targetVector);
-		palmShot.setSpeed(5);
+		palmShot.setSpeed(150);
 	}
 
 	addAirstream(start, end, delta) {

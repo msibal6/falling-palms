@@ -14,15 +14,13 @@ export class Palm2 extends Medy {
 		const halfExtents = new CANNON.Vec3(handSize.x / 2, handSize.y / 2, handSize.z / 2);
 		const boxShape = new CANNON.Box(halfExtents);
 		const tempPlayerBody = new CANNON.Body({
-			mass: 0.0,
+			mass: 1,
 			shape: boxShape,
 			material: window.game._cannonManager.palmMaterial,
 		});
 		super(tempPlayerMesh, tempPlayerBody);
 
 		this.collisionHandler = this.collide.bind(this);
-		// console.log(super);
-		// console.log(super.test());
 		this._body.addEventListener('collide', this.collisionHandler, false);
 	}
 
@@ -60,16 +58,16 @@ export class Palm2 extends Medy {
 	}
 
 	maintain() {
-		console.log(this);
 		this._body.velocity.set(
-			10,
+			this._direction.x,
 			this._direction.y,
-			this._direction.z,
+			this._direction.z
 		);
-		// this._body.velocity.scale(this._speed, this._body.velocity);
+		this._body.velocity.scale(this._speed, this._body.velocity);
 	}
 
 	update() {
-		this._mesh.position.copy(this._body.position);
+		super.update();
+		this.maintain();
 	}
 }
