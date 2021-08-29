@@ -40,8 +40,8 @@ export class CannonManager {
 
 	removeDeadMeshBodies() {
 		for (let i = 0; i < this.meshBodiesToRemove.length; i++) {
-			const meshBody = this.meshBodiesToRemove.pop();
-			this.world.removeBody(meshBody);
+			// const meshBody = ;
+			this.world.removeBody(this.meshBodiesToRemove.pop());
 			// removeItemFromArray(meshBody, this.meshBodiesToRemove);
 		}
 	}
