@@ -3,7 +3,7 @@ import { SphericalPanCamera } from './SphericalPanCamera.js';
 import * as CANNON from './cannon-es.js';
 import { Airstream } from './Airstream.js';
 import { Medy } from './Medy.js';
-import { Palm2 } from './Palm2.js';
+import { Palm } from './Palm.js';
 
 export class Player extends Medy {
 	constructor() {
@@ -65,7 +65,7 @@ export class Player extends Medy {
 		targetVector.subVectors(targetPoint, this._mesh.position);
 		targetVector.normalize();
 
-		const palmShot = new Palm2();
+		const palmShot = new Palm();
 		window.game.addMedy(palmShot);
 		palmShot.setFiringLocation(
 			this._mesh.position.x,

@@ -2,10 +2,10 @@ import { almostZero } from './helper.js';
 import { SphericalPanCamera } from './SphericalPanCamera.js';
 import * as CANNON from './cannon-es.js';
 import { Airstream } from './Airstream.js';
-import { Palm } from './Palm.js';
+import { OldPalm1 } from './OldPalm1.js';
 import { Medy } from './Medy.js';
-import { Palm2 } from './Palm2.js';
-import { Palm3 } from './Palm3.js';
+import { Palm } from './Palm.js';
+import { OldPalm2 } from './OldPalm2.js';
 
 export class OldPlayer {
 	constructor() {
@@ -69,7 +69,7 @@ export class OldPlayer {
 		targetVector.subVectors(targetPoint, this._medy._mesh.position);
 		targetVector.normalize();
 
-		const palmShot = new Palm2();
+		const palmShot = new Palm();
 		window.game.addMedy(palmShot);
 		palmShot.setFiringLocation(
 			this._medy._mesh.position.x,
