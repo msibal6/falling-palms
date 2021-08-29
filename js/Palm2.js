@@ -4,21 +4,21 @@ import { Medy } from './Medy.js';
 export class Palm2 extends Medy {
 	constructor() {
 		const handSize = new THREE.Vector3(3, 6, 0.5);
-		const tempPlayerMesh = new THREE.Mesh(
+		const palmMesh = new THREE.Mesh(
 			new THREE.BoxGeometry(handSize.x, handSize.y, handSize.z),
 			new THREE.MeshLambertMaterial({
 				color: 0xFFadfb,
 			}));
-		tempPlayerMesh.castShadow = true;
-		tempPlayerMesh.receiveShadow = true;
+		palmMesh.castShadow = true;
+		palmMesh.receiveShadow = true;
 		const halfExtents = new CANNON.Vec3(handSize.x / 2, handSize.y / 2, handSize.z / 2);
 		const boxShape = new CANNON.Box(halfExtents);
-		const tempPlayerBody = new CANNON.Body({
+		const palmBody = new CANNON.Body({
 			mass: 1,
 			shape: boxShape,
 			material: window.game._cannonManager.palmMaterial,
 		});
-		super(tempPlayerMesh, tempPlayerBody);
+		super(palmMesh, palmBody);
 
 
 		this.collisionHandler = this.collide.bind(this);
