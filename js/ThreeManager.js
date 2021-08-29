@@ -18,12 +18,12 @@ export class ThreeManager {
 	}
 
 	addVisual(meshBody) {
-		this._visuals.push(meshBody);
+		// this._visuals.push(meshBody);
 		this.addToScene(meshBody);
 	}
 
 	removeVisual(meshBody) {
-		removeItemFromArray(meshBody, this._visuals);
+		// removeItemFromArray(meshBody, this._visuals);
 		this.scene.remove(meshBody);
 	}
 

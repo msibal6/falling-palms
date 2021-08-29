@@ -24,13 +24,13 @@ export class CannonManager {
 	}
 
 	addPhysical(meshBody) {
-		this._physicals.push(meshBody);
+		// this._physicals.push(meshBody);
 		this.world.addBody(meshBody);
 	}
 
 	removePhysical(meshBody) {
 		this.killBody(meshBody);
-		removeItemFromArray(meshBody, this._physicals);
+		// removeItemFromArray(meshBody, this._physicals);
 	}
 
 	removeDeadMeshBodies() {

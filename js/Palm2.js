@@ -20,13 +20,15 @@ export class Palm2 extends Medy {
 		});
 		super(tempPlayerMesh, tempPlayerBody);
 
+
 		this.collisionHandler = this.collide.bind(this);
 		this._body.addEventListener('collide', this.collisionHandler, false);
+		this.updatedWithMass = false;
 	}
 
 	collide(event) {
-		console.log(event);
-		console.log(this);
+		// console.log(event);
+		// console.log(this);
 		window.game.removeMedy(this);
 	}
 
@@ -57,7 +59,7 @@ export class Palm2 extends Medy {
 		this._body.velocity.scale(speed, this._body.velocity);
 	}
 
-	maintain() {
+	maintainTrajectory() {
 		this._body.velocity.set(
 			this._direction.x,
 			this._direction.y,
@@ -68,6 +70,11 @@ export class Palm2 extends Medy {
 
 	update() {
 		super.update();
-		this.maintain();
+		this.maintainTrajectory();
+		if (!this.updatedWithMass) {
+			this.updatedWithMass = true;
+			this._body.mass = 0;
+			console.log("set mass to 0");
+		}
 	}
 }

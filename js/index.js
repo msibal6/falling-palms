@@ -46,7 +46,7 @@ class Game {
 	}
 
 	addMedy(medy) {
-		console.log(medy);
+		// console.log(medy);
 		this._medies.push(medy);
 		this._threeManager.addVisual(medy._mesh);
 		this._cannonManager.addPhysical(medy._body);
