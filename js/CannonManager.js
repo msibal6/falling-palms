@@ -29,21 +29,21 @@ export class CannonManager {
 	}
 
 	removePhysical(meshBody) {
-		this.killBody(meshBody);
 		// removeItemFromArray(meshBody, this._physicals);
-	}
-
-	removeDeadMeshBodies() {
-		for (let i = 0; i < this.meshBodiesToRemove.length; i++) {
-			const meshBody = this.meshBodiesToRemove[i];
-			this.world.removeBody(meshBody);
-			removeItemFromArray(meshBody, this.meshBodiesToRemove);
-		}
+		this.killBody(meshBody);
 	}
 
 	killBody(meshBody) {
 		meshBody.sleep();
 		this.meshBodiesToRemove.push(meshBody);
+	}
+
+	removeDeadMeshBodies() {
+		for (let i = 0; i < this.meshBodiesToRemove.length; i++) {
+			const meshBody = this.meshBodiesToRemove.pop();
+			this.world.removeBody(meshBody);
+			// removeItemFromArray(meshBody, this.meshBodiesToRemove);
+		}
 	}
 
 	createWorld() {

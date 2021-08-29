@@ -1,11 +1,7 @@
 import { KeyboardController } from './events.js';
 import { ThreeManager } from './ThreeManager.js';
 import { CannonManager } from './CannonManager.js';
-import { oldPlayer } from './OldPlayer.js';
-import { Medy } from './Medy.js';
-import * as CANNON from './cannon-es.js';
 import { removeItemFromArray } from './helper.js';
-import { Palm2 } from './Palm2.js';
 import { Player } from './Player.js';
 
 class Game {
@@ -30,8 +26,6 @@ class Game {
 			this._cannonManager.update();
 			// game updates mesh position from cannon positions
 			this.updateMedies();
-			// Player update
-			// this._player.update();
 			// Finally, render
 			this._threeManager.render();
 		}.bind(this);
