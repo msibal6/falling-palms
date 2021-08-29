@@ -1,12 +1,12 @@
 import { KeyboardController } from './events.js';
 import { ThreeManager } from './ThreeManager.js';
 import { CannonManager } from './CannonManager.js';
-import { Player } from './Player.js';
+import { oldPlayer } from './OldPlayer.js';
 import { Medy } from './Medy.js';
 import * as CANNON from './cannon-es.js';
 import { removeItemFromArray } from './helper.js';
 import { Palm2 } from './Palm2.js';
-import { Player2 } from './Player2.js';
+import { Player } from './Player.js';
 
 class Game {
 	constructor() {
@@ -26,7 +26,6 @@ class Game {
 
 		this.loop = function () {
 			this._animationLoop = requestAnimationFrame(this.loop);
-			// this.updateMeshBodies();
 			// done by cannonManager
 			this._cannonManager.update();
 			// game updates mesh position from cannon positions
@@ -41,14 +40,13 @@ class Game {
 	start() {
 		this._threeManager.createScene();
 		this._cannonManager.createWorld();
-		this._player = new Player2();
+		this._player = new Player();
 		this._player.create();
 		window.addEventListener('mousedown', this.onMouseClickHandler, false);
 		this.loop();
 	}
 
 	addMedy(medy) {
-		// console.log(medy);
 		this._medies.push(medy);
 		this._threeManager.addVisual(medy._mesh);
 		this._cannonManager.addPhysical(medy._body);
@@ -60,35 +58,13 @@ class Game {
 		this._cannonManager.removePhysical(medy._body);
 	}
 
-	addMeshBody(mesh, body) {
-		this._threeManager.addVisual(mesh);
-		this._cannonManager.addPhysical(body);
-	}
-
-	removeMeshBody(mesh, body) {
-		this._threeManager.removeVisual(mesh);
-		this._cannonManager.removePhysical(body);
-	}
-
 	updateMedies() {
 		for (let i = 0; i < this._medies.length; i++) {
 			this._medies[i].update();
 		}
 	}
 
-	updateMeshBodies() {
-		const visuals = this._threeManager._visuals;
-		const physicals = this._cannonManager._physicals;
-		if (physicals.length == 0) {
-			return;
-		}
-		for (let i = 0; i < physicals.length; i++) {
-			visuals[i].position.copy(physicals[i].position);
-		}
-	}
-
 	onMouseClick(event) {
-
 		// calculate mouse position in normalized device coordinates
 		// (-1 to +1) for both components
 		const raycaster = new THREE.Raycaster();

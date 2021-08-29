@@ -7,8 +7,22 @@ import { Medy } from './Medy.js';
 import { Palm2 } from './Palm2.js';
 import { Palm3 } from './Palm3.js';
 
-export class Player2 extends Medy {
+export class OldPlayer {
 	constructor() {
+		// visual THREE mesh
+		// physics CANNON body
+		// Wrapped in this._medy
+		this._medy = null;
+		this.maxSpeed = 80.0;
+		this.acceleration = 4.0;
+		this.xAcceleration = 0.0;
+		this.zAcceleration = 0.0;
+		this.damping = 0.85;
+		this.camera = null;
+	}
+
+	create() {
+		// Add visual player placeholder
 		const tempPlayerMesh = new THREE.Mesh(
 			new THREE.BoxGeometry(2, 2, 2),
 			new THREE.MeshLambertMaterial({
@@ -26,29 +40,17 @@ export class Player2 extends Medy {
 		const tempPlayerBody = new CANNON.Body({
 			mass: 1,
 			shape: boxShape,
-			material: window.game._cannonManager.planeMaterial
+			material: game._cannonManager.planeMaterial
 		});
 		tempPlayerBody.position.set(0, 100, 0);
 		tempPlayerBody.addEventListener('collide', function (e) {
 			console.log(e);
 		});
-		super(tempPlayerMesh, tempPlayerBody);
-		// visual THREE mesh
-		// physics CANNON body
-		// Wrapped in this._medy
-		this.maxSpeed = 80.0;
-		this.acceleration = 4.0;
-		this.xAcceleration = 0.0;
-		this.zAcceleration = 0.0;
-		this.damping = 0.85;
-		this.camera = null;
-	}
-
-	create() {
-		window.game.addMedy(this);
+		this._medy = new Medy(tempPlayerMesh, tempPlayerBody);
+		window.game.addMedy(this._medy);
 
 		// Camera
-		const orbitCamera = new SphericalPanCamera(window.game._threeManager.camera, this._mesh);
+		const orbitCamera = new SphericalPanCamera(window.game._threeManager.camera, this._medy._mesh);
 		orbitCamera.setPhiPan(Math.PI, Math.PI);
 		orbitCamera.setThetaPan(Math.PI / 4 * 3, Math.PI / 4);
 		orbitCamera.setRadius(20);
@@ -64,22 +66,22 @@ export class Player2 extends Medy {
 
 	shootPalm(targetPoint) {
 		const targetVector = new THREE.Vector3();
-		targetVector.subVectors(targetPoint, this._mesh.position);
+		targetVector.subVectors(targetPoint, this._medy._mesh.position);
 		targetVector.normalize();
 
 		const palmShot = new Palm2();
 		window.game.addMedy(palmShot);
 		palmShot.setFiringLocation(
-			this._mesh.position.x,
-			this._mesh.position.y - 10,
-			this._mesh.position.z
+			this._medy._mesh.position.x,
+			this._medy._mesh.position.y - 10,
+			this._medy._mesh.position.z
 		);
 		palmShot.setDirection(targetVector);
 		palmShot.setSpeed(150);
 	}
 
 	addAirstream(start, end, delta) {
-		const newAirstream = new Airstream(this._mesh);
+		const newAirstream = new Airstream(this._medy._mesh);
 		this.airstreams.push(newAirstream);
 		newAirstream.setStart(start);
 		newAirstream.setEnd(end);
@@ -130,12 +132,11 @@ export class Player2 extends Medy {
 	}
 
 	update() {
-		super.update();
 		// Stops the player body vertically  when it reaches a certain point
 		if (this.allAirstreamsStopped()) {
 			this.camera.setThetaDelta(0.05);
-			this._body.mass = 0;
-			this._body.velocity.y = 0;
+			this._medy._body.mass = 0;
+			this._medy._body.velocity.y = 0;
 		}
 
 		this.updateAirstreams();
@@ -144,9 +145,9 @@ export class Player2 extends Medy {
 		this.updateBackwardAcceleration("xAcceleration", "s");
 		this.updateBackwardAcceleration("zAcceleration", "a");
 		// console.log(this._medy);
-		this._body.velocity.set(
+		this._medy._body.velocity.set(
 			this.xAcceleration,
-			this._body.velocity.y,
+			this._medy._body.velocity.y,
 			this.zAcceleration
 		);
 		this.dampenAcceleration();
