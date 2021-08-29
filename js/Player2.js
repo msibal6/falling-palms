@@ -26,7 +26,7 @@ export class Player2 extends Medy {
 		const tempPlayerBody = new CANNON.Body({
 			mass: 1,
 			shape: boxShape,
-			material: game._cannonManager.planeMaterial
+			material: window.game._cannonManager.planeMaterial
 		});
 		tempPlayerBody.position.set(0, 100, 0);
 		tempPlayerBody.addEventListener('collide', function (e) {
@@ -130,6 +130,7 @@ export class Player2 extends Medy {
 	}
 
 	update() {
+		super.update();
 		// Stops the player body vertically  when it reaches a certain point
 		if (this.allAirstreamsStopped()) {
 			this.camera.setThetaDelta(0.05);

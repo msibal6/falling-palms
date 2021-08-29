@@ -27,8 +27,6 @@ export class Palm2 extends Medy {
 	}
 
 	collide(event) {
-		// console.log(event);
-		// console.log(this);
 		window.game.removeMedy(this);
 	}
 
@@ -52,6 +50,7 @@ export class Palm2 extends Medy {
 			testPoint.addVectors(this._mesh.position, direction);
 		}
 		this._mesh.lookAt(testPoint);
+		this._body.quaternion.copy(this._mesh.quaternion);
 	}
 
 	setSpeed(speed) {

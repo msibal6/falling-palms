@@ -2,8 +2,7 @@
 import { vectorsAlmostEqual } from './helper.js';
 
 export class Airstream {
-	constructor(target, name) {
-		// target tracks a THREE mesh 
+	constructor(target) {
 		this.target = target;
 		this.startPoint = null;
 		this.currentPoint = null;
@@ -17,12 +16,10 @@ export class Airstream {
 				color: 0x0FF0FF,
 				side: THREE.DoubleSide,
 			}));
-
 		this.mesh.name = "Airstream";
 		this.mesh.rotation.x = -Math.PI / 2;
 		this.mesh.receiveShadow = false;
 		this.mesh.castShadow = false;
-
 		this.mesh.raycast = function (raycaster, intersects) {
 			this.mesh.geometry.computeBoundingBox();
 			this.mesh.geometry.boundingBox.applyMatrix4(this.mesh.matrix);
@@ -63,11 +60,13 @@ export class Airstream {
 	}
 
 	updateOffset() {
-		let gap = new THREE.Vector3(this.endPoint.x - this.startPoint.x,
+		let gap = new THREE.Vector3(
+			this.endPoint.x - this.startPoint.x,
 			this.endPoint.y - this.startPoint.y,
 			this.endPoint.z - this.startPoint.z);
 		gap.divideScalar(this.delta);
-		this.currentPoint = new THREE.Vector3(gap.x + this.currentPoint.x,
+		this.currentPoint = new THREE.Vector3(
+			gap.x + this.currentPoint.x,
 			gap.y + this.currentPoint.y,
 			gap.z + this.currentPoint.z);
 	}

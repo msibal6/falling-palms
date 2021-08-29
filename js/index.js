@@ -6,6 +6,7 @@ import { Medy } from './Medy.js';
 import * as CANNON from './cannon-es.js';
 import { removeItemFromArray } from './helper.js';
 import { Palm2 } from './Palm2.js';
+import { Player2 } from './Player2.js';
 
 class Game {
 	constructor() {
@@ -19,7 +20,7 @@ class Game {
 
 		this.onMouseClickHandler = this.onMouseClick.bind(this);
 
-		this._player = new Player();
+		this._player = null;
 
 		this._animationLoop = null;
 
@@ -31,7 +32,7 @@ class Game {
 			// game updates mesh position from cannon positions
 			this.updateMedies();
 			// Player update
-			this._player.update();
+			// this._player.update();
 			// Finally, render
 			this._threeManager.render();
 		}.bind(this);
@@ -40,6 +41,7 @@ class Game {
 	start() {
 		this._threeManager.createScene();
 		this._cannonManager.createWorld();
+		this._player = new Player2();
 		this._player.create();
 		window.addEventListener('mousedown', this.onMouseClickHandler, false);
 		this.loop();
@@ -71,15 +73,6 @@ class Game {
 	updateMedies() {
 		for (let i = 0; i < this._medies.length; i++) {
 			this._medies[i].update();
-		}
-	}
-
-	maintainMedies() {
-		for (let i = 0; i < this._medies.length; i++) {
-			if (this._medies[i].maintain !== undefined) {
-				// console.log(this._medies[i]);
-				this._medies[i].maintain();
-			}
 		}
 	}
 
