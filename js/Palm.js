@@ -73,7 +73,6 @@ export class Palm extends Medy {
 		if (!this.updatedWithMass) {
 			this.updatedWithMass = true;
 			this._body.mass = 0;
-			console.log("set mass to 0");
 		}
 	}
 }
