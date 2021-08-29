@@ -2,10 +2,8 @@ import { almostZero } from './helper.js';
 import { SphericalPanCamera } from './SphericalPanCamera.js';
 import * as CANNON from './cannon-es.js';
 import { Airstream } from './Airstream.js';
-import { Palm } from './Palm.js';
 import { Medy } from './Medy.js';
 import { Palm2 } from './Palm2.js';
-import { Palm3 } from './Palm3.js';
 
 export class Player extends Medy {
 	constructor() {

@@ -1,7 +1,7 @@
 import * as CANNON from './cannon-es.js';
 import { Medy } from './Medy.js';
 
-export class Palm3 {
+export class OldPalm2 {
 	constructor() {
 		const handSize = new THREE.Vector3(3, 6, 0.5);
 		const tempPlayerMesh = new THREE.Mesh(
