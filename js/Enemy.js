@@ -37,7 +37,7 @@ export class Enemy extends Medy {
 		console.log(event.body);
 		const bodyHit = event.body;
 		if (bodyHit.collisionFilterGroup === window.game._cannonManager._palmFilterGroup) {
-			console.log("bye");
+			// console.log("bye");
 			window.game.removeMedy(this);
 		}
 	}

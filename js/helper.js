@@ -28,6 +28,9 @@ export function vectorsAlmostEqual(threeVector1, threeVector2, precision) {
 	return false;
 }
 
+export function getRandomInt(max) {
+	return Math.floor(Math.random() * max);
+}
 export function removeItemFromArray(item, array) {
 	const index = array.indexOf(item);
 	if (index === -1) {

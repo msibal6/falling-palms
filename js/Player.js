@@ -1,4 +1,4 @@
-import { almostZero } from './helper.js';
+import { almostZero, getRandomInt } from './helper.js';
 import { SphericalPanCamera } from './SphericalPanCamera.js';
 import * as CANNON from './cannon-es.js';
 import { Airstream } from './Airstream.js';
@@ -26,23 +26,39 @@ export class Player extends Medy {
 			shape: boxShape,
 			material: window.game._cannonManager.planeMaterial
 		});
-		tempPlayerBody.position.set(0, 100, 0);
-		tempPlayerBody.addEventListener('collide', function (e) {
-			// player collides with other medy and sees it in event.body
-			console.log(e);
-			console.log(e.target);
-			console.log(e.body);
-		});
 		super(tempPlayerMesh, tempPlayerBody);
+		this._body.position.set(0, 100, 0);
+		this.collisionHandler = this.collide.bind(this);
+		this._body.addEventListener('collide', this.collisionHandler);
 		// visual THREE mesh
 		// physics CANNON body
-		// Wrapped in this._medy
 		this.maxSpeed = 80.0;
 		this.acceleration = 4.0;
 		this.xAcceleration = 0.0;
 		this.zAcceleration = 0.0;
 		this.damping = 0.85;
 		this.camera = null;
+	}
+
+	collide(event) {
+		const bodyHit = event.body;
+		// console.log(bodyHit);
+		if (bodyHit.collisionFilterGroup === window.game._cannonManager._needleFilterGroup) {
+			this.HitByNeedle();
+		}
+	}
+
+	HitByNeedle() {
+		if (!this.allAirstreamsStopped()) {
+			const stoppedAirstreams = [];
+			for (let i = 0; i < this._airstreams.length; i++) {
+				if (this._airstreams[i].isStopped()) {
+					stoppedAirstreams.push(i);
+				}
+			}
+			const index = getRandomInt(stoppedAirstreams.length);
+			this._airstreams[stoppedAirstreams[index]].start();
+		}
 	}
 
 	create() {
@@ -56,11 +72,13 @@ export class Player extends Medy {
 		this.camera = orbitCamera;
 
 		// Add AirStreams
-		this.airstreams = [];
+		this._airstreams = [];
 		this.addAirstream(new THREE.Vector3(5, 0, 10),
 			new THREE.Vector3(5, 10, 10), 75);
 		this.addAirstream(new THREE.Vector3(5, 0, -10),
 			new THREE.Vector3(5, 10, -10), 100);
+		this.addAirstream(new THREE.Vector3(0, 0, -10),
+			new THREE.Vector3(2, 10, -10), 100);
 	}
 
 	shootPalm(targetPoint) {
@@ -81,7 +99,7 @@ export class Player extends Medy {
 
 	addAirstream(start, end, delta) {
 		const newAirstream = new Airstream(this._mesh);
-		this.airstreams.push(newAirstream);
+		this._airstreams.push(newAirstream);
 		newAirstream.setStart(start);
 		newAirstream.setEnd(end);
 		newAirstream.setDelta(delta);
@@ -90,20 +108,20 @@ export class Player extends Medy {
 	}
 
 	updateAirstreams() {
-		if (this.airstreams === undefined || this.airstreams.length == 0) {
+		if (this._airstreams === undefined || this._airstreams.length === 0) {
 			return;
 		}
-		for (let i = 0; i < this.airstreams.length; i++) {
-			this.airstreams[i].update();
+		for (let i = 0; i < this._airstreams.length; i++) {
+			this._airstreams[i].update();
 		}
 	}
 
 	allAirstreamsStopped() {
-		if (this.airstreams === undefined || this.airstreams.length == 0) {
+		if (this._airstreams === undefined || this._airstreams.length === 0) {
 			return true;
 		}
-		for (let i = 0; i < this.airstreams.length; i++) {
-			if (!this.airstreams[i].isStopped()) {
+		for (let i = 0; i < this._airstreams.length; i++) {
+			if (!this._airstreams[i].isStopped()) {
 				return false;
 			}
 		}
