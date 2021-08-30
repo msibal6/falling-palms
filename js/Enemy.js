@@ -34,20 +34,20 @@ export class Enemy extends Medy {
 		// Wrapped in this._mesh and this._body
 	}
 
-	shootPalm() {
+	shootNeedle() {
 		const targetPoint = this._target.position;
 		const targetVector = new THREE.Vector3();
 		targetVector.subVectors(targetPoint, this._mesh.position);
 		targetVector.normalize();
 
 		const needleShot = new Needle();
-		window.game.addMedy(palmShot);
-		palmShot.setFiringLocation(
+		window.game.addMedy(needleShot);
+		needleShot.setFiringLocation(
 			this._mesh.position.x,
-			this._mesh.position.y - 10,
+			this._mesh.position.y + 10,
 			this._mesh.position.z
 		);
-		palmShot.setDirection(targetVector);
-		palmShot.setSpeed(150);
+		needleShot.setDirection(targetVector);
+		needleShot.setSpeed(15);
 	}
 }

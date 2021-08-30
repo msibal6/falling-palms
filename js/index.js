@@ -3,6 +3,7 @@ import { ThreeManager } from './ThreeManager.js';
 import { CannonManager } from './CannonManager.js';
 import { removeItemFromArray } from './helper.js';
 import { Player } from './Player.js';
+import { Enemy } from './Enemy.js';
 
 class Game {
 	constructor() {
@@ -28,6 +29,10 @@ class Game {
 			this.updateMedies();
 			// Finally, render
 			this._threeManager.render();
+			if (!this._shotNeedle) {
+				this._testEnemy.shootNeedle();
+				this._shotNeedle = true;
+			}
 		}.bind(this);
 	}
 
@@ -36,8 +41,18 @@ class Game {
 		this._cannonManager.createWorld();
 		this._player = new Player();
 		this._player.create();
+		this.createEnemy();
 		window.addEventListener('mousedown', this.onMouseClickHandler, false);
 		this.loop();
+	}
+
+	createEnemy() {
+		this._testEnemy = new Enemy(this._player._mesh);
+		this.addMedy(this._testEnemy);
+		// console.log(this._testEnemy);
+		this._testEnemy._body.position.set(10, 1, 10);
+		// this._testEnemy.shootNeedle();
+		this._shotNeedle = false;
 	}
 
 	addMedy(medy) {
