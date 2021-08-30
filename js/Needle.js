@@ -28,14 +28,14 @@ export class Needle extends Medy {
 			material: window.game._cannonManager.palmMaterial,
 		});
 		super(needleMesh, needleBody);
-
 		this.collisionHandler = this.collide.bind(this);
 		this._body.addEventListener('collide', this.collisionHandler, false);
+		this._body.collisionFilterGroup = window.game._cannonManager._needleFilterGroup;
 		this.updatedWithMass = false;
 	}
 
 	collide(event) {
-		console.log(event);
+		// console.log(event);
 		window.game.removeMedy(this);
 	}
 

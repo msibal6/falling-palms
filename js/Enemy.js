@@ -13,8 +13,8 @@ export class Enemy extends Medy {
 		enemyMesh.castShadow = true;
 		enemyMesh.receiveShadow = true;
 		// // TODO raycasting for shooting palms
-		enemyMesh.raycast = function (raycaster, intersects) {
-		}
+		// enemyMesh.raycast = function (raycaster, intersects) {
+		// }
 		// // Physical player placeholder
 		const size = 1;
 		const halfExtents = new CANNON.Vec3(size, size, size);
@@ -24,14 +24,22 @@ export class Enemy extends Medy {
 			shape: boxShape,
 			material: window.game._cannonManager.planeMaterial
 		});
-		enemyBody.addEventListener('collide', function (e) {
-			console.log(e);
-		});
 		super(enemyMesh, enemyBody);
 		this._target = targetMesh;
+		this.collisionHandler = this.collide.bind(this);
+		enemyBody.addEventListener('collide', this.collisionHandler);
 		// visual THREE mesh
 		// physics CANNON body
 		// Wrapped in this._mesh and this._body
+	}
+
+	collide(event) {
+		console.log(event.body);
+		const bodyHit = event.body;
+		if (bodyHit.collisionFilterGroup === window.game._cannonManager._palmFilterGroup) {
+			console.log("bye");
+			window.game.removeMedy(this);
+		}
 	}
 
 	shootNeedle() {

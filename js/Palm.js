@@ -23,6 +23,7 @@ export class Palm extends Medy {
 
 		this.collisionHandler = this.collide.bind(this);
 		this._body.addEventListener('collide', this.collisionHandler, false);
+		this._body.collisionFilterGroup = window.game._cannonManager._palmFilterGroup;
 		this.updatedWithMass = false;
 	}
 

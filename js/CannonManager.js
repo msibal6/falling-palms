@@ -6,6 +6,8 @@ export class CannonManager {
 		this.lastCallTime = null;
 		this._physicals = [];
 		this.meshBodiesToRemove = [];
+		this._needleFilterGroup = 2;
+		this._palmFilterGroup = 3;
 
 		this.world = new CANNON.World({
 			gravity: new CANNON.Vec3(0, -10, 0), // m/s²

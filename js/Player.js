@@ -28,7 +28,10 @@ export class Player extends Medy {
 		});
 		tempPlayerBody.position.set(0, 100, 0);
 		tempPlayerBody.addEventListener('collide', function (e) {
+			// player collides with other medy and sees it in event.body
 			console.log(e);
+			console.log(e.target);
+			console.log(e.body);
 		});
 		super(tempPlayerMesh, tempPlayerBody);
 		// visual THREE mesh
