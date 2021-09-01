@@ -34,8 +34,8 @@ export class Needle extends Medy {
 		this.updatedWithMass = false;
 	}
 
+	// TODO optimization of deletion of needles and palms
 	collide(event) {
-		// console.log(event);
 		window.game.removeMedy(this);
 	}
 

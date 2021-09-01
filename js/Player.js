@@ -42,10 +42,7 @@ export class Player extends Medy {
 
 	collide(event) {
 		const bodyHit = event.body;
-		// console.log(event);
 		if (bodyHit.collisionFilterGroup === window.game._cannonManager._needleFilterGroup) {
-			console.log(event);
-			console.log(this);
 			this.HitByNeedle();
 		}
 	}

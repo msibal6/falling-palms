@@ -28,7 +28,10 @@ export function vectorsAlmostEqual(threeVector1, threeVector2, precision) {
 	return false;
 }
 
-export function getRandomInt(max) {
+export function getRandomInt(max, opts) {
+	if (opts !== undefined && opts.min !== undefined) {
+		return Math.floor(Math.random() * (max - opts.min)) + opts.min;
+	}
 	return Math.floor(Math.random() * max);
 }
 export function removeItemFromArray(item, array) {

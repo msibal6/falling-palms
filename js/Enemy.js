@@ -1,4 +1,5 @@
 import * as CANNON from './cannon-es.js';
+import { getRandomInt } from './helper.js';
 import { Medy } from './Medy.js';
 import { Needle } from './Needle.js';
 
@@ -28,13 +29,17 @@ export class Enemy extends Medy {
 
 		this._target = targetMesh;
 		this.collisionHandler = this.collide.bind(this);
-		this.shootNeedleHandler = this.shootNeedle.bind(this);
-		this._shootNeedleInterval = window.setInterval(this.shootNeedleHandler, 1000);
+		this.shootNeedleHandler = function () {
+			this.shootNeedle();
+			setTimeout(this.shootNeedleHandler, getRandomInt(1000, { min: 750 }));
+		}.bind(this);
+		// this._shootNeedleInterval = window.setInterval(this.shootNeedleHandler, 1000);
+		setTimeout(this.shootNeedleHandler, getRandomInt(1500, { min: 750 }));
 		this._body.addEventListener('collide', this.collisionHandler);
 	}
 
 	collide(event) {
-		console.log(event.body);
+		// console.log(event.body);
 		const bodyHit = event.body;
 		if (bodyHit.collisionFilterGroup === window.game._cannonManager._palmFilterGroup) {
 			// console.log("bye");
@@ -56,6 +61,6 @@ export class Enemy extends Medy {
 			this._mesh.position.z
 		);
 		needleShot.setDirection(targetVector);
-		needleShot.setSpeed(15);
+		needleShot.setSpeed(30);
 	}
 }

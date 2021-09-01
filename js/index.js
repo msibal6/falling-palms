@@ -43,13 +43,14 @@ class Game {
 	}
 
 	addEnemies() {
-		this.addEnemy();
+		this.addEnemy(10, 1, 10);
+		// this.addEnemy(10, 1, -10);
 	}
 
-	addEnemy() {
+	addEnemy(x, y, z) {
 		const newEnemy = new Enemy(this._player._mesh);
 		this.addMedy(newEnemy);
-		newEnemy._body.position.set(10, 1, 10);
+		newEnemy._body.position.set(x, y, z);
 	}
 
 	addMedy(medy) {
@@ -65,9 +66,9 @@ class Game {
 	}
 
 	updateMedies() {
-		for (let i = 0; i < this._medies.length; i++) {
-			this._medies[i].update();
-		}
+		this._medies.forEach((element) => {
+			element.update();
+		});
 	}
 
 	onMouseClick(event) {
