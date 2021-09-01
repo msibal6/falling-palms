@@ -48,7 +48,7 @@ class Game {
 	}
 
 	addEnemy(x, y, z) {
-		const newEnemy = new Enemy(this._player._mesh);
+		const newEnemy = new Enemy(this._player);
 		this.addMedy(newEnemy);
 		newEnemy._body.position.set(x, y, z);
 	}

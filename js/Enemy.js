@@ -5,8 +5,8 @@ import { Needle } from './Needle.js';
 
 export class Enemy extends Medy {
 	// Improved tracking to actually hit the target
-	// Enemy tracks targetMesh in visual world
-	constructor(targetMesh) {
+	// Enemy tracks targetMedy in both ivsual and physical world
+	constructor(targetMedy) {
 		const enemyMesh = new THREE.Mesh(
 			new THREE.BoxGeometry(2, 2, 2),
 			new THREE.MeshLambertMaterial({
@@ -27,7 +27,7 @@ export class Enemy extends Medy {
 		// Wrapped in this._mesh and this._body
 		super(enemyMesh, enemyBody);
 
-		this._target = targetMesh;
+		this._target = targetMedy;
 		this.collisionHandler = this.collide.bind(this);
 		this.shootNeedleHandler = function () {
 			this.shootNeedle();
@@ -47,19 +47,29 @@ export class Enemy extends Medy {
 		}
 	}
 
+	predictNextTargetLocation() {
+
+		const targetVelocity = this._target._body.velocity;
+		const locationCannon = this._body.position;
+		const locationThree = this._body.position;
+		console.log(locationCannon);
+		console.log(locationThree);
+	}
 	shootNeedle() {
-		const targetPoint = this._target.position;
+		const targetPoint = this._target._body.position;
 		const targetVector = new THREE.Vector3();
-		targetVector.subVectors(targetPoint, this._mesh.position);
+		const firingLocation = new THREE.Vector3(
+			this._body.position.x,
+			this._body.position.y + 10,
+			this._body.position.z
+		);
+		const predictedLocation = this.predictNextTargetLocation();
+		targetVector.subVectors(targetPoint, firingLocation);
 		targetVector.normalize();
 
 		const needleShot = new Needle();
 		window.game.addMedy(needleShot);
-		needleShot.setFiringLocation(
-			this._mesh.position.x,
-			this._mesh.position.y + 10,
-			this._mesh.position.z
-		);
+		needleShot.setFiringLocation(firingLocation);
 		needleShot.setDirection(targetVector);
 		needleShot.setSpeed(30);
 	}
