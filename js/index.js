@@ -29,10 +29,6 @@ class Game {
 			this.updateMedies();
 			// Finally, render
 			this._threeManager.render();
-			if (!this._shotNeedle) {
-				this._testEnemy.shootNeedle();
-				this._shotNeedle = true;
-			}
 		}.bind(this);
 	}
 
@@ -41,18 +37,19 @@ class Game {
 		this._cannonManager.createWorld();
 		this._player = new Player();
 		this._player.create();
-		this.createEnemy();
+		this.addEnemies();
 		window.addEventListener('mousedown', this.onMouseClickHandler, false);
 		this.loop();
 	}
 
-	createEnemy() {
-		this._testEnemy = new Enemy(this._player._mesh);
-		this.addMedy(this._testEnemy);
-		// console.log(this._testEnemy);
-		this._testEnemy._body.position.set(10, 1, 10);
-		// this._testEnemy.shootNeedle();
-		this._shotNeedle = false;
+	addEnemies() {
+		this.addEnemy();
+	}
+
+	addEnemy() {
+		const newEnemy = new Enemy(this._player._mesh);
+		this.addMedy(newEnemy);
+		newEnemy._body.position.set(10, 1, 10);
 	}
 
 	addMedy(medy) {

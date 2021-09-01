@@ -42,8 +42,10 @@ export class Player extends Medy {
 
 	collide(event) {
 		const bodyHit = event.body;
-		// console.log(bodyHit);
+		// console.log(event);
 		if (bodyHit.collisionFilterGroup === window.game._cannonManager._needleFilterGroup) {
+			console.log(event);
+			console.log(this);
 			this.HitByNeedle();
 		}
 	}
@@ -56,8 +58,11 @@ export class Player extends Medy {
 					stoppedAirstreams.push(i);
 				}
 			}
-			const index = getRandomInt(stoppedAirstreams.length);
-			this._airstreams[stoppedAirstreams[index]].start();
+			if (stoppedAirstreams.length > 0) {
+				const index = getRandomInt(stoppedAirstreams.length);
+				console.log("stopped");
+				this._airstreams[stoppedAirstreams[index]].start();
+			}
 		}
 	}
 
