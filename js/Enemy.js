@@ -29,7 +29,11 @@ export class Enemy extends Medy {
 
 		this._target = targetMedy;
 		this.collisionHandler = this.collide.bind(this);
+		this._dead = false;
 		this.shootNeedleHandler = function () {
+			if (this._dead) {
+				return;
+			}
 			this.shootNeedle();
 			setTimeout(this.shootNeedleHandler, getRandomInt(1000, { min: 750 }));
 		}.bind(this);
@@ -43,6 +47,7 @@ export class Enemy extends Medy {
 		const bodyHit = event.body;
 		if (bodyHit.collisionFilterGroup === window.game._cannonManager._palmFilterGroup) {
 			window.game.removeMedy(this);
+			this._dead = true;
 		}
 	}
 
