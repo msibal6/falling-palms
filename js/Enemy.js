@@ -42,19 +42,57 @@ export class Enemy extends Medy {
 		// console.log(event.body);
 		const bodyHit = event.body;
 		if (bodyHit.collisionFilterGroup === window.game._cannonManager._palmFilterGroup) {
-			// console.log("bye");
 			window.game.removeMedy(this);
 		}
 	}
 
-	predictNextTargetLocation() {
-
-		const targetVelocity = this._target._body.velocity;
-		const locationCannon = this._body.position;
-		const locationThree = this._body.position;
-		console.log(locationCannon);
-		console.log(locationThree);
+	getOptimalAngle(firingLocation, targetLocation) {
+		const planeDelta = Math.sqrt(Math.pow(targetLocation.x, 2) + Math.pow(targetLocation.z, 2));
+		const angle = Math.atan(targetLocation.y / planeDelta);
+		return angle;
 	}
+
+	getTravelTime(velocity, firingAngle, targetLocation) {
+		const planeDelta = Math.sqrt(Math.pow(targetLocation.x, 2) + Math.pow(targetLocation.z, 2));
+		return planeDelta / (Math.cos(firingAngle) * velocity)
+
+	}
+	// returns what direction we should aim at
+	predictAimingDirection(firingLocation) {
+		// get the time step
+		const timeDelta = window.game._cannonManager._timeStep;
+		let targetTime = 0;
+		const maxTime = 5;
+		// get the target location
+		const targetLocation = this._target._body.position;
+		// get the target velocity
+		const targetVelocity = this._target._body.velocity;
+		// for each time step
+		while (targetTime < maxTime) {
+			// calculate the next location
+			const predictedLocation = targetLocation.vadd(targetVelocity.scale(targetTime));
+			const targetDelta = predictedLocation.vsub(firingLocation);
+			// calculate the angle to the next location 
+			// console.log(targetDelta);
+			const firingAngle = this.getOptimalAngle(firingLocation, targetDelta);
+			// calculate the time to the next location for needle to shoot the next locationo
+			const travelTime = this.getTravelTime(100, firingAngle, targetDelta);
+			// if solution time greater > time for the object to travel 
+			// return the angle
+			if (travelTime < targetTime) {
+				// console.log(predictedLocation);
+				const targetDirection = targetDelta.unit();
+				console.log(targetDelta);
+				return targetDirection;
+			}
+			targetTime += timeDelta;
+			// else 
+			// recalculate the solution
+		}
+		return null;
+	}
+
+
 	shootNeedle() {
 		const targetPoint = this._target._body.position;
 		const targetVector = new THREE.Vector3();
@@ -63,14 +101,19 @@ export class Enemy extends Medy {
 			this._body.position.y + 10,
 			this._body.position.z
 		);
-		const predictedLocation = this.predictNextTargetLocation();
+		const newAngle = this.predictAimingDirection(firingLocation);
 		targetVector.subVectors(targetPoint, firingLocation);
 		targetVector.normalize();
 
-		const needleShot = new Needle();
-		window.game.addMedy(needleShot);
-		needleShot.setFiringLocation(firingLocation);
-		needleShot.setDirection(targetVector);
-		needleShot.setSpeed(30);
+		if (newAngle != null) {
+			const needleShot = new Needle();
+			window.game.addMedy(needleShot);
+			needleShot.setFiringLocation(firingLocation);
+			console.log("using new angle");
+			needleShot.setDirection(newAngle);
+			needleShot.setSpeed(100);
+		} else {
+			// needleShot.setDirection(targetVector);
+		}
 	}
 }

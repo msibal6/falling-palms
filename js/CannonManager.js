@@ -2,14 +2,14 @@ import * as CANNON from './cannon-es.js';
 import { removeItemFromArray } from './helper.js';
 export class CannonManager {
 	constructor() {
-		this.timeStep = 1 / 60;
-		this.lastCallTime = null;
+		this._timeStep = 1 / 60;
+		this._lastCallTime = null;
 		this._physicals = [];
-		this.meshBodiesToRemove = [];
+		this._meshBodiesToRemove = [];
 		this._needleFilterGroup = 2;
 		this._palmFilterGroup = 3;
 
-		this.world = new CANNON.World({
+		this._world = new CANNON.World({
 			gravity: new CANNON.Vec3(0, -10, 0), // m/s²
 		});
 
@@ -17,17 +17,17 @@ export class CannonManager {
 		this.planeMaterial = new CANNON.Material({ friction: 0, });
 		this.contactMaterial = new CANNON.ContactMaterial(this.planeMaterial, this.planeMaterial,
 			{ friction: 0, restitution: 0.0, });
-		this.world.addContactMaterial(this.contactMaterial);
+		this._world.addContactMaterial(this.contactMaterial);
 		// Palm Material
 		this.palmMaterial = new CANNON.Material({ friction: 5, });
 		this.palmContact = new CANNON.ContactMaterial(this.palmMaterial, this.planeMaterial,
 			{ friction: 0, restitution: 0.0 });
-		this.world.addContactMaterial(this.palmContact);
+		this._world.addContactMaterial(this.palmContact);
 	}
 
 	addPhysical(meshBody) {
 		// this._physicals.push(meshBody);
-		this.world.addBody(meshBody);
+		this._world.addBody(meshBody);
 	}
 
 	removePhysical(meshBody) {
@@ -37,13 +37,13 @@ export class CannonManager {
 
 	killBody(meshBody) {
 		meshBody.sleep();
-		this.meshBodiesToRemove.push(meshBody);
+		this._meshBodiesToRemove.push(meshBody);
 	}
 
 	removeDeadMeshBodies() {
-		for (let i = 0; i < this.meshBodiesToRemove.length; i++) {
+		for (let i = 0; i < this._meshBodiesToRemove.length; i++) {
 			// const meshBody = ;
-			this.world.removeBody(this.meshBodiesToRemove.pop());
+			this._world.removeBody(this._meshBodiesToRemove.pop());
 			// removeItemFromArray(meshBody, this.meshBodiesToRemove);
 		}
 	}
@@ -58,18 +58,18 @@ export class CannonManager {
 		});
 		planeBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0); // make it face up
 		planeBody.position.set(0, 0, 0);
-		this.world.addBody(planeBody)
+		this._world.addBody(planeBody)
 	}
 
 	update() {
 		this.removeDeadMeshBodies()
 		const time = performance.now() / 1000; // seconds
-		if (!this.lastCallTime) {
-			this.world.step(this.timeStep);
+		if (!this._lastCallTime) {
+			this._world.step(this._timeStep);
 		} else {
-			const dt = time - this.lastCallTime;
-			this.world.step(this.timeStep, dt);
+			const dt = time - this._lastCallTime;
+			this._world.step(this._timeStep, dt);
 		}
-		this.lastCallTime = time;
+		this._lastCallTime = time;
 	}
 }

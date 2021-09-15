@@ -66,6 +66,7 @@ export class Needle extends Medy {
 	setSpeed(speed) {
 		this._speed = speed;
 		this._body.velocity.scale(speed, this._body.velocity);
+		// console.log(this._body.velocity.length());
 	}
 
 	maintainTrajectory() {

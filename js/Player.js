@@ -172,10 +172,13 @@ export class Player extends Medy {
 		);
 		this.dampenAcceleration();
 		this.camera.update();
+		// console.log(this._body.velocity);
 	}
 
 	dampenAcceleration() {
-		if (almostZero(this.zAcceleration) && almostZero(this.xAcceleration)) {
+		if (almostZero(this.zAcceleration, 0.0001) && almostZero(this.xAcceleration, 0.0001)) {
+			this.zAcceleration = 0;
+			this.xAcceleration = 0;
 			return;
 		}
 		this.zAcceleration *= this.damping;

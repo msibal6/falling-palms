@@ -1,4 +1,6 @@
 "use strict";
+import * as CANNON from './cannon-es.js';
+
 export function getNormalizedVector(vector) {
 	const magnitude = Math.sqrt(vector.x * vector.x + vector.y * vector.y
 		+ vector.z * vector.z);
@@ -34,6 +36,7 @@ export function getRandomInt(max, opts) {
 	}
 	return Math.floor(Math.random() * max);
 }
+
 export function removeItemFromArray(item, array) {
 	const index = array.indexOf(item);
 	if (index === -1) {
@@ -44,4 +47,11 @@ export function removeItemFromArray(item, array) {
 	} else {
 		array.splice(index, index + 1);
 	}
+}
+
+export function cannon2ThreeVector3(cannonVec3) {
+	return new THREE.Vector3(cannonVec3.x, cannonVec3.y, cannonVec3.z);
+}
+export function three2CannonVec3(threeVector3) {
+	return new CANNON.Vec3(threeVector3.x, threeVector3.y, threeVector3.z);
 }
