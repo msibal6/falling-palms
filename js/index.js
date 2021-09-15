@@ -17,8 +17,6 @@ class Game {
 
 		this.onMouseClickHandler = this.onMouseClick.bind(this);
 
-		this._player = null;
-
 		this._animationLoop = null;
 
 		this.loop = function () {

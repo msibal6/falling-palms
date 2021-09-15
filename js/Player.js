@@ -44,6 +44,8 @@ export class Player extends Medy {
 		const bodyHit = event.body;
 		if (bodyHit.collisionFilterGroup === window.game._cannonManager._needleFilterGroup) {
 			this.HitByNeedle();
+		} else if (bodyHit.collisionFilterGroup === window.game._cannonManager._groundFilterGroup) {
+			// alert("hit the ground");
 		}
 	}
 
@@ -57,7 +59,6 @@ export class Player extends Medy {
 			}
 			if (stoppedAirstreams.length > 0) {
 				const index = getRandomInt(stoppedAirstreams.length);
-				console.log("stopped");
 				this._airstreams[stoppedAirstreams[index]].start();
 			}
 		}
@@ -164,7 +165,6 @@ export class Player extends Medy {
 		this.updateForwardAccelaration("zAcceleration", "d");
 		this.updateBackwardAcceleration("xAcceleration", "s");
 		this.updateBackwardAcceleration("zAcceleration", "a");
-		// console.log(this._medy);
 		this._body.velocity.set(
 			this.xAcceleration,
 			this._body.velocity.y,
@@ -172,7 +172,6 @@ export class Player extends Medy {
 		);
 		this.dampenAcceleration();
 		this.camera.update();
-		// console.log(this._body.velocity);
 	}
 
 	dampenAcceleration() {

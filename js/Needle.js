@@ -26,11 +26,12 @@ export class Needle extends Medy {
 			mass: 1,
 			shape: needleShape,
 			material: window.game._cannonManager.palmMaterial,
+			collisionFilterGroup: window.game._cannonManager._needleFilterGroup
 		});
 		super(needleMesh, needleBody);
 		this.collisionHandler = this.collide.bind(this);
 		this._body.addEventListener('collide', this.collisionHandler, false);
-		this._body.collisionFilterGroup = window.game._cannonManager._needleFilterGroup;
+		// this._body.collisionFilterGroup = window.game._cannonManager._needleFilterGroup;
 		this.updatedWithMass = false;
 	}
 
@@ -66,7 +67,6 @@ export class Needle extends Medy {
 	setSpeed(speed) {
 		this._speed = speed;
 		this._body.velocity.scale(speed, this._body.velocity);
-		// console.log(this._body.velocity.length());
 	}
 
 	maintainTrajectory() {

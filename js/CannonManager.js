@@ -8,6 +8,7 @@ export class CannonManager {
 		this._meshBodiesToRemove = [];
 		this._needleFilterGroup = 2;
 		this._palmFilterGroup = 3;
+		this._groundFilterGroup = 4;
 
 		this._world = new CANNON.World({
 			gravity: new CANNON.Vec3(0, -10, 0), // m/s²
@@ -55,6 +56,7 @@ export class CannonManager {
 			mass: 0,
 			shape: planeShape,
 			material: this.planeMaterial,
+			collisionFilterGroup: this._groundFilterGroup
 		});
 		planeBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0); // make it face up
 		planeBody.position.set(0, 0, 0);
