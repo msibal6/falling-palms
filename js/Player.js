@@ -45,7 +45,7 @@ export class Player extends Medy {
 		if (bodyHit.collisionFilterGroup === window.game._cannonManager._needleFilterGroup) {
 			this.HitByNeedle();
 		} else if (bodyHit.collisionFilterGroup === window.game._cannonManager._groundFilterGroup) {
-			// alert("hit the ground");
+			// alert("hit the ground")
 		}
 	}
 
