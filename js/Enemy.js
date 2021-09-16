@@ -80,7 +80,7 @@ export class Enemy extends Medy {
 			const firingAngle = this.getOptimalAngle(targetDelta);
 			// Calculate the time to predicted location
 			// for needle to shoot the next locationo
-			const travelTime = this.getTravelTime(100, firingAngle, targetDelta);
+			const travelTime = this.getTravelTime(50, firingAngle, targetDelta);
 			// If solution time greater > time for the object to travel 
 			// return the targetDirection
 			if (travelTime < targetTime) {
@@ -107,7 +107,7 @@ export class Enemy extends Medy {
 			window.game.addMedy(needleShot);
 			needleShot.setFiringLocation(firingLocation);
 			needleShot.setDirection(idealTargetDirection);
-			needleShot.setSpeed(100);
+			needleShot.setSpeed(50);
 		} else {
 			const targetPoint = this._target._body.position;
 			const targetVector = new THREE.Vector3();

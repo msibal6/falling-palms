@@ -22,16 +22,18 @@ export class Player extends Medy {
 		const halfExtents = new CANNON.Vec3(size, size, size);
 		const boxShape = new CANNON.Box(halfExtents);
 		const tempPlayerBody = new CANNON.Body({
-			mass: 1,
+			mass: 5,
 			shape: boxShape,
 			material: window.game._cannonManager.planeMaterial
 		});
 		super(tempPlayerMesh, tempPlayerBody);
 		this._body.position.set(0, 100, 0);
 		this.collisionHandler = this.collide.bind(this);
+		this._body.addEventListener('collide', this.collisionHandler);
+
 		this.onMouseClickHandler = this.onMouseClick.bind(this);
 		window.addEventListener('mousedown', this.onMouseClickHandler, false);
-		this._body.addEventListener('collide', this.collisionHandler);
+
 		// visual THREE mesh
 		// physics CANNON body
 		this.maxSpeed = 80.0;
@@ -43,10 +45,19 @@ export class Player extends Medy {
 	}
 
 	collide(event) {
+		console.log(this._body.velocity);
+		// this._body.velocity.set(
+		// 	this._body.velocity.x,
+		// 	this._body.velocity.y,
+		// 	this._body.velocity.z,
+		// );
 		const bodyHit = event.body;
 		if (bodyHit.collisionFilterGroup === window.game._cannonManager._needleFilterGroup) {
 			this.HitByNeedle();
 		} else if (bodyHit.collisionFilterGroup === window.game._cannonManager._groundFilterGroup) {
+			console.log("game over");
+			console.log(window._animationLoop);
+			window.cancelAnimationFrame(window.game._animationLoop);
 			// alert("hit the ground")
 		}
 	}

@@ -21,6 +21,7 @@ class Game {
 
 		this.loop = function () {
 			this._animationLoop = requestAnimationFrame(this.loop);
+			
 			// done by cannonManager
 			this._cannonManager.update();
 			// game updates mesh position from cannon positions

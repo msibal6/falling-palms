@@ -14,7 +14,9 @@ export class ThreeManager {
 
 	initRenderer() {
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
-		document.body.appendChild(this.renderer.domElement);
+		const threeContainers = document.getElementsByClassName("js-three-container");
+		this.renderer.domElement.className = "three-js-canvas";
+		threeContainers[0].appendChild(this.renderer.domElement);
 	}
 
 	addVisual(meshBody) {

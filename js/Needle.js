@@ -37,6 +37,7 @@ export class Needle extends Medy {
 
 	// TODO optimization of deletion of needles and palms
 	collide(event) {
+		this._body.velocity.set(0, 0, 0);
 		window.game.removeMedy(this);
 	}
 
