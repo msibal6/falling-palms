@@ -29,6 +29,8 @@ export class Player extends Medy {
 		super(tempPlayerMesh, tempPlayerBody);
 		this._body.position.set(0, 100, 0);
 		this.collisionHandler = this.collide.bind(this);
+		this.onMouseClickHandler = this.onMouseClick.bind(this);
+		window.addEventListener('mousedown', this.onMouseClickHandler, false);
 		this._body.addEventListener('collide', this.collisionHandler);
 		// visual THREE mesh
 		// physics CANNON body
@@ -82,6 +84,24 @@ export class Player extends Medy {
 			new THREE.Vector3(5, 10, -10), 100);
 		this.addAirstream(new THREE.Vector3(0, 0, -10),
 			new THREE.Vector3(2, 10, -10), 100);
+	}
+
+	onMouseClick(event) {
+		// calculate mouse position in normalized device coordinates
+		// (-1 to +1) for both components
+		const raycaster = new THREE.Raycaster();
+		const mouse = new THREE.Vector2();
+		mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+		mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+		raycaster.setFromCamera(mouse, this.camera.threeCamera);
+
+		// calculate objects intersecting the picking ray
+		const intersects = raycaster.intersectObjects(window.game._threeManager.scene.children);
+		// console.log("shjoot");
+		if (intersects.length) {
+			// console.log("shoootpalm");
+			this.shootPalm(intersects[0].point);
+		}
 	}
 
 	shootPalm(targetPoint) {

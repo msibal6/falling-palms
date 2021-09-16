@@ -1,4 +1,4 @@
-import { KeyboardController } from './events.js';
+import { KeyboardController } from './KeyboardController.js';
 import { ThreeManager } from './ThreeManager.js';
 import { CannonManager } from './CannonManager.js';
 import { removeItemFromArray } from './helper.js';
@@ -15,7 +15,7 @@ class Game {
 		this._medies = [];
 		// between the two
 
-		this.onMouseClickHandler = this.onMouseClick.bind(this);
+		// this.onMouseClickHandler = this.onMouseClick.bind(this);
 
 		this._animationLoop = null;
 
@@ -36,7 +36,7 @@ class Game {
 		this._player = new Player();
 		this._player.create();
 		this.addEnemies();
-		window.addEventListener('mousedown', this.onMouseClickHandler, false);
+		// window.addEventListener('mousedown', this.onMouseClickHandler, false);
 		this.loop();
 	}
 
