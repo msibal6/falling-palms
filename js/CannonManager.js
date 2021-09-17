@@ -4,12 +4,11 @@ export class CannonManager {
 	constructor() {
 		this._timeStep = 1 / 60;
 		this._lastCallTime = null;
-		this._physicals = [];
-		this._meshBodiesToRemove = [];
+		this._bodies = [];
+		this._bodiesToRemove = [];
 		this._needleFilterGroup = 2;
 		this._palmFilterGroup = 3;
 		this._groundFilterGroup = 4;
-
 		this._world = new CANNON.World({
 			gravity: new CANNON.Vec3(0, -10, 0), // m/s²
 		});
@@ -31,25 +30,28 @@ export class CannonManager {
 		this._world.addBody(meshBody);
 	}
 
-	removePhysical(meshBody) {
+	removePhysical(body) {
 		// removeItemFromArray(meshBody, this._physicals);
-		this.killBody(meshBody);
+		this.killBody(body);
 	}
 
 	killBody(meshBody) {
 		meshBody.sleep();
-		this._meshBodiesToRemove.push(meshBody);
+		this._bodiesToRemove.push(meshBody);
 	}
 
 	removeDeadMeshBodies() {
-		for (let i = 0; i < this._meshBodiesToRemove.length; i++) {
-			// const meshBody = ;
-			this._world.removeBody(this._meshBodiesToRemove.pop());
-			// removeItemFromArray(meshBody, this.meshBodiesToRemove);
-		}
+		this._bodiesToRemove.forEach(function (body) {
+			this._world.removeBody(body);
+		});
+		this._bodiesToRemove = [];
+		// for (let i = 0; i < this._meshBodiesToRemove.length; i++) {
+		// 	this._world.removeBody(this._meshBodiesToRemove.pop());
+		// 	// removeItemFromArray(meshBody, this.meshBodiesToRemove);
+		// }
 	}
 
-	createWorld() {
+	createPhysicalScene() {
 		// Physical floor
 		const planeShape = new CANNON.Plane();
 		const planeBody = new CANNON.Body({

@@ -32,8 +32,8 @@ class Game {
 	}
 
 	start() {
-		this._threeManager.createScene();
-		this._cannonManager.createWorld();
+		this._threeManager.createVisualScene();
+		this._cannonManager.createPhysicalScene();
 		this._player = new Player();
 		this._player.create();
 		this.addEnemies();

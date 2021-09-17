@@ -19,9 +19,9 @@ export class ThreeManager {
 		threeContainers[0].appendChild(this.renderer.domElement);
 	}
 
-	addVisual(meshBody) {
+	addVisual(visualPart) {
 		// this._visuals.push(meshBody);
-		this.addToScene(meshBody);
+		this.addToScene(visualPart);
 	}
 
 	removeVisual(meshBody) {
@@ -29,7 +29,7 @@ export class ThreeManager {
 		this.scene.remove(meshBody);
 	}
 
-	createScene() {
+	createVisualScene() {
 		this.createSkybox();
 		this.createFloor();
 		this.createLighting();
@@ -87,12 +87,9 @@ export class ThreeManager {
 		this.scene.add(object);
 	}
 
-
-
 	render() {
 		this.renderer.render(this.scene, this.camera);
 	}
-
 
 	handleWindowResize() {
 		return function () {
