@@ -21,7 +21,7 @@ class Game {
 
 		this.loop = function () {
 			this._animationLoop = requestAnimationFrame(this.loop);
-			
+
 			// done by cannonManager
 			this._cannonManager.update();
 			// game updates mesh position from cannon positions
@@ -32,13 +32,32 @@ class Game {
 	}
 
 	start() {
+		this.initliazeGame();
+		this.loop();
+	}
+
+	initliazeGame() {
 		this._threeManager.createVisualScene();
 		this._cannonManager.createPhysicalScene();
 		this._player = new Player();
 		this._player.create();
 		this.addEnemies();
-		// window.addEventListener('mousedown', this.onMouseClickHandler, false);
-		this.loop();
+	}
+
+	destroy() {
+	window.cancelAnimationFrame(this._animationLoop);
+		for (let i = 0; i < this._medies.length; i++) {
+			removeItemFromArray(this._medies[i], this._medies);
+			this._threeManager.removeVisual(this._medies[i]._mesh);
+			this._cannonManager.removePhysical(this._medies[i]._body);
+		}
+		this._medies = [];
+		this._threeManager.destroy();
+	}
+
+	restart() {
+		this.destroy();
+		this.start();
 	}
 
 	addEnemies() {

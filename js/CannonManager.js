@@ -33,7 +33,6 @@ export class CannonManager {
 	removePhysical(body) {
 		// removeItemFromArray(meshBody, this._physicals);
 		this.killBody(body);
-		// this._world.removeBody(body);
 	}
 
 	killBody(body) {

@@ -56,8 +56,7 @@ export class Player extends Medy {
 			this.HitByNeedle();
 		} else if (bodyHit.collisionFilterGroup === window.game._cannonManager._groundFilterGroup) {
 			console.log("game over");
-			console.log(window._animationLoop);
-			window.cancelAnimationFrame(window.game._animationLoop);
+			// window.game.restart();
 			// alert("hit the ground")
 		}
 	}
@@ -138,7 +137,7 @@ export class Player extends Medy {
 		newAirstream.setEnd(end);
 		newAirstream.setDelta(delta);
 		newAirstream.start();
-		window.game._threeManager.addToScene(newAirstream.mesh);
+		window.game._threeManager.addVisual(newAirstream.mesh);
 	}
 
 	updateAirstreams() {

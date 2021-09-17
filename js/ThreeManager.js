@@ -4,32 +4,25 @@ import { removeItemFromArray } from "./helper.js";
 export class ThreeManager {
 	constructor() {
 		this._visuals = [];
-		const threeCamera = new THREE.PerspectiveCamera(75,
+		this.camera = new THREE.PerspectiveCamera(75,
 			window.innerWidth / window.innerHeight, 0.1, 1000);
-		this.camera = threeCamera;
-		this.scene = new THREE.Scene();
-		this.renderer = new THREE.WebGLRenderer();
+		this.scene = null;
+		this.renderer = null;
 		this.initRenderer();
 	}
 
 	initRenderer() {
+		this.renderer = new THREE.WebGLRenderer();
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 		const threeContainers = document.getElementsByClassName("js-three-container");
 		this.renderer.domElement.className = "three-js-canvas";
 		threeContainers[0].appendChild(this.renderer.domElement);
 	}
 
-	addVisual(visualPart) {
-		// this._visuals.push(meshBody);
-		this.addToScene(visualPart);
-	}
 
-	removeVisual(meshBody) {
-		// removeItemFromArray(meshBody, this._visuals);
-		this.scene.remove(meshBody);
-	}
 
 	createVisualScene() {
+		this.scene = new THREE.Scene();
 		this.createSkybox();
 		this.createFloor();
 		this.createLighting();
@@ -83,7 +76,32 @@ export class ThreeManager {
 		this.scene.background = texture;
 	}
 
+	destroy() {
+		for (let i = 0; i < this._visuals.length; i++) {
+			this.removeVisual(this._visuals[i]);
+		}
+		this._visuals = [];
+	}
+
+	addVisual(visual) {
+		this._visuals.push(visual);
+		this.addToScene(visual);
+	}
+
+	removeVisual(visual) {
+		if (visual === undefined) {
+			return;
+		}
+		removeItemFromArray(visual, this._visuals);
+		this.removeFromScene(visual);
+	}
+
+	removeFromScene(object) {
+		this.scene.remove(object);
+	}
+
 	addToScene(object) {
+		// this._visuals.push(visual);
 		this.scene.add(object);
 	}
 
