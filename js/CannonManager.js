@@ -3,26 +3,11 @@ import { removeItemFromArray } from './helper.js';
 export class CannonManager {
 	constructor() {
 		this._timeStep = 1 / 60;
-		this._lastCallTime = null;
-		this._bodies = [];
-		this._bodiesToRemove = [];
 		this._needleFilterGroup = 2;
 		this._palmFilterGroup = 3;
 		this._groundFilterGroup = 4;
-		this._world = new CANNON.World({
-			gravity: new CANNON.Vec3(0, -10, 0), // m/s²
-		});
 
-		// Program contact between floor material and itself
-		this.planeMaterial = new CANNON.Material({ friction: 0, });
-		this.contactMaterial = new CANNON.ContactMaterial(this.planeMaterial, this.planeMaterial,
-			{ friction: 0, restitution: 0.0, });
-		this._world.addContactMaterial(this.contactMaterial);
-		// Palm Material
-		this.palmMaterial = new CANNON.Material({ friction: 5, });
-		this.palmContact = new CANNON.ContactMaterial(this.palmMaterial, this.planeMaterial,
-			{ friction: 0, restitution: 0.0 });
-		this._world.addContactMaterial(this.palmContact);
+		this._world = null;
 	}
 
 	addPhysical(meshBody) {
@@ -48,6 +33,24 @@ export class CannonManager {
 	}
 
 	createPhysicalScene() {
+		this._lastCallTime = null;
+		this._bodies = [];
+		this._bodiesToRemove = [];
+		this._world = new CANNON.World({
+			gravity: new CANNON.Vec3(0, -10, 0), // m/s²
+		});
+
+		// Program contact between floor material and itself
+		this.planeMaterial = new CANNON.Material({ friction: 0, });
+		this.contactMaterial = new CANNON.ContactMaterial(this.planeMaterial, this.planeMaterial,
+			{ friction: 0, restitution: 0.0, });
+		this._world.addContactMaterial(this.contactMaterial);
+		// Palm Material
+		this.palmMaterial = new CANNON.Material({ friction: 5, });
+		this.palmContact = new CANNON.ContactMaterial(this.palmMaterial, this.planeMaterial,
+			{ friction: 0, restitution: 0.0 });
+		this._world.addContactMaterial(this.palmContact);
+
 		// Floor
 		const planeShape = new CANNON.Plane();
 		const planeBody = new CANNON.Body({

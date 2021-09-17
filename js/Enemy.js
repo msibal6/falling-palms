@@ -34,7 +34,10 @@ export class Enemy extends Medy {
 			}
 			this.shootNeedle();
 			setTimeout(this.shootNeedleHandler, getRandomInt(1000, { min: 750 }));
+			console.log(this._mesh);
 		}.bind(this);
+
+		// this.shootTimer = setInterval(this.shootNeedleHandler, 2000);
 
 		setTimeout(this.shootNeedleHandler, getRandomInt(1500, { min: 750 }));
 		this._body.addEventListener('collide', this.collisionHandler);
@@ -109,7 +112,7 @@ export class Enemy extends Medy {
 			needleShot.setDirection(idealTargetDirection);
 			needleShot.setSpeed(50);
 		} else {
-			const targetPoint = this._target._body.position;
+			const targetPoint = this._target_body.position;
 			const targetVector = new THREE.Vector3();
 			targetVector.subVectors(targetPoint, firingLocation);
 			targetVector.normalize();

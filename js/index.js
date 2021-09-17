@@ -11,11 +11,9 @@ class Game {
 		this._threeManager = new ThreeManager();
 		// World is managed by cannon manager of the game
 		this._cannonManager = new CannonManager();
-		// TODO Add array for mesh bodies so it is clear game is handling intersection
+		// handles intersection between three and cannon
 		this._medies = [];
-		// between the two
-
-		// this.onMouseClickHandler = this.onMouseClick.bind(this);
+		this._timeouts = [];
 
 		this._animationLoop = null;
 
@@ -47,12 +45,12 @@ class Game {
 	destroy() {
 	window.cancelAnimationFrame(this._animationLoop);
 		for (let i = 0; i < this._medies.length; i++) {
-			removeItemFromArray(this._medies[i], this._medies);
 			this._threeManager.removeVisual(this._medies[i]._mesh);
 			this._cannonManager.removePhysical(this._medies[i]._body);
+			removeItemFromArray(this._medies[i], this._medies);
 		}
 		this._medies = [];
-		this._threeManager.destroy();
+		// this._threeManager.destroy();
 	}
 
 	restart() {

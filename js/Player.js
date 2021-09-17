@@ -45,7 +45,7 @@ export class Player extends Medy {
 	}
 
 	collide(event) {
-		console.log(this._body.velocity);
+		// console.log(this._body.velocity);
 		// this._body.velocity.set(
 		// 	this._body.velocity.x,
 		// 	this._body.velocity.y,
@@ -56,7 +56,7 @@ export class Player extends Medy {
 			this.HitByNeedle();
 		} else if (bodyHit.collisionFilterGroup === window.game._cannonManager._groundFilterGroup) {
 			console.log("game over");
-			// window.game.restart();
+			window.game.restart();
 			// alert("hit the ground")
 		}
 	}

@@ -19,8 +19,6 @@ export class ThreeManager {
 		threeContainers[0].appendChild(this.renderer.domElement);
 	}
 
-
-
 	createVisualScene() {
 		this.scene = new THREE.Scene();
 		this.createSkybox();
@@ -89,9 +87,6 @@ export class ThreeManager {
 	}
 
 	removeVisual(visual) {
-		if (visual === undefined) {
-			return;
-		}
 		removeItemFromArray(visual, this._visuals);
 		this.removeFromScene(visual);
 	}
@@ -101,7 +96,6 @@ export class ThreeManager {
 	}
 
 	addToScene(object) {
-		// this._visuals.push(visual);
 		this.scene.add(object);
 	}
 
