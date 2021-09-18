@@ -25,6 +25,7 @@ export class Enemy extends Medy {
 		// Wrapped in this._mesh and this._body
 		super(enemyMesh, enemyBody);
 		this._target = targetMedy;
+		this._mesh.name = "enemy";
 		this.collisionHandler = this.collide.bind(this);
 		this._dead = false;
 
@@ -34,12 +35,12 @@ export class Enemy extends Medy {
 			}
 			this.shootNeedle();
 			setTimeout(this.shootNeedleHandler, getRandomInt(1000, { min: 750 }));
-			console.log(this._mesh);
+			// console.log(this._mesh);
 		}.bind(this);
 
 		// this.shootTimer = setInterval(this.shootNeedleHandler, 2000);
 
-		setTimeout(this.shootNeedleHandler, getRandomInt(1500, { min: 750 }));
+		// setTimeout(this.shootNeedleHandler, getRandomInt(1500, { min: 750 }));
 		this._body.addEventListener('collide', this.collisionHandler);
 	}
 

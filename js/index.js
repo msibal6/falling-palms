@@ -46,13 +46,10 @@ class Game {
 	destroy() {
 		window.cancelAnimationFrame(this._animationLoop);
 		console.log(this._threeManager.scene.children);
-		for (let i = 0; i < this._medies.length; i++) {
-			if (this._medies[i].shootHandler !== undefined) {
-				this._medies[i].dead = true;
-			}
-			this._threeManager.removeVisual(this._medies[i]._mesh);
-			this._cannonManager.removePhysical(this._medies[i]._body);
-			removeItemFromArray(this._medies[i], this._medies);
+		console.log(this._medies.length);
+		while (this._medies.length > 0){
+			console.log(this._medies.length);
+			this.removeMedy(this._medies.pop());
 		}
 		this._medies = [];
 		console.log(this._threeManager.scene.children);
@@ -66,6 +63,7 @@ class Game {
 	addEnemies() {
 		this.addEnemy(10, 1, 10);
 		// this.addEnemy(10, 1, -10);
+		console.log(this._medies);
 	}
 
 	addEnemy(x, y, z) {

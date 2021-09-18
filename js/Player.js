@@ -57,6 +57,7 @@ export class Player extends Medy {
 			this.HitByNeedle();
 		} else if (bodyHit.collisionFilterGroup === window.game._cannonManager._groundFilterGroup) {
 			console.log("game over");
+			// window.cancelAnimationFrame(window.game._animationLoop);
 			window.game.restart();
 			// alert("hit the ground")
 		}
@@ -79,6 +80,7 @@ export class Player extends Medy {
 
 	create() {
 		window.game.addMedy(this);
+		console.log(window.game._medies);
 
 		// Camera
 		const orbitCamera = new SphericalPanCamera(window.game._threeManager.camera, this._mesh);
