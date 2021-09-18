@@ -35,12 +35,11 @@ export class Enemy extends Medy {
 			}
 			this.shootNeedle();
 			setTimeout(this.shootNeedleHandler, getRandomInt(1000, { min: 750 }));
-			// console.log(this._mesh);
 		}.bind(this);
 
 		// this.shootTimer = setInterval(this.shootNeedleHandler, 2000);
 
-		// setTimeout(this.shootNeedleHandler, getRandomInt(1500, { min: 750 }));
+		setTimeout(this.shootNeedleHandler, getRandomInt(1500, { min: 750 }));
 		this._body.addEventListener('collide', this.collisionHandler);
 	}
 
@@ -52,6 +51,9 @@ export class Enemy extends Medy {
 		}
 	}
 
+cleanup() {
+	this._dead = true;
+}
 	getOptimalAngle(targetLocation) {
 		const planeDelta = Math.sqrt(Math.pow(targetLocation.x, 2) + Math.pow(targetLocation.z, 2));
 		const angle = Math.atan(targetLocation.y / planeDelta);

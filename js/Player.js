@@ -46,7 +46,6 @@ export class Player extends Medy {
 	}
 
 	collide(event) {
-		// console.log(this._body.velocity);
 		// this._body.velocity.set(
 		// 	this._body.velocity.x,
 		// 	this._body.velocity.y,
@@ -56,8 +55,6 @@ export class Player extends Medy {
 		if (bodyHit.collisionFilterGroup === window.game._cannonManager._needleFilterGroup) {
 			this.HitByNeedle();
 		} else if (bodyHit.collisionFilterGroup === window.game._cannonManager._groundFilterGroup) {
-			console.log("game over");
-			// window.cancelAnimationFrame(window.game._animationLoop);
 			window.game.restart();
 			// alert("hit the ground")
 		}
@@ -80,7 +77,6 @@ export class Player extends Medy {
 
 	create() {
 		window.game.addMedy(this);
-		console.log(window.game._medies);
 
 		// Camera
 		const orbitCamera = new SphericalPanCamera(window.game._threeManager.camera, this._mesh);
@@ -110,9 +106,7 @@ export class Player extends Medy {
 
 		// calculate objects intersecting the picking ray
 		const intersects = raycaster.intersectObjects(window.game._threeManager.scene.children);
-		// console.log("shjoot");
 		if (intersects.length) {
-			// console.log("shoootpalm");
 			this.shootPalm(intersects[0].point);
 		}
 	}

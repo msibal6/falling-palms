@@ -45,14 +45,14 @@ class Game {
 
 	destroy() {
 		window.cancelAnimationFrame(this._animationLoop);
-		console.log(this._threeManager.scene.children);
-		console.log(this._medies.length);
-		while (this._medies.length > 0){
-			console.log(this._medies.length);
-			this.removeMedy(this._medies.pop());
+		while (this._medies.length) {
+			const medy = this._medies.pop();
+			if (medy.cleanup) {
+				medy.cleanup();
+			}
+			this.removeMedy(medy);
 		}
 		this._medies = [];
-		console.log(this._threeManager.scene.children);
 	}
 
 	restart() {
@@ -63,7 +63,6 @@ class Game {
 	addEnemies() {
 		this.addEnemy(10, 1, 10);
 		// this.addEnemy(10, 1, -10);
-		console.log(this._medies);
 	}
 
 	addEnemy(x, y, z) {
@@ -109,7 +108,6 @@ class Game {
 
 // Window variables 
 window.game = new Game();
-// console.log(window.game.threeManager.);
 window.addEventListener('resize', window.game._threeManager.handleWindowResize(), false);
 
 // Setting up keyboard events
