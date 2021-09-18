@@ -39,18 +39,23 @@ class Game {
 		this._cannonManager.createPhysicalScene();
 		this._player = new Player();
 		this._player.create();
+
 		this.addEnemies();
 	}
 
 	destroy() {
-	window.cancelAnimationFrame(this._animationLoop);
+		window.cancelAnimationFrame(this._animationLoop);
+		console.log(this._threeManager.scene.children);
 		for (let i = 0; i < this._medies.length; i++) {
+			if (this._medies[i].shootHandler !== undefined) {
+				this._medies[i].dead = true;
+			}
 			this._threeManager.removeVisual(this._medies[i]._mesh);
 			this._cannonManager.removePhysical(this._medies[i]._body);
 			removeItemFromArray(this._medies[i], this._medies);
 		}
 		this._medies = [];
-		// this._threeManager.destroy();
+		console.log(this._threeManager.scene.children);
 	}
 
 	restart() {

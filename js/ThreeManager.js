@@ -21,6 +21,7 @@ export class ThreeManager {
 
 	createVisualScene() {
 		this.scene = new THREE.Scene();
+		this.scene.name = "scne" + Date(Date.now());
 		this.createSkybox();
 		this.createFloor();
 		this.createLighting();

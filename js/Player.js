@@ -12,7 +12,7 @@ export class Player extends Medy {
 			new THREE.MeshLambertMaterial({
 				color: 0xFFFFFF,
 			}));
-		tempPlayerMesh.castShadow = true;
+		tempPlayerMesh.castShaodow = true;
 		tempPlayerMesh.receiveShadow = true;
 		// // TODO raycasting for shooting palms
 		tempPlayerMesh.raycast = function (raycaster, intersects) {
@@ -36,6 +36,7 @@ export class Player extends Medy {
 
 		// visual THREE mesh
 		// physics CANNON body
+		this._mesh.name = "ADFADFADFSADFS";
 		this.maxSpeed = 80.0;
 		this.acceleration = 4.0;
 		this.xAcceleration = 0.0;
