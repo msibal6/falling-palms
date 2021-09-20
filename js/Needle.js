@@ -31,13 +31,12 @@ export class Needle extends Medy {
 		super(needleMesh, needleBody);
 		this.collisionHandler = this.collide.bind(this);
 		this._body.addEventListener('collide', this.collisionHandler, false);
-		// this._body.collisionFilterGroup = window.game._cannonManager._needleFilterGroup;
 		this.updatedWithMass = false;
 	}
 
 	// TODO optimization of deletion of needles and palms
 	collide(event) {
-		this._body.velocity.set(0, 0, 0);
+		// this._body.velocity.set(0, 0, 0);
 		window.game.removeMedy(this);
 	}
 

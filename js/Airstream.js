@@ -9,7 +9,7 @@ export class Airstream {
 		this.endPoint = null;
 		this.delta = 1000;
 		this.increment = 0;
-		this.moving = false;
+		this.stop();
 		this.mesh = new THREE.Mesh(
 			new THREE.BoxGeometry(1, 1, 12),
 			new THREE.MeshLambertMaterial({

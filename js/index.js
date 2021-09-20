@@ -14,19 +14,22 @@ class Game {
 		// handles intersection between three and cannon
 		this._medies = [];
 		this._timeouts = [];
-
 		this._animationLoop = null;
-
 		this.loop = function () {
 			this._animationLoop = requestAnimationFrame(this.loop);
-
 			// done by cannonManager
 			this._cannonManager.update();
 			// game updates mesh position from cannon positions
 			this.updateMedies();
+			if (window.keyboardController.pressed["space"]) {
+				window.game._player._mesh.dispatchEvent(this._startEvent);
+			}
 			// Finally, render
 			this._threeManager.render();
 		}.bind(this);
+
+		this._startEvent = { type: 'start' };
+		this._pauseEvent = { type: 'pause' };
 	}
 
 	start() {
@@ -39,8 +42,7 @@ class Game {
 		this._cannonManager.createPhysicalScene();
 		this._player = new Player();
 		this._player.create();
-
-		this.addEnemies();
+		// this.addEnemies();
 	}
 
 	destroy() {
@@ -87,22 +89,6 @@ class Game {
 		this._medies.forEach((element) => {
 			element.update();
 		});
-	}
-
-	onMouseClick(event) {
-		// calculate mouse position in normalized device coordinates
-		// (-1 to +1) for both components
-		const raycaster = new THREE.Raycaster();
-		const mouse = new THREE.Vector2();
-		mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-		mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-		raycaster.setFromCamera(mouse, this._player.camera.threeCamera);
-
-		// calculate objects intersecting the picking ray
-		const intersects = raycaster.intersectObjects(this._threeManager.scene.children);
-		if (intersects.length) {
-			this._player.shootPalm(intersects[0].point);
-		}
 	}
 }
 

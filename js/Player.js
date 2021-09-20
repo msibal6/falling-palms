@@ -29,7 +29,10 @@ export class Player extends Medy {
 		super(tempPlayerMesh, tempPlayerBody);
 		this._body.position.set(0, 100, 0);
 		this.collisionHandler = this.collide.bind(this);
+		this.startHandler = this.start.bind(this);
+		this._body.sleep();
 		this._body.addEventListener('collide', this.collisionHandler);
+		this._mesh.addEventListener('start', this.startHandler);
 
 		this.onMouseClickHandler = this.onMouseClick.bind(this);
 		window.addEventListener('mousedown', this.onMouseClickHandler, false);
@@ -45,12 +48,26 @@ export class Player extends Medy {
 		this.camera = null;
 	}
 
+	pause() {
+		this._airstreams.forEach(function startAirstream(airstream) {
+			airstream.stop();
+		});
+		this._body.sleep();
+	}
+
+	start() {
+		this._airstreams.forEach(function startAirstream(airstream) {
+			airstream.start();
+		});
+		this._body.wakeUp();
+	}
+
 	collide(event) {
-		// this._body.velocity.set(
-		// 	this._body.velocity.x,
-		// 	this._body.velocity.y,
-		// 	this._body.velocity.z,
-		// );
+		this._body.velocity.set(
+			this._body.velocity.x,
+			this._body.velocity.y,
+			this._body.velocity.z,
+		);
 		const bodyHit = event.body;
 		if (bodyHit.collisionFilterGroup === window.game._cannonManager._needleFilterGroup) {
 			this.HitByNeedle();

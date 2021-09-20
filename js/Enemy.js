@@ -115,7 +115,7 @@ cleanup() {
 			needleShot.setDirection(idealTargetDirection);
 			needleShot.setSpeed(50);
 		} else {
-			const targetPoint = this._target_body.position;
+			const targetPoint = this._target._body.position;
 			const targetVector = new THREE.Vector3();
 			targetVector.subVectors(targetPoint, firingLocation);
 			targetVector.normalize();
