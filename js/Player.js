@@ -27,7 +27,7 @@ export class Player extends Medy {
 			material: window.game._cannonManager.planeMaterial
 		});
 		super(tempPlayerMesh, tempPlayerBody);
-		this._body.position.set(0, 100, 0);
+		this._body.position.set(0, 200, 0);
 		this.collisionHandler = this.collide.bind(this);
 		this.startHandler = this.start.bind(this);
 		this._body.sleep();
@@ -53,13 +53,15 @@ export class Player extends Medy {
 			airstream.stop();
 		});
 		this._body.sleep();
+		this.camera.stopPan();
 	}
 
 	start() {
+		this._body.wakeUp();
 		this._airstreams.forEach(function startAirstream(airstream) {
 			airstream.start();
 		});
-		this._body.wakeUp();
+		this.camera.startPan();
 	}
 
 	collide(event) {

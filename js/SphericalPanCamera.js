@@ -15,6 +15,15 @@ export class SphericalPanCamera {
 		this.endTheta = Math.PI / 2;
 		this.deltaPhi = 0.02;
 		this.deltaTheta = 0.01;
+		this.stopPan();
+	}
+
+	startPan() {
+		this.isPanning = true;
+	}
+
+	stopPan() {
+		this.isPanning = false;
 	}
 
 	setThetaPan(newStartTheta, newEndTheta, newDeltaTheta = 0.01) {
@@ -93,7 +102,7 @@ export class SphericalPanCamera {
 
 	update() {
 		// Update angle
-		if (!this.isPanFinished()) {
+		if (!this.isPanFinished() && this.isPanning) {
 			this.updateAngles();
 		}
 		// Update position
