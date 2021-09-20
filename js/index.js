@@ -7,6 +7,8 @@ import { Enemy } from './Enemy.js';
 
 class Game {
 	constructor() {
+		this._startEvent = { type: 'start' };
+		this._pauseEvent = { type: 'pause' };
 		// visual  is managed by _three manager of the game 
 		this._threeManager = new ThreeManager();
 		// World is managed by cannon manager of the game
@@ -22,14 +24,16 @@ class Game {
 			// game updates mesh position from cannon positions
 			this.updateMedies();
 			if (window.keyboardController.pressed["space"]) {
-				window.game._player._mesh.dispatchEvent(this._startEvent);
+
+				this._medies.forEach(function startMedy(medy) {
+					medy._mesh.dispatchEvent(window.game._startEvent);
+				})
+				// this._player._mesh.dispatchEvent(this._startEvent);
 			}
 			// Finally, render
 			this._threeManager.render();
 		}.bind(this);
 
-		this._startEvent = { type: 'start' };
-		this._pauseEvent = { type: 'pause' };
 	}
 
 	start() {

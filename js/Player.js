@@ -30,6 +30,7 @@ export class Player extends Medy {
 		this._body.position.set(0, 200, 0);
 		this.collisionHandler = this.collide.bind(this);
 		this.startHandler = this.start.bind(this);
+		this.bindMethod("startHandler", "start");
 		this._body.sleep();
 		this._body.addEventListener('collide', this.collisionHandler);
 		this._mesh.addEventListener('start', this.startHandler);

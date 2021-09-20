@@ -11,4 +11,8 @@ export class Medy {
 	test() {
 		console.log(this);
 	}
+
+	bindMethod(boundMethodName, ogMethodName) {
+		this[boundMethodName] = this[ogMethodName].bind(this)
+	}
 }
