@@ -3,48 +3,48 @@ import { vectorsAlmostEqual } from './helper.js';
 
 export class Airstream {
 	constructor(target) {
-		this.target = target;
-		this.startPoint = null;
-		this.currentPoint = null;
-		this.endPoint = null;
-		this.delta = 1000;
-		this.increment = 0;
+		this._target = target;
+		this._startPoint = null;
+		this._currentPoint = null;
+		this._endPoint = null;
+		this._delta = 1000;
+		this._increment = 0;
 		this.stop();
-		this.mesh = new THREE.Mesh(
+		this._mesh = new THREE.Mesh(
 			new THREE.BoxGeometry(1, 1, 12),
 			new THREE.MeshLambertMaterial({
 				color: 0x0FF0FF,
 				side: THREE.DoubleSide,
 			}));
-		this.mesh.name = "Airstream";
-		this.mesh.rotation.x = -Math.PI / 2;
-		this.mesh.receiveShadow = false;
-		this.mesh.castShadow = false;
-		this.mesh.raycast = function (raycaster, intersects) {
-			this.mesh.geometry.computeBoundingBox();
-			this.mesh.geometry.boundingBox.applyMatrix4(this.mesh.matrix);
-			if (raycaster.ray.intersectsBox(this.mesh.geometry.boundingBox)) {
+		this._mesh.name = "Airstream";
+		this._mesh.rotation.x = -Math.PI / 2;
+		this._mesh.receiveShadow = false;
+		this._mesh.castShadow = false;
+		this._mesh.raycast = function (raycaster, intersects) {
+			this._mesh.geometry.computeBoundingBox();
+			this._mesh.geometry.boundingBox.applyMatrix4(this._mesh.matrix);
+			if (raycaster.ray.intersectsBox(this._mesh.geometry.boundingBox)) {
 				this.stop();
 			}
 		}.bind(this);
 	}
 
 	setStart(startPoint) {
-		this.startPoint = startPoint;
-		this.currentPoint = startPoint;
+		this._startPoint = startPoint;
+		this._currentPoint = startPoint;
 	}
 
 	restart() {
-		this.increment = 0;
-		this.setStart(this.startPoint);
+		this._increment = 0;
+		this.setStart(this._startPoint);
 	}
 
 	setEnd(endPoint) {
-		this.endPoint = endPoint;
+		this._endPoint = endPoint;
 	}
 
 	setDelta(newDelta) {
-		this.delta = newDelta;
+		this._delta = newDelta;
 	}
 
 	start() {
@@ -61,31 +61,31 @@ export class Airstream {
 
 	updateOffset() {
 		let gap = new THREE.Vector3(
-			this.endPoint.x - this.startPoint.x,
-			this.endPoint.y - this.startPoint.y,
-			this.endPoint.z - this.startPoint.z);
-		gap.divideScalar(this.delta);
-		this.currentPoint = new THREE.Vector3(
-			gap.x + this.currentPoint.x,
-			gap.y + this.currentPoint.y,
-			gap.z + this.currentPoint.z);
+			this._endPoint.x - this._startPoint.x,
+			this._endPoint.y - this._startPoint.y,
+			this._endPoint.z - this._startPoint.z);
+		gap.divideScalar(this._delta);
+		this._currentPoint = new THREE.Vector3(
+			gap.x + this._currentPoint.x,
+			gap.y + this._currentPoint.y,
+			gap.z + this._currentPoint.z);
 	}
 
 	updateSize() {
-		let rad = this.increment / (this.delta) * 2 * Math.PI;
+		let rad = this._increment / (this._delta) * 2 * Math.PI;
 		const scale = -0.5 * Math.cos(rad) + 0.5;
-		this.mesh.scale.set(scale, scale, scale);
+		this._mesh.scale.set(scale, scale, scale);
 	}
 
 	update() {
 		if (this.moving) {
-			this.increment = this.increment + 1;
+			this._increment = this._increment + 1;
 			this.updateOffset();
 			this.updateSize();
-			if (vectorsAlmostEqual(this.currentPoint, this.endPoint, 0.1)) {
+			if (vectorsAlmostEqual(this._currentPoint, this._endPoint, 0.1)) {
 				this.restart();
 			}
 		}
-		this.mesh.position.addVectors(this.target.position, this.currentPoint);
+		this._mesh.position.addVectors(this._target.position, this._currentPoint);
 	}
 }

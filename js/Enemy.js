@@ -26,8 +26,10 @@ export class Enemy extends Medy {
 		super(enemyMesh, enemyBody);
 		this._target = targetMedy;
 		this._mesh.name = "enemy";
-		this.collisionHandler = this.collide.bind(this);
 		this._dead = true;
+		this.collisionHandler = this.collide.bind(this);
+		this.bindMethod("startHandler", "start");
+		this._mesh.addEventListener('start', this.startHandler, false);
 
 		this.shootNeedleHandler = function () {
 			if (this._dead) {
@@ -37,18 +39,20 @@ export class Enemy extends Medy {
 			setTimeout(this.shootNeedleHandler, getRandomInt(1000, { min: 750 }));
 		}.bind(this);
 		this._body.addEventListener('collide', this.collisionHandler);
+
 	}
 
 	pause() {
-		this._dead = true;
-		// setTimeout(this.shootNeedleHandler, getRandomInt(1500, { min: 750 }));
+		this.cleanup();
 	}
 
 	start() {
+		if (!this._dead) {
+			return;
+		}
 		this._dead = false;
-		setTimeout(this.shootNeedleHandler, getRandomInt(1500, { min: 750 }));
+		setTimeout(this.shootNeedleHandler, getRandomInt(1000, { min: 750 }));
 	}
-
 
 	collide(event) {
 		const bodyHit = event.body;
@@ -61,6 +65,7 @@ export class Enemy extends Medy {
 	cleanup() {
 		this._dead = true;
 	}
+
 	getOptimalAngle(targetLocation) {
 		const planeDelta = Math.sqrt(Math.pow(targetLocation.x, 2) + Math.pow(targetLocation.z, 2));
 		const angle = Math.atan(targetLocation.y / planeDelta);

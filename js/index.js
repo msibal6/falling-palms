@@ -26,9 +26,9 @@ class Game {
 			if (window.keyboardController.pressed["space"]) {
 
 				this._medies.forEach(function startMedy(medy) {
+					// console.log(this);
 					medy._mesh.dispatchEvent(window.game._startEvent);
 				})
-				// this._player._mesh.dispatchEvent(this._startEvent);
 			}
 			// Finally, render
 			this._threeManager.render();
@@ -46,7 +46,7 @@ class Game {
 		this._cannonManager.createPhysicalScene();
 		this._player = new Player();
 		this._player.create();
-		// this.addEnemies();
+		this.addEnemies();
 	}
 
 	destroy() {

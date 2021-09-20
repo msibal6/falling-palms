@@ -154,7 +154,7 @@ export class Player extends Medy {
 		newAirstream.setEnd(end);
 		newAirstream.setDelta(delta);
 		newAirstream.start();
-		window.game._threeManager.addVisual(newAirstream.mesh);
+		window.game._threeManager.addVisual(newAirstream._mesh);
 	}
 
 	updateAirstreams() {
