@@ -41,6 +41,13 @@ class Game {
 		this.loop();
 	}
 
+	createUI() {
+		const startingUI = window.document.getElementById("ui-start");
+		startingUI.innerHTML = "<button class=\"btn success\">Success</button>";
+
+	
+	}
+
 	initliazeGame() {
 		this._threeManager.createVisualScene();
 		this._cannonManager.createPhysicalScene();
@@ -105,3 +112,4 @@ window.keyboardController = new KeyboardController();
 window.keyboardController.init();
 
 window.game.start();
+window.game.createUI();
