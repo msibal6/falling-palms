@@ -9,13 +9,15 @@ class Game {
 	constructor() {
 		this._startEvent = { type: 'start' };
 		this._pauseEvent = { type: 'pause' };
+		this._lossEvent = { type: 'gameover', outcome: 0 };
+		this._winEvent = { type: 'gameover', outcome: 1 };
 		// visual  is managed by _three manager of the game 
 		this._threeManager = new ThreeManager();
 		// World is managed by cannon manager of the game
 		this._cannonManager = new CannonManager();
 		// handles intersection between three and cannon
 		this._medies = [];
-		this._timeouts = [];
+		this._enemies = [];
 		this._animationLoop = null;
 		this.loop = function () {
 			this._animationLoop = requestAnimationFrame(this.loop);
@@ -23,13 +25,6 @@ class Game {
 			this._cannonManager.update();
 			// game updates mesh position from cannon positions
 			this.updateMedies();
-			if (window.keyboardController.pressed["space"]) {
-
-				this._medies.forEach(function startMedy(medy) {
-					// console.log(this);
-					medy._mesh.dispatchEvent(window.game._startEvent);
-				})
-			}
 			// Finally, render
 			this._threeManager.render();
 		}.bind(this);
@@ -41,17 +36,26 @@ class Game {
 		this.loop();
 	}
 
+	makeActive(uiID) {
+		const uiSections = window.document.getElementsByClassName("ui");
+		for (let i = 0; i < uiSections.length; i++) {
+			uiSections[i].classList.add("inactive");
+		}
+		const uiSection = window.document.getElementById(uiID);
+		uiSection.classList.remove("inactive");
+		uiSection.classList.add("active");
+	}
+
 	createUI() {
 		const startButton = window.document.getElementById("start-button");
-		console.log(startButton);
+		this.makeActive("ui-start");
 		startButton.addEventListener('click', function (event) {
-			console.log("clicked button");
 			window.game._medies.forEach(function startMedy(medy) {
-				// console.log(this);
 				medy._mesh.dispatchEvent(window.game._startEvent);
 			});
-			const startButton = window.document.getElementById("start-button");
-			startButton.classList.toggle("inactive");
+			const startButton = window.document.getElementById("ui-start");
+			startButton.classList.add("inactive");
+			startButton.classList.remove("active");
 		});
 	}
 
@@ -59,6 +63,7 @@ class Game {
 		this._threeManager.createVisualScene();
 		this._cannonManager.createPhysicalScene();
 		this._player = new Player();
+		this.addMedy(this._player);
 		this._player.create();
 		this.addEnemies();
 	}
@@ -72,21 +77,31 @@ class Game {
 			}
 			this.removeMedy(medy);
 		}
+		while (this._enemies.length) {
+			this._enemies.pop();
+		}
+		this._enemies = [];
 		this._medies = [];
 	}
 
 	restart() {
+		this._medies.forEach(function(medy) {
+			medy._mesh.dispatchEvent(window.game._lossEvent);
+		})
+
 		this.destroy();
 		this.start();
+		this.createUI();
 	}
 
 	addEnemies() {
 		this.addEnemy(10, 1, 10);
-		// this.addEnemy(10, 1, -10);
+		this.addEnemy(10, 1, -10);
 	}
 
 	addEnemy(x, y, z) {
 		const newEnemy = new Enemy(this._player);
+		this._enemies.push(newEnemy);
 		this.addMedy(newEnemy);
 		newEnemy._body.position.set(x, y, z);
 	}
@@ -98,6 +113,9 @@ class Game {
 	}
 
 	removeMedy(medy) {
+		if (medy instanceof Enemy) {
+			this._enemyCount--;
+		}
 		removeItemFromArray(medy, this._medies);
 		this._threeManager.removeVisual(medy._mesh);
 		this._cannonManager.removePhysical(medy._body);

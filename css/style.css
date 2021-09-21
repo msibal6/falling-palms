@@ -2,7 +2,7 @@ body {
   margin: 0;
 }
 
-.starting-ui {
+.ui {
   position:absolute;
   top: 50%;
   right: 20%;
@@ -10,4 +10,8 @@ body {
 
 .inactive {
   display: none;
+}
+
+.active {
+  display: block;
 }

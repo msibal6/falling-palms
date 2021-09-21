@@ -31,9 +31,11 @@ export class Player extends Medy {
 		this.collisionHandler = this.collide.bind(this);
 		this.startHandler = this.start.bind(this);
 		this.bindMethod("startHandler", "start");
+		this.bindMethod("gameOverHandler", "gameover");
 		this._body.sleep();
 		this._body.addEventListener('collide', this.collisionHandler);
 		this._mesh.addEventListener('start', this.startHandler);
+		this._mesh.addEventListener('gameover', this.gameOverHandler);
 
 		this.onMouseClickHandler = this.onMouseClick.bind(this);
 		window.addEventListener('mousedown', this.onMouseClickHandler, false);
@@ -47,6 +49,7 @@ export class Player extends Medy {
 		this.zAcceleration = 0.0;
 		this.damping = 0.85;
 		this.camera = null;
+		this._foundSelf = false;
 	}
 
 	pause() {
@@ -65,6 +68,14 @@ export class Player extends Medy {
 		this.camera.startPan();
 	}
 
+	gameover(outcome) {
+		if (outcome == 1) {
+			window.alert("you win");
+		} else {
+			window.alert("you lose");
+		}
+	}
+
 	collide(event) {
 		this._body.velocity.set(
 			this._body.velocity.x,
@@ -76,11 +87,15 @@ export class Player extends Medy {
 			this.HitByNeedle();
 		} else if (bodyHit.collisionFilterGroup === window.game._cannonManager._groundFilterGroup) {
 			window.game.restart();
-			// alert("hit the ground")
 		}
 	}
 
 	HitByNeedle() {
+		// if (this.allAirstreamsStopped()) {
+		// 	this._body.mass = 5;
+		// 	this._body.updateMassProperties();
+		// 	console.log(this._body.mass);
+		// }
 		if (!this.allAirstreamsStopped()) {
 			const stoppedAirstreams = [];
 			for (let i = 0; i < this._airstreams.length; i++) {
@@ -96,9 +111,6 @@ export class Player extends Medy {
 	}
 
 	create() {
-		window.game.addMedy(this);
-
-		// Camera
 		const orbitCamera = new SphericalPanCamera(window.game._threeManager.camera, this._mesh);
 		orbitCamera.setPhiPan(Math.PI, Math.PI);
 		orbitCamera.setThetaPan(Math.PI / 4 * 3, Math.PI / 4);
@@ -200,11 +212,16 @@ export class Player extends Medy {
 
 	update() {
 		super.update();
+		if (window.game._enemies.length == 0) {
+			window.game.restart();
+		}
 		// Stops the player body vertically  when it reaches a certain point
 		if (this.allAirstreamsStopped()) {
 			this.camera.setThetaDelta(0.05);
 			this._body.mass = 0;
+			this._body.updateMassProperties();
 			this._body.velocity.y = 0;
+			this._foundSelf = true;
 		}
 
 		this.updateAirstreams();

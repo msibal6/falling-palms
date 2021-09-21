@@ -1,5 +1,5 @@
 import * as CANNON from './cannon-es.js';
-import { getRandomInt } from './helper.js';
+import { getRandomInt, removeItemFromArray } from './helper.js';
 import { Medy } from './Medy.js';
 import { Needle } from './Needle.js';
 
@@ -57,8 +57,9 @@ export class Enemy extends Medy {
 	collide(event) {
 		const bodyHit = event.body;
 		if (bodyHit.collisionFilterGroup === window.game._cannonManager._palmFilterGroup) {
-			window.game.removeMedy(this);
 			this._dead = true;
+			removeItemFromArray(this, window.game._enemies);
+			window.game.removeMedy(this);
 		}
 	}
 
