@@ -28,7 +28,6 @@ class Game {
 			// Finally, render
 			this._threeManager.render();
 		}.bind(this);
-
 	}
 
 	start() {
