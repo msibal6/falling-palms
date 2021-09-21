@@ -8,6 +8,7 @@ export class ThreeManager {
 			window.innerWidth / window.innerHeight, 0.1, 1000);
 		this.scene = null;
 		this.renderer = null;
+		this.windowResizeHandler = this.windowResize.bind(this);
 		this.initRenderer();
 	}
 
@@ -21,7 +22,7 @@ export class ThreeManager {
 
 	createVisualScene() {
 		this.scene = new THREE.Scene();
-		this.scene.name = "scne" + Date(Date.now());
+		this.scene.name = "scene " + Date(Date.now());
 		this.createSkybox();
 		this.createFloor();
 		this.createLighting();
@@ -104,13 +105,11 @@ export class ThreeManager {
 		this.renderer.render(this.scene, this.camera);
 	}
 
-	handleWindowResize() {
-		return function () {
-			const windowHeight = window.innerHeight;
-			const windowWidth = window.innerWidth;
-			this.renderer.setSize(windowWidth, windowHeight);
-			this.camera.aspect = windowWidth / windowHeight;
-			this.camera.updateProjectionMatrix();
-		}.bind(this);
+	windowResize() {
+		const windowHeight = window.innerHeight;
+		const windowWidth = window.innerWidth;
+		this.renderer.setSize(windowWidth, windowHeight);
+		this.camera.aspect = windowWidth / windowHeight;
+		this.camera.updateProjectionMatrix();
 	}
 }

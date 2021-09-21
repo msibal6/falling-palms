@@ -42,10 +42,10 @@ class Game {
 	}
 
 	createUI() {
-		const startingUI = window.document.getElementById("ui-start");
-		startingUI.innerHTML = "<button class=\"btn success\">Success</button>";
+		const startingUI = window.document.getElementsByClassName("starting-ui")[0];
+		console.log(startingUI);
+		// startingUI.style.position = 
 
-	
 	}
 
 	initliazeGame() {
@@ -105,7 +105,7 @@ class Game {
 
 // Window variables 
 window.game = new Game();
-window.addEventListener('resize', window.game._threeManager.handleWindowResize(), false);
+window.addEventListener('resize', window.game._threeManager.windowResizeHandler, false);
 
 // Setting up keyboard events
 window.keyboardController = new KeyboardController();
