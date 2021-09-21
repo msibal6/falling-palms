@@ -26,45 +26,52 @@ export class Enemy extends Medy {
 		super(enemyMesh, enemyBody);
 		this._target = targetMedy;
 		this._mesh.name = "enemy";
-		this._dead = true;
+		this._stopFiring = true;
 		this.collisionHandler = this.collide.bind(this);
 		this.bindMethod("startHandler", "start");
+		this.bindMethod("gameoverHandler", "gameover");
 		this._mesh.addEventListener('start', this.startHandler, false);
-
+		this._mesh.addEventListener('gameover', this.gameoverHandler, false);
 		this.shootNeedleHandler = function () {
-			if (this._dead) {
+			if (this._stopFiring) {
 				return;
 			}
 			this.shootNeedle();
 			setTimeout(this.shootNeedleHandler, getRandomInt(1000, { min: 750 }));
 		}.bind(this);
 		this._body.addEventListener('collide', this.collisionHandler);
+	}
 
+
+	start() {
+		if (!this._stopFiring) {
+			return;
+		}
+		this._stopFiring = false;
+		setTimeout(this.shootNeedleHandler, getRandomInt(1000, { min: 750 }));
 	}
 
 	pause() {
 		this.cleanup();
 	}
 
-	start() {
-		if (!this._dead) {
-			return;
+	gameover(event) {
+		if (event.outcome == 0) {
+			this._stopFiring = true;
 		}
-		this._dead = false;
-		setTimeout(this.shootNeedleHandler, getRandomInt(1000, { min: 750 }));
 	}
 
 	collide(event) {
 		const bodyHit = event.body;
 		if (bodyHit.collisionFilterGroup === window.game._cannonManager._palmFilterGroup) {
-			this._dead = true;
+			this._stopFiring = true;
 			removeItemFromArray(this, window.game._enemies);
 			window.game.removeMedy(this);
 		}
 	}
 
 	cleanup() {
-		this._dead = true;
+		this._stopFiring = true;
 	}
 
 	getOptimalAngle(targetLocation) {

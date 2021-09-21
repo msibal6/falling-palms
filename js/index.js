@@ -40,6 +40,7 @@ class Game {
 		const uiSections = window.document.getElementsByClassName("ui");
 		for (let i = 0; i < uiSections.length; i++) {
 			uiSections[i].classList.add("inactive");
+			uiSections[i].classList.remove("active");
 		}
 		const uiSection = window.document.getElementById(uiID);
 		uiSection.classList.remove("inactive");
@@ -47,6 +48,10 @@ class Game {
 	}
 
 	createUI() {
+		this.createStartUI();
+	}
+
+	createStartUI() {
 		const startButton = window.document.getElementById("start-button");
 		this.makeActive("ui-start");
 		startButton.addEventListener('click', function (event) {
@@ -84,11 +89,29 @@ class Game {
 		this._medies = [];
 	}
 
-	restart() {
-		this._medies.forEach(function(medy) {
-			medy._mesh.dispatchEvent(window.game._lossEvent);
-		})
+	win() {
+		this._medies.forEach(function (medy) {
+			medy._mesh.dispatchEvent(window.game._winEvent);
+		});
+		const restartButton = window.document.getElementById("restart-button");
+		this.makeActive("ui-end");
+		restartButton.addEventListener('click', function (event) {
+			this.restart();
+		}.bind(this));
+	}
 
+	lose() {
+		this._medies.forEach(function (medy) {
+			medy._mesh.dispatchEvent(window.game._lossEvent);
+		});
+		const restartButton = window.document.getElementById("restart-button");
+		this.makeActive("ui-end");
+		restartButton.addEventListener('click', function (event) {
+			this.restart();
+		}.bind(this));
+	}
+
+	restart() {
 		this.destroy();
 		this.start();
 		this.createUI();

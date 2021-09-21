@@ -68,11 +68,11 @@ export class Player extends Medy {
 		this.camera.startPan();
 	}
 
-	gameover(outcome) {
-		if (outcome == 1) {
-			window.alert("you win");
+	gameover(event) {
+		if (event.outcome == 1) {
+			// console.log("i won!!!");
 		} else {
-			window.alert("you lose");
+			// window.alert("you lose");
 		}
 	}
 
@@ -86,7 +86,7 @@ export class Player extends Medy {
 		if (bodyHit.collisionFilterGroup === window.game._cannonManager._needleFilterGroup) {
 			this.HitByNeedle();
 		} else if (bodyHit.collisionFilterGroup === window.game._cannonManager._groundFilterGroup) {
-			window.game.restart();
+			window.game.lose();
 		}
 	}
 
@@ -213,7 +213,7 @@ export class Player extends Medy {
 	update() {
 		super.update();
 		if (window.game._enemies.length == 0) {
-			window.game.restart();
+			window.game.win();
 		}
 		// Stops the player body vertically  when it reaches a certain point
 		if (this.allAirstreamsStopped()) {
