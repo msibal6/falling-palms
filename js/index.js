@@ -42,10 +42,17 @@ class Game {
 	}
 
 	createUI() {
-		const startingUI = window.document.getElementsByClassName("starting-ui")[0];
-		console.log(startingUI);
-		// startingUI.style.position = 
-
+		const startButton = window.document.getElementById("start-button");
+		console.log(startButton);
+		startButton.addEventListener('click', function (event) {
+			console.log("clicked button");
+			window.game._medies.forEach(function startMedy(medy) {
+				// console.log(this);
+				medy._mesh.dispatchEvent(window.game._startEvent);
+			});
+			const startButton = window.document.getElementById("start-button");
+			startButton.classList.toggle("inactive");
+		});
 	}
 
 	initliazeGame() {

@@ -2,8 +2,12 @@ body {
   margin: 0;
 }
 
-#ui-start {
+.starting-ui {
   position:absolute;
   top: 50%;
   right: 20%;
+}
+
+.inactive {
+  display: none;
 }
