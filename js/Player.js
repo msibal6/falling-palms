@@ -4,6 +4,7 @@ import * as CANNON from './cannon-es.js';
 import { Airstream } from './Airstream.js';
 import { Medy } from './Medy.js';
 import { Palm } from './Palm.js';
+import { FBXLoader } from 'https://cdn.jsdelivr.net/npm/three@0.118.1/examples/jsm/loaders/FBXLoader.js';
 
 export class Player extends Medy {
 	constructor() {
@@ -68,6 +69,32 @@ export class Player extends Medy {
 		this.camera.startPan();
 	}
 
+	loadAnimatedModel() {
+		const loader = new FBXLoader();
+		loader.setPath('./resources/zombie/');
+		loader.load('mremireh_o_desbiens.fbx', (fbx) => {
+			fbx.scale.setScalar(0.1);
+			fbx.traverse(c => {
+				c.castShadow = true;
+			});
+
+			const params = {
+				target: fbx,
+				camera: this._camera,
+			}
+			this._controls = new BasicCharacterControls(params);
+
+			const anim = new FBXLoader();
+			anim.setPath('./resources/zombie/');
+			anim.load('walk.fbx', (anim) => {
+				const m = new THREE.AnimationMixer(fbx);
+				this._mixers.push(m);
+				const idle = m.clipAction(anim.animations[0]);
+				idle.play();
+			});
+			this._scene.add(fbx);
+		});
+	}
 	gameover(event) {
 		if (event.outcome == 1) {
 			// console.log("i won!!!");

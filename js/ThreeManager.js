@@ -4,6 +4,8 @@ import { removeItemFromArray } from "./helper.js";
 export class ThreeManager {
 	constructor() {
 		this._visuals = [];
+		this._mixers = [];
+		this._clock = new THREE.Clock();
 		this.camera = new THREE.PerspectiveCamera(75,
 			window.innerWidth / window.innerHeight, 0.1, 1000);
 		this.scene = null;
@@ -81,6 +83,7 @@ export class ThreeManager {
 			this.removeVisual(this._visuals[i]);
 		}
 		this._visuals = [];
+		this._mixers = [];
 	}
 
 	addVisual(visual) {
