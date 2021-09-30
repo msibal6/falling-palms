@@ -1,6 +1,6 @@
 import * as CANNON from './cannon-es.js';
 import { Medy } from './Medy.js';
-
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.118/build/three.module.js';
 export class Needle extends Medy {
 	constructor() {
 		const needleDimensions = new THREE.Vector3(0.5, 0.5, 5);

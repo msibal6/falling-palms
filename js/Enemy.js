@@ -2,7 +2,7 @@ import * as CANNON from './cannon-es.js';
 import { getRandomInt, removeItemFromArray } from './helper.js';
 import { Medy } from './Medy.js';
 import { Needle } from './Needle.js';
-
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.118/build/three.module.js';
 export class Enemy extends Medy {
 	constructor(targetMedy) {
 		const enemyMesh = new THREE.Mesh(

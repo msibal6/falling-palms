@@ -5,7 +5,7 @@ import { Airstream } from './Airstream.js';
 import { Medy } from './Medy.js';
 import { Palm } from './Palm.js';
 import { FBXLoader } from 'https://cdn.jsdelivr.net/npm/three@0.118.1/examples/jsm/loaders/FBXLoader.js';
-
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.118/build/three.module.js';
 export class Player extends Medy {
 	constructor() {
 		const tempPlayerMesh = new THREE.Mesh(
@@ -71,28 +71,22 @@ export class Player extends Medy {
 
 	loadAnimatedModel() {
 		const loader = new FBXLoader();
-		loader.setPath('./resources/zombie/');
-		loader.load('mremireh_o_desbiens.fbx', (fbx) => {
+		loader.setPath('../3D assets/');
+		loader.load('xbot.fbx', (fbx) => {
 			fbx.scale.setScalar(0.1);
 			fbx.traverse(c => {
 				c.castShadow = true;
 			});
 
-			const params = {
-				target: fbx,
-				camera: this._camera,
-			}
-			this._controls = new BasicCharacterControls(params);
-
 			const anim = new FBXLoader();
-			anim.setPath('./resources/zombie/');
-			anim.load('walk.fbx', (anim) => {
+			anim.setPath('../3D assets/');
+			anim.load('falling.fbx', (anim) => {
 				const m = new THREE.AnimationMixer(fbx);
-				this._mixers.push(m);
+				window.game._threeManager._mixers.push(m);
 				const idle = m.clipAction(anim.animations[0]);
 				idle.play();
 			});
-			this._scene.add(fbx);
+			window.game._threeManager.addToScene(fbx);
 		});
 	}
 	gameover(event) {

@@ -1,6 +1,6 @@
 
 import { vectorsAlmostEqual } from './helper.js';
-
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.118/build/three.module.js';
 export class Airstream {
 	constructor(target) {
 		this._target = target;

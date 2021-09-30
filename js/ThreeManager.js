@@ -1,5 +1,5 @@
 import { removeItemFromArray } from "./helper.js";
-
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.118/build/three.module.js';
 // classes in js are jusy syntax obstructions
 export class ThreeManager {
 	constructor() {
@@ -15,7 +15,12 @@ export class ThreeManager {
 	}
 
 	initRenderer() {
-		this.renderer = new THREE.WebGLRenderer();
+		this.renderer = new THREE.WebGLRenderer({
+			antialias: true,
+		});
+		this.renderer.shadowMap.enabled = true;
+		this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+		this.renderer.setPixelRatio(window.devicePixelRatio);
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 		const threeContainers = document.getElementsByClassName("js-three-container");
 		this.renderer.domElement.className = "three-js-canvas";

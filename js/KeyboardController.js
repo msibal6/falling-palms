@@ -1,5 +1,6 @@
 "use strict";
 export { printo } from './test.js';
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.118/build/three.module.js';
 export class KeyboardController {
 	constructor() {
 		// keycodes

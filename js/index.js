@@ -4,7 +4,7 @@ import { CannonManager } from './CannonManager.js';
 import { removeItemFromArray } from './helper.js';
 import { Player } from './Player.js';
 import { Enemy } from './Enemy.js';
-
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.118/build/three.module.js';
 class Game {
 	constructor() {
 		this._startEvent = { type: 'start' };
@@ -25,6 +25,10 @@ class Game {
 			this._cannonManager.update();
 			// game updates mesh position from cannon positions
 			this.updateMedies();
+			const delta = window.game._threeManager._clock.getDelta();
+			for (let i = 0; i < window.game._threeManager._mixers.length; i++) {
+				window.game._threeManager._mixers[i].update(delta);
+			}
 			// Finally, render
 			this._threeManager.render();
 		}.bind(this);
@@ -67,8 +71,9 @@ class Game {
 		this._threeManager.createVisualScene();
 		this._cannonManager.createPhysicalScene();
 		this._player = new Player();
-		this.addMedy(this._player);
 		this._player.create();
+		this.addMedy(this._player);
+		this._player.loadAnimatedModel();
 		this.addEnemies();
 	}
 
