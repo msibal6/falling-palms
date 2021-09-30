@@ -4,7 +4,7 @@ import { CannonManager } from './CannonManager.js';
 import { removeItemFromArray } from './helper.js';
 import { Player } from './Player.js';
 import { Enemy } from './Enemy.js';
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.118/build/three.module.js';
+
 class Game {
 	constructor() {
 		this._startEvent = { type: 'start' };

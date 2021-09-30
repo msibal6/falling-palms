@@ -1,11 +1,11 @@
 import { almostZero, getRandomInt } from './helper.js';
 import { SphericalPanCamera } from './SphericalPanCamera.js';
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.118/build/three.module.js';
 import * as CANNON from './cannon-es.js';
+import { FBXLoader } from 'https://cdn.jsdelivr.net/npm/three@0.118.1/examples/jsm/loaders/FBXLoader.js';
 import { Airstream } from './Airstream.js';
 import { Medy } from './Medy.js';
 import { Palm } from './Palm.js';
-import { FBXLoader } from 'https://cdn.jsdelivr.net/npm/three@0.118.1/examples/jsm/loaders/FBXLoader.js';
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.118/build/three.module.js';
 export class Player extends Medy {
 	constructor() {
 		const tempPlayerMesh = new THREE.Mesh(
