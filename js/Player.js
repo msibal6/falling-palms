@@ -12,6 +12,8 @@ export class Player extends Medy {
 			new THREE.BoxGeometry(2, 2, 2),
 			new THREE.MeshLambertMaterial({
 				color: 0xFFFFFF,
+				opacity:0,
+				transparent: true,
 			}));
 		tempPlayerMesh.castShaodow = true;
 		tempPlayerMesh.receiveShadow = true;
@@ -28,6 +30,7 @@ export class Player extends Medy {
 			material: window.game._cannonManager.planeMaterial
 		});
 		super(tempPlayerMesh, tempPlayerBody);
+		this.loadAnimatedModel();
 		this._body.position.set(0, 200, 0);
 		this.collisionHandler = this.collide.bind(this);
 		this.startHandler = this.start.bind(this);
@@ -73,7 +76,7 @@ export class Player extends Medy {
 		const loader = new FBXLoader();
 		loader.setPath('../3D assets/');
 		loader.load('xbot.fbx', (fbx) => {
-			fbx.scale.setScalar(0.1);
+			fbx.scale.setScalar(0.05);
 			fbx.traverse(c => {
 				c.castShadow = true;
 			});
@@ -86,7 +89,12 @@ export class Player extends Medy {
 				const idle = m.clipAction(anim.animations[0]);
 				idle.play();
 			});
+			// this._mesh = fbx;
+			// this._mesh.addEventListener('start', this.startHandler);
+			// this._mesh.addEventListener('gameover', this.gameOverHandler)
+			// console.log(this._mesh);
 			window.game._threeManager.addToScene(fbx);
+			this._fbx = fbx;
 		});
 	}
 	gameover(event) {
@@ -112,11 +120,6 @@ export class Player extends Medy {
 	}
 
 	HitByNeedle() {
-		// if (this.allAirstreamsStopped()) {
-		// 	this._body.mass = 5;
-		// 	this._body.updateMassProperties();
-		// 	console.log(this._body.mass);
-		// }
 		if (!this.allAirstreamsStopped()) {
 			const stoppedAirstreams = [];
 			for (let i = 0; i < this._airstreams.length; i++) {
@@ -132,6 +135,7 @@ export class Player extends Medy {
 	}
 
 	create() {
+		console.log(this._mesh);
 		const orbitCamera = new SphericalPanCamera(window.game._threeManager.camera, this._mesh);
 		orbitCamera.setPhiPan(Math.PI, Math.PI);
 		orbitCamera.setThetaPan(Math.PI / 4 * 3, Math.PI / 4);
@@ -233,6 +237,9 @@ export class Player extends Medy {
 
 	update() {
 		super.update();
+		if (this._fbx) {
+			this._fbx.position.copy(this._body.position);
+		}
 		if (window.game._enemies.length == 0) {
 			window.game.win();
 		}

@@ -73,8 +73,8 @@ class Game {
 		this._player = new Player();
 		this._player.create();
 		this.addMedy(this._player);
-		this._player.loadAnimatedModel();
 		this.addEnemies();
+		
 	}
 
 	destroy() {
