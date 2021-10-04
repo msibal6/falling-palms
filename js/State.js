@@ -24,7 +24,7 @@ class FallingState extends State {
 		const idleAction = this._parent._animations['falling'].action;
 		if (prevState) {
 			// crossfade from previous animation to current idle action
-			const prevAction = this._parent._animations[prevState.Name].action;
+			const prevAction = this._parent._animations[prevState.name].action;
 			idleAction.time = 0.0;
 			idleAction.enabled = true;
 			idleAction.setEffectiveTimeScale(1.0);
@@ -40,7 +40,7 @@ class FallingState extends State {
 	}
 
 	update(_, input) {
-		if (input.foundSelf == true) {
+		if (input._foundSelf == true) {
 			this._parent.setState('rightidle');
 		}
 	}
@@ -51,7 +51,7 @@ class RightIdleState extends State {
 		super(parent);
 	}
 
-	get Name() {
+	get name() {
 		return "rightidle";
 	}
 
@@ -59,7 +59,8 @@ class RightIdleState extends State {
 		const idleAction = this._parent._animations['rightidle'].action;
 		if (prevState) {
 			// crossfade from previous animation to current idle action
-			const prevAction = this._parent._animations[prevState.Name].action;
+			console.log(this);
+			const prevAction = this._parent._animations[prevState.name].action;
 			idleAction.time = 0.0;
 			idleAction.enabled = true;
 			idleAction.setEffectiveTimeScale(1.0);
@@ -76,7 +77,7 @@ class RightIdleState extends State {
 	}
 
 	update(_, input) {
-		if (input.mousedown == true) {
+		if (input._mouseDown == true) {
 			this._parent.setState('rightpunch');
 		}
 	}
@@ -87,7 +88,7 @@ class LeftIdleState extends State {
 		super(parent);
 	}
 
-	get Name() {
+	get name() {
 		return "leftidle";
 	}
 
@@ -95,7 +96,7 @@ class LeftIdleState extends State {
 		const idleAction = this._parent._animations['leftidle'].action;
 		if (prevState) {
 			// crossfade from previous animation to current idle action
-			const prevAction = this._parent._animations[prevState.Name].action;
+			const prevAction = this._parent._animations[prevState.name].action;
 			idleAction.time = 0.0;
 			idleAction.enabled = true;
 			idleAction.setEffectiveTimeScale(1.0);
@@ -111,14 +112,14 @@ class LeftIdleState extends State {
 	}
 
 	update(_, input) {
-		if (input.mousedown == true) {
+		if (input._mouseDown == true) {
 			this._parent.setState('leftpunch');
 		}
 	}
 }
 
 class RightPunchState extends State {
-	get Name() {
+	get name() {
 		return "rightpunch";
 	}
 
@@ -135,7 +136,7 @@ class RightPunchState extends State {
 		mixer.addEventListener('finished', this.finishCallback);
 
 		if (prevState) {
-			const prevAction = this._parent._animations[prevState.Name].action;
+			const prevAction = this._parent._animations[prevState.name].action;
 
 			curAction.reset();
 			curAction.setLoop(THREE.LoopOnce, 1);
@@ -167,7 +168,7 @@ class RightPunchState extends State {
 }
 
 class LeftPunchState extends State {
-	get Name() {
+	get name() {
 		return 'leftpunch';
 	}
 
@@ -184,7 +185,7 @@ class LeftPunchState extends State {
 		mixer.addEventListener('finished', this.finishCallback);
 
 		if (prevState) {
-			const prevAction = this._parent._animations[prevState.Name].action;
+			const prevAction = this._parent._animations[prevState.name].action;
 
 			curAction.reset();
 			curAction.setLoop(THREE.LoopOnce, 1);

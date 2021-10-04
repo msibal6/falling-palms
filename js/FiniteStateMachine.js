@@ -17,17 +17,18 @@ class FiniteStateMachine {
 	}
 
 	setState(name) {
+		console.log("set state to " + name);
 		const prevState = this._currentState;
 		if (prevState) {
 			if (prevState.Name == name) {
 				return;
 			}
-			prevState.Exit();
+			prevState.exit();
 		}
 		const state = new this._states[name](this);
 
 		this._currentState = state;
-		state.Enter(prevState);
+		state.enter(prevState);
 	}
 
 	update(timeElapsed, input) {
@@ -40,12 +41,14 @@ class FiniteStateMachine {
 class PlayerFSM extends FiniteStateMachine {
 	constructor(animations) {
 		super();
+		console.log("player FSM");
 		this._animations = animations;
 		this.addState('falling', FallingState);
 		this.addState('rightidle', RightIdleState);
 		this.addState('leftidle', LeftIdleState);
 		this.addState('rightpunch', RightPunchState);
 		this.addState('leftpunch', LeftPunchState);
+		console.log(this._states);
 	}
 }
 

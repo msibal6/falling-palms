@@ -53,10 +53,10 @@ export class Player extends Medy {
 		this.camera = null;
 
 		// Animation setup
-		this.loadAnimatedModel();
 		this._animations = {};
 		this._input = new PlayerInput();
 		this._stateMachine = new PlayerFSM(this._animations);
+		this.loadAnimatedModel();
 	}
 
 	pause() {
@@ -76,33 +76,61 @@ export class Player extends Medy {
 	}
 
 	loadAnimatedModel() {
-		const loader = new FBXLoader();
-		loader.setPath('../3D assets/');
-		loader.load('xbot.fbx', (fbx) => {
+		const modelLoader = new FBXLoader();
+		modelLoader.setPath('../3D assets/');
+		modelLoader.load('xbot.fbx', (fbx) => {
 			fbx.scale.setScalar(0.05);
 			fbx.traverse(c => {
 				c.castShadow = true;
 			});
 
-			const anim = new FBXLoader();
-			anim.setPath('../3D assets/');
-			anim.load('falling.fbx', (anim) => {
-				const m = new THREE.AnimationMixer(fbx);
-				window.game._threeManager._mixers.push(m);
-				const idle = m.clipAction(anim.animations[0]);
-				idle.play();
-			});
 			window.game._threeManager.addToScene(fbx);
 			this._fbx = fbx;
-			console.log(this._fbx);
-			fbx.rotation.y = Math.PI / 2;
+
+			this._mixer = new THREE.AnimationMixer(this._fbx);
+
+			this._manager = new THREE.LoadingManager();
+			this._manager.onLoad = () => {
+				this._stateMachine.setState('falling');
+			}
+
+			const onAnimLoad = (animName, anim) => {
+				// Extracting AnimationClip from loaded Animation
+				const clip = anim.animations[0];
+				// creating new AnimationAction
+				const action = this._mixer.clipAction(clip);
+				this._animations[animName] = {
+					clip: clip,
+					action: action,
+				};
+			};
+
+			const animLoader = new FBXLoader(this._manager);
+			animLoader.setPath('../3D assets/');
+			animLoader.load('falling.fbx', (anim) => {
+				onAnimLoad('falling', anim);
+			});
+			animLoader.load('idle.fbx', (anim) => {
+				onAnimLoad('leftidle', anim);
+			});
+			animLoader.load('idle.fbx', (anim) => {
+				onAnimLoad('rightidle', anim);
+			});
+			animLoader.load('mixamo_left_punch.fbx', (anim) => {
+				onAnimLoad('leftpunch', anim);
+			});
+			animLoader.load('mixamo_right_punch.fbx', (anim) => {
+				onAnimLoad('rightpunch', anim);
+			});
+			this._fbx.rotation.y = Math.PI / 2;
 		});
 	}
 	gameover(event) {
+		// Won the game
 		if (event.outcome == 1) {
 			// console.log("i won!!!");
 		} else {
-			// window.alert("you lose");
+			// window.game._threeManager.removeFromScene(this._fbx);
 		}
 	}
 
@@ -196,9 +224,19 @@ export class Player extends Medy {
 	}
 
 	updateAirstreams() {
+		// Stops the player body vertically  when it reaches a certain point
+		if (this.allAirstreamsStopped()) {
+			this.camera.setThetaDelta(0.05);
+			this._body.mass = 0;
+			this._body.updateMassProperties();
+			this._body.velocity.y = 0;
+			this._input._foundSelf = true;
+		}
+
 		if (this._airstreams === undefined || this._airstreams.length === 0) {
 			return;
 		}
+
 		for (let i = 0; i < this._airstreams.length; i++) {
 			this._airstreams[i].update();
 		}
@@ -236,21 +274,16 @@ export class Player extends Medy {
 		}
 	}
 
-	update() {
+	update(deltaTime) {
 		super.update();
+		this._stateMachine.update(deltaTime, this._input);
+
 		if (this._fbx) {
 			this._fbx.position.copy(this._body.position);
 		}
+
 		if (window.game._enemies.length == 0) {
 			window.game.win();
-		}
-		// Stops the player body vertically  when it reaches a certain point
-		if (this.allAirstreamsStopped()) {
-			this.camera.setThetaDelta(0.05);
-			this._body.mass = 0;
-			this._body.updateMassProperties();
-			this._body.velocity.y = 0;
-			this._input._foundSelf = true;
 		}
 
 		this.updateAirstreams();
@@ -265,6 +298,9 @@ export class Player extends Medy {
 		);
 		this.dampenAcceleration();
 		this.camera.update();
+		if (this._mixer) {
+			this._mixer.update(deltaTime);
+		}
 	}
 
 	dampenAcceleration() {
