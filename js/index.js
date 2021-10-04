@@ -25,10 +25,10 @@ class Game {
 			this._cannonManager.update();
 			// game updates mesh position from cannon positions
 			this.updateMedies();
-			const delta = window.game._threeManager._clock.getDelta();
-			for (let i = 0; i < window.game._threeManager._mixers.length; i++) {
-				window.game._threeManager._mixers[i].update(delta);
-			}
+			const delta = this._threeManager._clock.getDelta();
+			this._threeManager._mixers.map(m => {
+				m.update(delta);
+			});
 			// Finally, render
 			this._threeManager.render();
 		}.bind(this);
@@ -79,6 +79,7 @@ class Game {
 
 	destroy() {
 		window.cancelAnimationFrame(this._animationLoop);
+		this._player._fbx = null;
 		while (this._medies.length) {
 			const medy = this._medies.pop();
 			if (medy.cleanup) {
@@ -89,6 +90,8 @@ class Game {
 		while (this._enemies.length) {
 			this._enemies.pop();
 		}
+		this._threeManager.scene.children = [];
+
 		this._enemies = [];
 		this._medies = [];
 	}

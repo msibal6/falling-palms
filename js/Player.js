@@ -12,7 +12,7 @@ export class Player extends Medy {
 			new THREE.BoxGeometry(2, 2, 2),
 			new THREE.MeshLambertMaterial({
 				color: 0xFFFFFF,
-				opacity:0,
+				opacity: 0,
 				transparent: true,
 			}));
 		tempPlayerMesh.castShaodow = true;
@@ -95,6 +95,9 @@ export class Player extends Medy {
 			// console.log(this._mesh);
 			window.game._threeManager.addToScene(fbx);
 			this._fbx = fbx;
+			console.log(this._fbx);
+			fbx.rotation.y = Math.PI/2;
+			// this.rota
 		});
 	}
 	gameover(event) {
