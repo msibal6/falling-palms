@@ -6,9 +6,9 @@ class State {
 		this._parent = parent;
 	}
 
-	Enter() { }
-	Exit() { }
-	Update() { }
+	enter() { }
+	exit() { }
+	update() { }
 };
 
 class FallingState extends State {
@@ -16,11 +16,11 @@ class FallingState extends State {
 		super(parent);
 	}
 
-	get Name() {
+	get name() {
 		return "falling";
 	}
 
-	Enter(prevState) {
+	enter(prevState) {
 		const idleAction = this._parent._animations['falling'].action;
 		if (prevState) {
 			// crossfade from previous animation to current idle action
@@ -36,10 +36,10 @@ class FallingState extends State {
 		}
 	}
 
-	Exit() {
+	exit() {
 	}
 
-	Update(_, input) {
+	update(_, input) {
 		if (input.foundSelf == true) {
 			this._parent.setState('rightidle');
 		}
@@ -55,7 +55,7 @@ class RightIdleState extends State {
 		return "rightidle";
 	}
 
-	Enter(prevState) {
+	enter(prevState) {
 		const idleAction = this._parent._animations['rightidle'].action;
 		if (prevState) {
 			// crossfade from previous animation to current idle action
@@ -71,11 +71,11 @@ class RightIdleState extends State {
 		}
 	}
 
-	Exit() {
+	exit() {
 
 	}
 
-	Update(_, input) {
+	update(_, input) {
 		if (input.mousedown == true) {
 			this._parent.setState('rightpunch');
 		}
@@ -91,7 +91,7 @@ class LeftIdleState extends State {
 		return "leftidle";
 	}
 
-	Enter(prevState) {
+	enter(prevState) {
 		const idleAction = this._parent._animations['leftidle'].action;
 		if (prevState) {
 			// crossfade from previous animation to current idle action
@@ -107,10 +107,10 @@ class LeftIdleState extends State {
 		}
 	}
 
-	Exit() {
+	exit() {
 	}
 
-	Update(_, input) {
+	update(_, input) {
 		if (input.mousedown == true) {
 			this._parent.setState('leftpunch');
 		}
@@ -129,7 +129,7 @@ class RightPunchState extends State {
 		}
 	}
 
-	Enter(prevState) {
+	enter(prevState) {
 		const curAction = this._parent._animations['rightpunch'].action;
 		const mixer = curAction.getMixer();
 		mixer.addEventListener('finished', this.finishCallback);
@@ -147,7 +147,7 @@ class RightPunchState extends State {
 		}
 	}
 
-	Exit() {
+	exit() {
 		this.cleanup();
 
 	}
@@ -162,7 +162,7 @@ class RightPunchState extends State {
 		rightPunchAction.getMixer().removeEventListener('finished', this.finishCallback);
 	}
 
-	Update(_, input) { 
+	update(_, input) {
 	}
 }
 
@@ -178,7 +178,7 @@ class LeftPunchState extends State {
 		}
 	}
 
-	Enter(prevState) {
+	enter(prevState) {
 		const curAction = this._parent._animations['leftpunch'].action;
 		const mixer = curAction.getMixer();
 		mixer.addEventListener('finished', this.finishCallback);
@@ -196,7 +196,7 @@ class LeftPunchState extends State {
 		}
 	}
 
-	Exit() {
+	exit() {
 		this.cleanup();
 
 	}
@@ -211,7 +211,9 @@ class LeftPunchState extends State {
 		rightPunchAction.getMixer().removeEventListener('finished', this.finishCallback);
 	}
 
-	Update(_, input) { 
+	update(_, input) {
 	}
 }
 
+
+export { FallingState, RightIdleState, LeftIdleState, RightPunchState, LeftPunchState };
