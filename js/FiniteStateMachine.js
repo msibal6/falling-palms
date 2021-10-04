@@ -17,7 +17,7 @@ class FiniteStateMachine {
 	}
 
 	setState(name) {
-		console.log("set state to " + name);
+		// console.log("set state to " + name);
 		const prevState = this._currentState;
 		if (prevState) {
 			if (prevState.Name == name) {

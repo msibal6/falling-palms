@@ -12,6 +12,8 @@ export class Enemy extends Medy {
 			new THREE.BoxGeometry(2, 2, 2),
 			new THREE.MeshLambertMaterial({
 				color: 0xFFFFFF,
+				opacity: 0,
+				transparent: true,
 			}));
 		enemyMesh.castShadow = true;
 		enemyMesh.receiveShadow = true;
@@ -69,13 +71,13 @@ export class Enemy extends Medy {
 
 			this._manager = new THREE.LoadingManager();
 			this._manager.onLoad = () => {
-				console.log("manager onload");
+				// console.log("manager onload");
 				this._stateMachine.setState('rightidle');
 			}
 
 			const onAnimLoad = (animName, anim) => {
 				// Extracting AnimationClip from loaded Animation
-				console.log(this._manager.onLoad);
+				// console.log(this._manager.onLoad);
 				const clip = anim.animations[0];
 				// creating new AnimationAction
 				const action = this._mixer.clipAction(clip);
@@ -141,6 +143,7 @@ export class Enemy extends Medy {
 	collide(event) {
 		const bodyHit = event.body;
 		if (bodyHit.collisionFilterGroup === window.game._cannonManager._palmFilterGroup) {
+			window.game._threeManager.removeFromScene(this._fbx);
 			this._stopFiring = true;
 			removeItemFromArray(this, window.game._enemies);
 			window.game.removeMedy(this);

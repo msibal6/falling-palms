@@ -164,7 +164,7 @@ export class Player extends Medy {
 	}
 
 	create() {
-		console.log(this._mesh);
+		// console.log(this._mesh);
 		const orbitCamera = new SphericalPanCamera(window.game._threeManager.camera, this._mesh);
 		orbitCamera.setPhiPan(Math.PI, Math.PI);
 		orbitCamera.setThetaPan(Math.PI / 4 * 3, Math.PI / 4);
@@ -199,15 +199,20 @@ export class Player extends Medy {
 
 	shootPalm(targetPoint) {
 		const targetVector = new THREE.Vector3();
-		targetVector.subVectors(targetPoint, this._mesh.position);
+		const firingLocation = new THREE.Vector3(
+			this._mesh.position.x + 5,
+			this._mesh.position.y + 10,
+			this._mesh.position.z
+		);
+		targetVector.subVectors(targetPoint, firingLocation);
 		targetVector.normalize();
 
 		const palmShot = new Palm();
 		window.game.addMedy(palmShot);
 		palmShot.setFiringLocation(
-			this._mesh.position.x,
-			this._mesh.position.y - 10,
-			this._mesh.position.z
+			firingLocation.x,
+			firingLocation.y,
+			firingLocation.z,
 		);
 		palmShot.setDirection(targetVector);
 		palmShot.setSpeed(150);
