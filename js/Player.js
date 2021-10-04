@@ -6,8 +6,11 @@ import { FBXLoader } from 'https://cdn.jsdelivr.net/npm/three@0.118.1/examples/j
 import { Airstream } from './Airstream.js';
 import { Medy } from './Medy.js';
 import { Palm } from './Palm.js';
+import { PlayerInput } from './PlayerInput.js';
+import { PlayerFSM } from './FiniteStateMachine.js';
 export class Player extends Medy {
 	constructor() {
+		// visual mesh
 		const tempPlayerMesh = new THREE.Mesh(
 			new THREE.BoxGeometry(2, 2, 2),
 			new THREE.MeshLambertMaterial({
@@ -17,10 +20,7 @@ export class Player extends Medy {
 			}));
 		tempPlayerMesh.castShaodow = true;
 		tempPlayerMesh.receiveShadow = true;
-		// // TODO raycasting for shooting palms
-		tempPlayerMesh.raycast = function (raycaster, intersects) {
-		}
-		// // Physical player placeholder
+		// Physical player body
 		const size = 1;
 		const halfExtents = new CANNON.Vec3(size, size, size);
 		const boxShape = new CANNON.Box(halfExtents);
@@ -30,30 +30,33 @@ export class Player extends Medy {
 			material: window.game._cannonManager.planeMaterial
 		});
 		super(tempPlayerMesh, tempPlayerBody);
-		this.loadAnimatedModel();
+		// Initial postion
 		this._body.position.set(0, 200, 0);
+		this._body.sleep();
+		// Event handlers for collision and game control
 		this.collisionHandler = this.collide.bind(this);
 		this.startHandler = this.start.bind(this);
-		this.bindMethod("startHandler", "start");
-		this.bindMethod("gameOverHandler", "gameover");
-		this._body.sleep();
+		this.gameOverHandler = this.gameover.bind(this);
+		this.palmHandler = this.onMouseClick.bind(this);
 		this._body.addEventListener('collide', this.collisionHandler);
 		this._mesh.addEventListener('start', this.startHandler);
 		this._mesh.addEventListener('gameover', this.gameOverHandler);
+		document.addEventListener('mousedown', this.palmHandler, true);
 
-		this.onMouseClickHandler = this.onMouseClick.bind(this);
-		document.addEventListener('mousedown', this.onMouseClickHandler, true);
-
-		// visual THREE mesh
-		// physics CANNON body
-		this._mesh.name = "ADFADFADFSADFS";
+		// this._mesh.name = "ADFADFADFSADFS";
+		// Movement variables
 		this.maxSpeed = 80.0;
 		this.acceleration = 4.0;
 		this.xAcceleration = 0.0;
 		this.zAcceleration = 0.0;
 		this.damping = 0.85;
 		this.camera = null;
-		this._foundSelf = false;
+
+		// Animation setup
+		this.loadAnimatedModel();
+		this._animations = {};
+		this._input = new PlayerInput();
+		this._stateMachine = new PlayerFSM(this._animations);
 	}
 
 	pause() {
@@ -92,7 +95,7 @@ export class Player extends Medy {
 			window.game._threeManager.addToScene(fbx);
 			this._fbx = fbx;
 			console.log(this._fbx);
-			fbx.rotation.y = Math.PI/2;
+			fbx.rotation.y = Math.PI / 2;
 		});
 	}
 	gameover(event) {
@@ -153,7 +156,6 @@ export class Player extends Medy {
 	onMouseClick(event) {
 		// calculate mouse position in normalized device coordinates
 		// (-1 to +1) for both components
-		console.log(event);
 		const raycaster = new THREE.Raycaster();
 		const mouse = new THREE.Vector2();
 		mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -248,7 +250,7 @@ export class Player extends Medy {
 			this._body.mass = 0;
 			this._body.updateMassProperties();
 			this._body.velocity.y = 0;
-			this._foundSelf = true;
+			this._input._foundSelf = true;
 		}
 
 		this.updateAirstreams();

@@ -39,6 +39,7 @@ class FiniteStateMachine {
 
 class PlayerFSM extends FiniteStateMachine {
 	constructor(animations) {
+		super();
 		this._animations = animations;
 		this.addState('falling', FallingState);
 		this.addState('rightidle', RightIdleState);
@@ -47,3 +48,5 @@ class PlayerFSM extends FiniteStateMachine {
 		this.addState('leftpunch', LeftPunchState);
 	}
 }
+
+export { PlayerFSM };
