@@ -41,15 +41,24 @@ class FiniteStateMachine {
 class PlayerFSM extends FiniteStateMachine {
 	constructor(animations) {
 		super();
-		console.log("player FSM");
 		this._animations = animations;
 		this.addState('falling', FallingState);
 		this.addState('rightidle', RightIdleState);
 		this.addState('leftidle', LeftIdleState);
 		this.addState('rightpunch', RightPunchState);
 		this.addState('leftpunch', LeftPunchState);
-		console.log(this._states);
 	}
 }
 
-export { PlayerFSM };
+class EnemyFSM extends FiniteStateMachine {
+	constructor(animations) {
+		super();
+		this._animations = animations;
+		this.addState('rightidle', RightIdleState);
+		this.addState('leftidle', LeftIdleState);
+		this.addState('rightpunch', RightPunchState);
+		this.addState('leftpunch', LeftPunchState);
+	}
+}
+
+export { PlayerFSM , EnemyFSM};

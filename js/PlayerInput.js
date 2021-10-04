@@ -7,7 +7,6 @@ export class PlayerInput {
 	}
 
 	onMouseDown(e) {
-		console.log("pressing click");
 		this._mouseDown = true;
 
 	}

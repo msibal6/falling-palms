@@ -59,7 +59,6 @@ class RightIdleState extends State {
 		const idleAction = this._parent._animations['rightidle'].action;
 		if (prevState) {
 			// crossfade from previous animation to current idle action
-			console.log(this);
 			const prevAction = this._parent._animations[prevState.name].action;
 			idleAction.time = 0.0;
 			idleAction.enabled = true;

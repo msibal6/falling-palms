@@ -3,6 +3,9 @@ import * as CANNON from './cannon-es.js';
 import { getRandomInt, removeItemFromArray } from './helper.js';
 import { Medy } from './Medy.js';
 import { Needle } from './Needle.js';
+import { EnemyFSM } from './FiniteStateMachine.js';
+import { FBXLoader } from 'https://cdn.jsdelivr.net/npm/three@0.118.1/examples/jsm/loaders/FBXLoader.js';
+
 export class Enemy extends Medy {
 	constructor(targetMedy) {
 		const enemyMesh = new THREE.Mesh(
@@ -37,16 +40,73 @@ export class Enemy extends Medy {
 				return;
 			}
 			this.shootNeedle();
+			this._input._mouseDown = true;
 			setTimeout(this.shootNeedleHandler, getRandomInt(1000, { min: 750 }));
 		}.bind(this);
 		this._body.addEventListener('collide', this.collisionHandler);
+
+		this._animations = {};
+		this._input = {
+			_mouseDown: false,
+		}
+		this._stateMachine = new EnemyFSM(this._animations);
+		this.loadAnimatedModel();
 	}
 
+	loadAnimatedModel() {
+		const modelLoader = new FBXLoader();
+		modelLoader.setPath('../3D assets/');
+		modelLoader.load('ybot.fbx', (fbx) => {
+			fbx.scale.setScalar(0.05);
+			fbx.traverse(c => {
+				c.castShadow = true;
+			});
 
+			window.game._threeManager.addToScene(fbx);
+			this._fbx = fbx;
+
+			this._mixer = new THREE.AnimationMixer(this._fbx);
+
+			this._manager = new THREE.LoadingManager();
+			this._manager.onLoad = () => {
+				console.log("manager onload");
+				this._stateMachine.setState('rightidle');
+			}
+
+			const onAnimLoad = (animName, anim) => {
+				// Extracting AnimationClip from loaded Animation
+				console.log(this._manager.onLoad);
+				const clip = anim.animations[0];
+				// creating new AnimationAction
+				const action = this._mixer.clipAction(clip);
+				this._animations[animName] = {
+					clip: clip,
+					action: action,
+				};
+			};
+
+			const animLoader = new FBXLoader(this._manager);
+			animLoader.setPath('../3D assets/');
+			animLoader.load('idle.fbx', (anim) => {
+				onAnimLoad('leftidle', anim);
+			});
+			animLoader.load('idle.fbx', (anim) => {
+				onAnimLoad('rightidle', anim);
+			});
+			animLoader.load('mixamo_left_punch.fbx', (anim) => {
+				onAnimLoad('leftpunch', anim);
+			});
+			animLoader.load('mixamo_right_punch.fbx', (anim) => {
+				onAnimLoad('rightpunch', anim);
+			});
+			this._fbx.rotation.y = -Math.PI / 2;
+		});
+	}
 	start() {
 		if (!this._stopFiring) {
 			return;
 		}
+		this._stateMachine.setState('rightidle');
 		this._stopFiring = false;
 		setTimeout(this.shootNeedleHandler, getRandomInt(1000, { min: 750 }));
 	}
@@ -58,6 +118,23 @@ export class Enemy extends Medy {
 	gameover(event) {
 		if (event.outcome == 0) {
 			this._stopFiring = true;
+		}
+	}
+
+	update(deltaTime) {
+		// console.log(deltaTime);
+		super.update();
+
+		this._stateMachine.update(deltaTime, this._input);
+		this._input._mouseDown = false;
+
+		if (this._fbx) {
+			this._fbx.position.copy(this._body.position);
+		}
+
+		if (this._mixer) {
+			// console.log(this._mixer);
+			this._mixer.update(deltaTime);
 		}
 	}
 
