@@ -42,7 +42,7 @@ export class Player extends Medy {
 		this._mesh.addEventListener('gameover', this.gameOverHandler);
 
 		this.onMouseClickHandler = this.onMouseClick.bind(this);
-		window.addEventListener('mousedown', this.onMouseClickHandler, false);
+		document.addEventListener('mousedown', this.onMouseClickHandler, true);
 
 		// visual THREE mesh
 		// physics CANNON body
@@ -89,15 +89,10 @@ export class Player extends Medy {
 				const idle = m.clipAction(anim.animations[0]);
 				idle.play();
 			});
-			// this._mesh = fbx;
-			// this._mesh.addEventListener('start', this.startHandler);
-			// this._mesh.addEventListener('gameover', this.gameOverHandler)
-			// console.log(this._mesh);
 			window.game._threeManager.addToScene(fbx);
 			this._fbx = fbx;
 			console.log(this._fbx);
 			fbx.rotation.y = Math.PI/2;
-			// this.rota
 		});
 	}
 	gameover(event) {
@@ -158,6 +153,7 @@ export class Player extends Medy {
 	onMouseClick(event) {
 		// calculate mouse position in normalized device coordinates
 		// (-1 to +1) for both components
+		console.log(event);
 		const raycaster = new THREE.Raycaster();
 		const mouse = new THREE.Vector2();
 		mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
