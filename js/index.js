@@ -24,11 +24,7 @@ class Game {
 			// done by cannonManager
 			this._cannonManager.update();
 			// game updates mesh position from cannon positions
-			const delta = this._threeManager._clock.getDelta();
-			this.updateMedies(delta);
-			// this._threeManager._mixers.map(m => {
-				// m.update(delta);
-			// });
+			this.updateMedies();
 			// Finally, render
 			this._threeManager.render();
 		}.bind(this);
@@ -74,7 +70,7 @@ class Game {
 		this._player.create();
 		this.addMedy(this._player);
 		this.addEnemies();
-		
+
 	}
 
 	destroy() {
@@ -151,9 +147,10 @@ class Game {
 		this._cannonManager.removePhysical(medy._body);
 	}
 
-	updateMedies(deltaTime) {
+	updateMedies() {
+		const delta = this._threeManager._clock.getDelta();
 		this._medies.forEach((element) => {
-			element.update(deltaTime);
+			element.update(delta);
 		});
 	}
 }
